@@ -1660,7 +1660,7 @@ function actualizarStats() {
 function renderFiltros() {
   const TIPOS_FIJOS = ["libro", "reflexion", "articulo"];
   const tiposEnDatos = new Set(libros.map(l => l.tipo));
-  const tipos = ["Todos", ...TIPOS_FIJOS.filter(t => tiposEnDatos.has(t) || t === "articulo")];
+  const tipos = ["Todos", ...TIPOS_FIJOS.filter(t => tiposEnDatos.has(t))];
   const labels  = { Todos:"Todos", libro:"Libros", reflexion:"Reflexiones", articulo:"Artículos" };
   $("filtros-container").innerHTML = tipos.map(t => `
     <button class="pill-filtro${t === filtroActivo ? " activo" : ""}"
