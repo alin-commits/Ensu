@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnSu — Lo que leo me forma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ── CSS CUSTOM PROPERTIES ── */
+  :root {
+    --fondo:      #F5F5F5;
+    --negro:      #121212;
+    --tarjeta:    #FFFFFF;
+    --terracota:  #C68A6D;
+    --salvia:     #A7AEA1;
+    --beige:      #E6E0D6;
+    --texto-2:    #4A4540;
+    --muted:      #9C9189;
+    --borde:      rgba(18,18,18,0.12);
+    --radius:     12px;
+    --trans:      0.22s ease;
+  }
+
+  /* ── RESET & BASE ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--fondo);
+    color: var(--negro);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  img { display: block; max-width: 100%; }
+
+  button { cursor: pointer; font-family: 'Inter', sans-serif; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--fondo); }
+  ::-webkit-scrollbar-thumb { background: var(--salvia); border-radius: 3px; }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     NAV
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    background: rgba(245,245,245,0.72);
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border-bottom: 1px solid var(--borde);
+    transition: background var(--trans), box-shadow var(--trans);
+  }
+
+  nav.scrolled {
+    background: rgba(245,245,245,0.92);
+    box-shadow: 0 2px 24px rgba(18,18,18,0.07);
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--negro);
+  }
+
+  .nav-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  .nav-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--negro);
+  }
+
+  .btn-nuevo {
+    background: var(--negro);
+    color: #F5F5F5;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background var(--trans), transform var(--trans);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-nuevo:hover {
+    background: #2a2a2a;
+    transform: translateY(-1px);
+  }
+
+  .btn-nuevo:active { transform: translateY(0); }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     HERO
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 126px 28px 72px;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .hero-left {}
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 58px);
+    font-weight: 300;
+    line-height: 1.12;
+    margin-bottom: 20px;
+    color: var(--negro);
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--terracota);
+  }
+
+  .hero-desc {
+    font-size: 15px;
+    color: var(--texto-2);
+    line-height: 1.7;
+    max-width: 460px;
+    margin-bottom: 36px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--negro);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 44px;
+    background: var(--borde);
+    align-self: center;
+  }
+
+  /* Hero visual */
+  .hero-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-logo-wrap {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-logo-halo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 55%, rgba(198,138,109,0.18) 0%, rgba(198,138,109,0.06) 52%, transparent 72%);
+    animation: pulse-halo 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-halo {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.06); opacity: 0.7; }
+  }
+
+  .hero-logo-img {
+    width: 240px;
+    height: 240px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 12px 32px rgba(198,138,109,0.22));
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SEPARADOR
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .separador {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .sep-line {
+    flex: 1;
+    height: 1px;
+    background: var(--borde);
+  }
+
+  .sep-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     FILTROS
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .filtros-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px 36px;
+  }
+
+  .filtros {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pill-filtro {
+    background: transparent;
+    border: 1.5px solid var(--borde);
+    color: var(--texto-2);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all var(--trans);
+    white-space: nowrap;
+  }
+
+  .pill-filtro:hover {
+    border-color: var(--negro);
+    color: var(--negro);
+  }
+
+  .pill-filtro.activo {
+    background: var(--negro);
+    border-color: var(--negro);
+    color: #FFFFFF;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     GRID DE TARJETAS
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .grid-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 28px 96px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+
+  .empty-state .empty-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* TARJETA */
+  .card {
+    background: var(--tarjeta);
+    border-radius: var(--radius);
+    border: 1px solid var(--borde);
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
+    position: relative;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(18,18,18,0.10);
+    border-color: rgba(18,18,18,0.22);
+  }
+
+  .card-accent {
+    height: 3px;
+    width: 100%;
+  }
+
+  .card-accent.terracota { background: var(--terracota); }
+  .card-accent.salvia    { background: var(--salvia); }
+
+  .card-body {
+    padding: 22px 22px 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .card-autor {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+  }
+
+  .badge-leyendo  { background: rgba(198,138,109,0.14); color: var(--terracota); }
+  .badge-terminado{ background: rgba(167,174,161,0.18); color: #5c6358; }
+  .badge-proximo  { background: rgba(230,224,214,0.7); color: var(--muted); }
+
+  .card-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--negro);
+    margin-bottom: 6px;
+  }
+
+  .card-libro {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--texto-2);
+    border: 1px solid var(--borde);
+    padding: 2px 9px;
+    border-radius: 100px;
+    letter-spacing: 0.02em;
+  }
+
+  .card-extracto {
+    font-size: 13.5px;
+    color: var(--texto-2);
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+    margin-bottom: 18px;
+  }
+
+  .card-progress-wrap {
+    margin: 0 -0px;
+    padding: 0 22px;
+  }
+
+  .card-progress-bar {
+    height: 2px;
+    border-radius: 2px;
+    background: var(--beige);
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+
+  .card-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+
+  .card-progress-fill.terracota { background: var(--terracota); }
+  .card-progress-fill.salvia    { background: var(--salvia); }
+
+  .card-footer {
+    padding: 14px 22px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-fecha {
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+
+  .card-arrow {
+    font-size: 18px;
+    color: var(--muted);
+    transition: color var(--trans), transform var(--trans);
+    line-height: 1;
+  }
+
+  .card:hover .card-arrow {
+    color: var(--terracota);
+    transform: translateX(3px);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     MODAL BASE
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(18,18,18,0.52);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .modal {
+    background: var(--tarjeta);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 88vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
+    box-shadow: 0 32px 80px rgba(18,18,18,0.2);
+  }
+
+  .modal-overlay.open .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     MODAL DETALLE
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .detail-bar {
+    height: 4px;
+    background: var(--terracota);
+    border-radius: 16px 16px 0 0;
+  }
+
+  .detail-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .detail-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .detail-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--negro);
+    margin-bottom: 6px;
+  }
+
+  .detail-autor {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  .detail-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  /* Tabs */
+  .detail-tabs {
+    padding: 0 32px;
+    border-bottom: 1px solid var(--borde);
+    display: flex;
+    gap: 0;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 14px 0;
+    margin-right: 28px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color var(--trans), border-color var(--trans);
+    letter-spacing: 0.02em;
+  }
+
+  .tab-btn.activo {
+    color: var(--negro);
+    border-bottom-color: var(--terracota);
+  }
+
+  .tab-btn:hover { color: var(--negro); }
+
+  .tab-panel {
+    display: none;
+    padding: 28px 32px;
+  }
+
+  .tab-panel.activo { display: block; }
+
+  /* Panel Reflexión */
+  .reflexion-texto {
+    font-size: 14.5px;
+    color: var(--texto-2);
+    line-height: 1.75;
+    margin-bottom: 24px;
+  }
+
+  .cita-bloque {
+    border-left: 3px solid var(--terracota);
+    padding: 14px 20px;
+    background: rgba(198,138,109,0.06);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 24px;
+  }
+
+  .cita-texto {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--negro);
+    line-height: 1.5;
+  }
+
+  .pregunta-bloque {
+    background: var(--beige);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .pregunta-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .pregunta-texto {
+    font-size: 14px;
+    color: var(--texto-2);
+    line-height: 1.65;
+  }
+
+  /* Panel Mi vida */
+  .vida-bloque {
+    background: var(--beige);
+    border-radius: 12px;
+    padding: 22px 24px;
+  }
+
+  .vida-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .vida-texto {
+    font-size: 14.5px;
+    color: var(--texto-2);
+    line-height: 1.75;
+  }
+
+  /* Panel Ficha */
+  .ficha-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .ficha-item {
+    background: var(--beige);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .ficha-key {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .ficha-val {
+    font-size: 14.5px;
+    color: var(--negro);
+    font-weight: 500;
+  }
+
+  .ficha-progress-wrap { margin-top: 6px; }
+
+  .ficha-bar {
+    height: 4px;
+    background: rgba(18,18,18,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .ficha-bar-fill {
+    height: 100%;
+    background: var(--terracota);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+
+  /* Modal footer */
+  .detail-footer {
+    padding: 20px 32px 28px;
+    border-top: 1px solid var(--borde);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn-editar {
+    background: transparent;
+    border: 1.5px solid var(--borde);
+    color: var(--texto-2);
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--trans);
+  }
+
+  .btn-editar:hover {
+    border-color: var(--negro);
+    color: var(--negro);
+  }
+
+  .btn-eliminar {
+    background: transparent;
+    border: 1.5px solid rgba(198,80,60,0.25);
+    color: #b94030;
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--trans);
+  }
+
+  .btn-eliminar:hover {
+    background: rgba(198,80,60,0.07);
+    border-color: rgba(198,80,60,0.45);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--muted);
+    line-height: 1;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background var(--trans), color var(--trans);
+    z-index: 10;
+  }
+
+  .modal-close:hover {
+    background: var(--beige);
+    color: var(--negro);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     MODAL FORMULARIO
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .form-modal {
+    max-width: 720px;
+  }
+
+  .form-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--negro);
+    margin-bottom: 4px;
+  }
+
+  .form-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .form-body {
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--borde);
+    margin-bottom: 4px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--texto-2);
+    letter-spacing: 0.02em;
+  }
+
+  label .req {
+    color: var(--terracota);
+    margin-left: 2px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="number"],
+  select,
+  textarea {
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    color: var(--negro);
+    background: var(--fondo);
+    border: 1.5px solid var(--borde);
+    border-radius: 8px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color var(--trans), box-shadow var(--trans);
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--terracota);
+    box-shadow: 0 0 0 3px rgba(198,138,109,0.12);
+  }
+
+  input.error, select.error, textarea.error {
+    border-color: #c04040;
+    box-shadow: 0 0 0 3px rgba(192,64,64,0.1);
+  }
+
+  .error-msg {
+    font-size: 11.5px;
+    color: #c04040;
+    display: none;
+  }
+
+  .error-msg.visible { display: block; }
+
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--beige);
+    border-radius: 4px;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--terracota);
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+
+  input[type="range"]:focus {
+    border: none;
+    box-shadow: none;
+    outline: none;
+  }
+
+  .range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .range-wrap input { flex: 1; }
+
+  .range-val {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--terracota);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .form-footer {
+    padding: 18px 32px 28px;
+    border-top: 1px solid var(--borde);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1.5px solid var(--borde);
+    color: var(--texto-2);
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all var(--trans);
+  }
+
+  .btn-cancel:hover {
+    border-color: var(--negro);
+    color: var(--negro);
+  }
+
+  .btn-save {
+    background: var(--negro);
+    color: #F5F5F5;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background var(--trans), transform var(--trans);
+  }
+
+  .btn-save:hover {
+    background: #2a2a2a;
+    transform: translateY(-1px);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--negro);
+    color: #F5F5F5;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    z-index: 2000;
+    box-shadow: 0 8px 24px rgba(18,18,18,0.22);
+    transform: translateY(16px);
+    opacity: 0;
+    transition: all 0.28s cubic-bezier(0.22,1,0.36,1);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     RESPONSIVE
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  @media (max-width: 1024px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding-top: 100px;
+    }
+    .hero-right { display: none; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .nav-inner { padding: 0 16px; }
+    .hero { padding: 100px 16px 52px; }
+    .hero-stats { gap: 16px; }
+    .separador { padding: 0 16px 40px; }
+    .filtros-wrap { padding: 0 16px 28px; }
+    .grid-wrap { padding: 0 16px 72px; }
+    .cards-grid { grid-template-columns: 1fr; gap: 16px; }
+    .modal { border-radius: 14px 14px 0 0; max-height: 92vh; }
+    .modal-overlay { align-items: flex-end; padding: 0; }
+    .detail-header { padding: 22px 20px 16px; }
+    .detail-tabs { padding: 0 20px; }
+    .tab-panel { padding: 22px 20px; }
+    .detail-footer { padding: 16px 20px 22px; }
+    .form-header { padding: 22px 20px 16px; }
+    .form-body { padding: 18px 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-footer { padding: 14px 20px 22px; }
+    .ficha-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 400px) {
+    .hero-title { font-size: 36px; }
+    .stat-num { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ━━━━━━━━━━ NAV ━━━━━━━━━━ -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <img src="img/logo.png" alt="EnSu Logo" class="nav-logo">
+      <span class="nav-name">EnSu</span>
+    </a>
+    <button class="btn-nuevo" onclick="abrirFormModal()">
+      <span>+</span> Nuevo libro
+    </button>
+  </div>
+</nav>
+
+<!-- ━━━━━━━━━━ HERO ━━━━━━━━━━ -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Diario de lectura</p>
+    <h1 class="hero-title">Lo que leo me <em>forma.</em></h1>
+    <p class="hero-desc">
+      Un espacio para anotar lo que los libros despiertan en mí — reflexiones honestas, citas que resuenan y la forma en que cada lectura aterriza en mi vida real.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num" id="stat-libros">0</span>
+        <span class="stat-label">Libros</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="hero-stat">
+        <span class="stat-num" id="stat-reflexiones">0</span>
+        <span class="stat-label">Reflexiones</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="hero-stat">
+        <span class="stat-num" id="stat-areas">0</span>
+        <span class="stat-label">Áreas</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-logo-wrap">
+      <div class="hero-logo-halo"></div>
+      <img src="img/logo.png" alt="EnSu" class="hero-logo-img">
+    </div>
+  </div>
+</section>
+
+<!-- ━━━━━━━━━━ SEPARADOR ━━━━━━━━━━ -->
+<div class="separador">
+  <div class="sep-line"></div>
+  <span class="sep-text">Reflexiones</span>
+  <div class="sep-line"></div>
+</div>
+
+<!-- ━━━━━━━━━━ FILTROS ━━━━━━━━━━ -->
+<div class="filtros-wrap">
+  <div class="filtros" id="filtros-container"></div>
+</div>
+
+<!-- ━━━━━━━━━━ GRID ━━━━━━━━━━ -->
+<div class="grid-wrap">
+  <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<!-- ━━━━━━━━━━ MODAL DETALLE ━━━━━━━━━━ -->
+<div class="modal-overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('detail-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="detail-bar"></div>
+    <div class="detail-header">
+      <div class="detail-eyebrow">
+        <span id="d-autor"></span>
+        <span id="d-badge" class="badge"></span>
+      </div>
+      <h2 class="detail-title" id="d-titulo"></h2>
+      <p class="detail-autor" id="d-libro-autor"></p>
+      <div class="detail-tags" id="d-tags"></div>
+    </div>
+    <div class="detail-tabs">
+      <button class="tab-btn activo" onclick="cambiarTab(this,'tab-reflexion')">Reflexión</button>
+      <button class="tab-btn" onclick="cambiarTab(this,'tab-vida')">Mi vida</button>
+      <button class="tab-btn" onclick="cambiarTab(this,'tab-ficha')">Ficha</button>
+    </div>
+    <div class="tab-panel activo" id="tab-reflexion">
+      <p class="reflexion-texto" id="d-reflexion"></p>
+      <div class="cita-bloque" id="d-cita-wrap">
+        <p class="cita-texto" id="d-cita"></p>
+      </div>
+      <div class="pregunta-bloque" id="d-pregunta-wrap">
+        <p class="pregunta-label">Tensión / Pregunta abierta</p>
+        <p class="pregunta-texto" id="d-pregunta"></p>
+      </div>
+    </div>
+    <div class="tab-panel" id="tab-vida">
+      <div class="vida-bloque">
+        <p class="vida-label">Aplicación a mi vida</p>
+        <p class="vida-texto" id="d-vida"></p>
+      </div>
+    </div>
+    <div class="tab-panel" id="tab-ficha">
+      <div class="ficha-grid" id="d-ficha-grid"></div>
+    </div>
+    <div class="detail-footer">
+      <button class="btn-editar" id="btn-editar-detail">Editar</button>
+      <button class="btn-eliminar" id="btn-eliminar-detail">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━ MODAL FORMULARIO ━━━━━━━━━━ -->
+<div class="modal-overlay" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
+  <div class="modal form-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('form-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="form-header">
+      <h2 class="form-title" id="form-title-text">Nueva reflexión</h2>
+      <p class="form-subtitle">Registra lo que este libro despertó en ti.</p>
+    </div>
+    <form id="libro-form" onsubmit="guardarLibro(event)" novalidate>
+      <div class="form-body">
+
+        <p class="form-section-label">Datos del libro</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-libro">Libro <span class="req">*</span></label>
+            <input type="text" id="f-libro" placeholder="Título del libro">
+            <span class="error-msg" id="e-libro">Campo obligatorio.</span>
+          </div>
+          <div class="form-group">
+            <label for="f-autor">Autor</label>
+            <input type="text" id="f-autor" placeholder="Nombre del autor">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-fecha">Fecha</label>
+            <input type="date" id="f-fecha">
+          </div>
+          <div class="form-group">
+            <label for="f-estado">Estado</label>
+            <select id="f-estado">
+              <option value="leyendo">Leyendo</option>
+              <option value="terminado">Terminado</option>
+              <option value="proximo">Próximo</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-progreso">Progreso de lectura — <span id="progreso-val">50%</span></label>
+          <div class="range-wrap">
+            <input type="range" id="f-progreso" min="0" max="100" value="50"
+              oninput="document.getElementById('progreso-val').textContent=this.value+'%'">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(separadas por comas)</small></label>
+          <input type="text" id="f-tags" placeholder="Ej: Gratitud, Fe, Control">
+        </div>
+
+        <p class="form-section-label">Reflexión</p>
+        <div class="form-group full">
+          <label for="f-titulo-reflexion">Título de la reflexión <span class="req">*</span></label>
+          <input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase...">
+          <span class="error-msg" id="e-titulo">Campo obligatorio.</span>
+        </div>
+        <div class="form-group full">
+          <label for="f-idea">Idea central del libro</label>
+          <textarea id="f-idea" placeholder="¿De qué trata el libro en esencia?" rows="3"></textarea>
+        </div>
+        <div class="form-group full">
+          <label for="f-reflexion">Reflexión <span class="req">*</span></label>
+          <textarea id="f-reflexion" placeholder="Lo que este libro despertó en ti..." rows="5"></textarea>
+          <span class="error-msg" id="e-reflexion">Campo obligatorio.</span>
+        </div>
+        <div class="form-group full">
+          <label for="f-cita">Cita destacada</label>
+          <textarea id="f-cita" placeholder='"La frase que no puedes olvidar..."' rows="3"></textarea>
+        </div>
+
+        <p class="form-section-label">Mi vida</p>
+        <div class="form-group full">
+          <label for="f-vida">Aplicación a mi vida <span class="req">*</span></label>
+          <textarea id="f-vida" placeholder="¿Cómo aterrizas esto en tu día a día real?" rows="5"></textarea>
+          <span class="error-msg" id="e-vida">Campo obligatorio.</span>
+        </div>
+        <div class="form-group full">
+          <label for="f-tension">Tensión / Pregunta abierta</label>
+          <textarea id="f-tension" placeholder="Una pregunta que este libro no resolvió del todo..." rows="3"></textarea>
+        </div>
+
+        <p class="form-section-label">Valoración</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-dificultad">Dificultad</label>
+            <select id="f-dificultad">
+              <option value="Accesible">Accesible</option>
+              <option value="Moderada">Moderada</option>
+              <option value="Densa">Densa</option>
+              <option value="Muy densa">Muy densa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-puntuacion">Puntuación (1–10)</label>
+            <input type="number" id="f-puntuacion" min="1" max="10" placeholder="8">
+          </div>
+        </div>
+
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn-cancel" onclick="cerrarModal('form-overlay')">Cancelar</button>
+        <button type="submit" class="btn-save">Guardar reflexión</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     JAVASCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<script>
+/* ── DATOS INICIALES ── */
+let libros = [
+  {
+    id: 1,
+    libro:      "Encontrando un hogar",
+    autor:      "Renezz",
+    fecha:      "2025-06-01",
+    estado:     "leyendo",
+    progreso:   90,
+    tags:       ["Gratitud", "Control", "Fe", "Servicio"],
+    tituloRef:  "Soltar el control no es rendirse — es confiar en algo más grande",
+    idea:       "El libro explora cómo el desapego del resultado no es pasividad sino fe activa.",
+    reflexion:  "Renezz habla desde sus propias experiencias de cómo el intento obsesivo de controlar el resultado de las cosas genera más sufrimiento que la incertidumbre en sí. El libro gira en torno a tres ejes: soltar el control y confiar en un plan mayor, vivir desde la gratitud en lugar del mérito, y encontrar sentido en los momentos difíciles a través de ayudar a otros.",
+    cita:       "El plan de Dios es más grande que cualquier plan que yo podría haber diseñado para mí mismo.",
+    vida:       "Conecta directo con mi patrón de sobre-inversión en relaciones. Cuando invierto demasiado en alguien que da señales mixtas, estoy intentando controlar el resultado. En HOMI también: lo que puedo controlar es el trabajo diario, el resto soltarlo.",
+    tension:    "¿Cuándo soltar es madurez y cuándo es evasión? ¿Puede la gratitud convertirse en resignación?",
+    dificultad: "Accesible",
+    puntuacion: 9
+  }
+];
+
+let nextId        = 2;
+let filtroActivo  = "Todos";
+let libroEditando = null;
+
+/* ── UTILIDADES ── */
+const $ = id => document.getElementById(id);
+
+function fmtFecha(str) {
+  if (!str) return "";
+  const [y, m, d] = str.split("-");
+  const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  return `${+d} ${meses[+m-1]} ${y}`;
+}
+
+function badgeClass(estado) {
+  return { leyendo:"badge-leyendo", terminado:"badge-terminado", proximo:"badge-proximo" }[estado] || "badge-proximo";
+}
+
+function badgeLabel(estado) {
+  return { leyendo:"Leyendo", terminado:"Terminado", proximo:"Próximo" }[estado] || estado;
+}
+
+function accentClass(i) { return i % 2 === 0 ? "terracota" : "salvia"; }
+
+function allAreas() {
+  const areas = new Set();
+  libros.forEach(l => l.tags.forEach(t => areas.add(t)));
+  return areas.size;
+}
+
+/* ── ESTADÍSTICAS ── */
+function actualizarStats() {
+  $("stat-libros").textContent      = libros.length;
+  $("stat-reflexiones").textContent = libros.length;
+  $("stat-areas").textContent       = allAreas();
+}
+
+/* ── FILTROS ── */
+function renderFiltros() {
+  const container = $("filtros-container");
+  const titulos   = ["Todos", ...new Set(libros.map(l => l.libro))];
+  container.innerHTML = titulos.map(t => `
+    <button class="pill-filtro${t === filtroActivo ? " activo" : ""}"
+      onclick="setFiltro('${t.replace(/'/g,"\\'")}')">
+      ${t}
+    </button>
+  `).join("");
+}
+
+function setFiltro(titulo) {
+  filtroActivo = titulo;
+  renderFiltros();
+  renderCards();
+}
+
+/* ── TARJETAS ── */
+function renderCards() {
+  const grid = $("cards-grid");
+  const lista = filtroActivo === "Todos"
+    ? libros
+    : libros.filter(l => l.libro === filtroActivo);
+
+  if (lista.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📖</div>
+        <p>Todavía no hay reflexiones aquí.<br>Añade tu primer libro para empezar.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = lista.map((l, i) => {
+    const ac  = accentClass(i);
+    const tags = l.tags.map(t => `<span class="tag">${t}</span>`).join("");
+    return `
+    <article class="card" onclick="abrirDetalle(${l.id})">
+      <div class="card-accent ${ac}"></div>
+      <div class="card-body">
+        <div class="card-eyebrow">
+          <span class="card-autor">${l.autor}</span>
+          <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
+        </div>
+        <h3 class="card-titulo">${l.tituloRef}</h3>
+        <p class="card-libro">${l.libro}</p>
+        <div class="card-tags">${tags}</div>
+        <p class="card-extracto">${l.reflexion}</p>
+      </div>
+      <div class="card-progress-wrap">
+        <div class="card-progress-bar">
+          <div class="card-progress-fill ${ac}" style="width:${l.progreso}%"></div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-fecha">${fmtFecha(l.fecha)}</span>
+        <span class="card-arrow">&#x2192;</span>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+/* ── MODAL DETALLE ── */
+function abrirDetalle(id) {
+  const l = libros.find(x => x.id === id);
+  if (!l) return;
+  libroEditando = id;
+
+  $("d-autor").textContent       = l.autor;
+  const badge = $("d-badge");
+  badge.textContent              = badgeLabel(l.estado);
+  badge.className                = `badge ${badgeClass(l.estado)}`;
+  $("d-titulo").textContent      = l.tituloRef;
+  $("d-libro-autor").textContent = `${l.libro}`;
+  $("d-tags").innerHTML          = l.tags.map(t=>`<span class="tag">${t}</span>`).join("");
+  $("d-reflexion").textContent   = l.reflexion;
+
+  const citaWrap   = $("d-cita-wrap");
+  const pregWrap   = $("d-pregunta-wrap");
+
+  if (l.cita) {
+    $("d-cita").textContent = `"${l.cita}"`;
+    citaWrap.style.display = "";
+  } else { citaWrap.style.display = "none"; }
+
+  if (l.tension) {
+    $("d-pregunta").textContent = l.tension;
+    pregWrap.style.display = "";
+  } else { pregWrap.style.display = "none"; }
+
+  $("d-vida").textContent = l.vida || "—";
+
+  $("d-ficha-grid").innerHTML = `
+    <div class="ficha-item">
+      <p class="ficha-key">Libro</p>
+      <p class="ficha-val">${l.libro}</p>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Autor</p>
+      <p class="ficha-val">${l.autor || "—"}</p>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Fecha</p>
+      <p class="ficha-val">${fmtFecha(l.fecha) || "—"}</p>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Estado</p>
+      <p class="ficha-val">${badgeLabel(l.estado)}</p>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Progreso</p>
+      <p class="ficha-val">${l.progreso}%</p>
+      <div class="ficha-bar"><div class="ficha-bar-fill" style="width:${l.progreso}%"></div></div>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Dificultad</p>
+      <p class="ficha-val">${l.dificultad || "—"}</p>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Puntuación</p>
+      <p class="ficha-val">${l.puntuacion ? l.puntuacion + " / 10" : "—"}</p>
+    </div>
+    <div class="ficha-item">
+      <p class="ficha-key">Etiquetas</p>
+      <p class="ficha-val">${l.tags.join(", ") || "—"}</p>
+    </div>
+  `;
+
+  // reset tabs
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("activo"));
+  document.querySelectorAll(".tab-btn")[0].classList.add("activo");
+  $("tab-reflexion").classList.add("activo");
+
+  $("btn-editar-detail").onclick  = () => { cerrarModal("detail-overlay"); abrirFormModal(id); };
+  $("btn-eliminar-detail").onclick = () => eliminarLibro(id);
+
+  abrirModal("detail-overlay");
+}
+
+function cambiarTab(btn, panelId) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("activo"));
+  btn.classList.add("activo");
+  $(panelId).classList.add("activo");
+}
+
+function eliminarLibro(id) {
+  if (!confirm("¿Eliminar esta reflexión? Esta acción no se puede deshacer.")) return;
+  libros = libros.filter(l => l.id !== id);
+  cerrarModal("detail-overlay");
+  renderFiltros();
+  renderCards();
+  actualizarStats();
+  mostrarToast("Reflexión eliminada.");
+}
+
+/* ── MODAL FORMULARIO ── */
+function abrirFormModal(editId) {
+  limpiarForm();
+  if (editId) {
+    const l = libros.find(x => x.id === editId);
+    if (!l) return;
+    libroEditando = editId;
+    $("form-title-text").textContent = "Editar reflexión";
+    $("f-libro").value           = l.libro;
+    $("f-autor").value           = l.autor;
+    $("f-fecha").value           = l.fecha;
+    $("f-estado").value          = l.estado;
+    $("f-progreso").value        = l.progreso;
+    $("progreso-val").textContent = l.progreso + "%";
+    $("f-tags").value            = l.tags.join(", ");
+    $("f-titulo-reflexion").value= l.tituloRef;
+    $("f-idea").value            = l.idea   || "";
+    $("f-reflexion").value       = l.reflexion;
+    $("f-cita").value            = l.cita   || "";
+    $("f-vida").value            = l.vida   || "";
+    $("f-tension").value         = l.tension|| "";
+    $("f-dificultad").value      = l.dificultad || "Accesible";
+    $("f-puntuacion").value      = l.puntuacion || "";
+  } else {
+    libroEditando = null;
+    $("form-title-text").textContent = "Nueva reflexión";
+    // fecha de hoy por defecto
+    const hoy = new Date().toISOString().split("T")[0];
+    $("f-fecha").value = hoy;
+  }
+  abrirModal("form-overlay");
+}
+
+function limpiarForm() {
+  $("libro-form").reset();
+  $("progreso-val").textContent = "50%";
+  ["e-libro","e-titulo","e-reflexion","e-vida"].forEach(id => {
+    $(id).classList.remove("visible");
+  });
+  ["f-libro","f-titulo-reflexion","f-reflexion","f-vida"].forEach(id => {
+    $(id).classList.remove("error");
+  });
+}
+
+function guardarLibro(e) {
+  e.preventDefault();
+  let valid = true;
+
+  function validar(campoId, errId) {
+    const val = $(campoId).value.trim();
+    if (!val) {
+      $(campoId).classList.add("error");
+      $(errId).classList.add("visible");
+      valid = false;
+    } else {
+      $(campoId).classList.remove("error");
+      $(errId).classList.remove("visible");
+    }
+  }
+
+  validar("f-libro",            "e-libro");
+  validar("f-titulo-reflexion", "e-titulo");
+  validar("f-reflexion",        "e-reflexion");
+  validar("f-vida",             "e-vida");
+
+  if (!valid) return;
+
+  const tagsRaw = $("f-tags").value.trim();
+  const tags    = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(Boolean) : [];
+  const puntRaw = $("f-puntuacion").value.trim();
+
+  const datos = {
+    libro:      $("f-libro").value.trim(),
+    autor:      $("f-autor").value.trim(),
+    fecha:      $("f-fecha").value,
+    estado:     $("f-estado").value,
+    progreso:   parseInt($("f-progreso").value),
+    tags,
+    tituloRef:  $("f-titulo-reflexion").value.trim(),
+    idea:       $("f-idea").value.trim(),
+    reflexion:  $("f-reflexion").value.trim(),
+    cita:       $("f-cita").value.trim(),
+    vida:       $("f-vida").value.trim(),
+    tension:    $("f-tension").value.trim(),
+    dificultad: $("f-dificultad").value,
+    puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null
+  };
+
+  if (libroEditando) {
+    const idx = libros.findIndex(x => x.id === libroEditando);
+    if (idx !== -1) libros[idx] = { ...libros[idx], ...datos };
+    mostrarToast("Reflexión actualizada.");
+  } else {
+    libros.push({ id: nextId++, ...datos });
+    mostrarToast("Reflexión guardada.");
+  }
+
+  cerrarModal("form-overlay");
+  renderFiltros();
+  renderCards();
+  actualizarStats();
+}
+
+/* ── MODALES ── */
+function abrirModal(overlayId) {
+  $(overlayId).classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function cerrarModal(overlayId) {
+  $(overlayId).classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function overlayClick(e, overlayId) {
+  if (e.target.id === overlayId) cerrarModal(overlayId);
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    cerrarModal("detail-overlay");
+    cerrarModal("form-overlay");
+  }
+});
+
+/* ── TOAST ── */
+let toastTimer;
+function mostrarToast(msg, icono="✓") {
+  const t = $("toast");
+  t.innerHTML = `<span>${icono}</span> ${msg}`;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+/* ── NAV SCROLL ── */
+window.addEventListener("scroll", () => {
+  const nav = $("main-nav");
+  if (window.scrollY > 20) nav.classList.add("scrolled");
+  else nav.classList.remove("scrolled");
+}, { passive: true });
+
+/* ── INIT ── */
+actualizarStats();
+renderFiltros();
+renderCards();
+</script>
+</body>
+</html>
