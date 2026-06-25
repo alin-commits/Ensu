@@ -1699,6 +1699,7 @@ let filtroActivo = "Todos";
 let busqueda     = "";
 let isAdmin      = false;
 let sortDesc     = true;
+let editandoId   = null;
 
 /* ── LOCALSTORAGE ── */
 function guardarEnStorage() {
@@ -2014,6 +2015,7 @@ function abrirFormModal(editId) {
   if (editId) {
     const l = libros.find(x => x.id === editId);
     if (!l) return;
+    editandoId = editId;
     $("form-title-text").textContent = "Editar entrada";
     $("f-tipo").value              = l.tipo || "libro";
     $("f-libro").value             = l.libro;
@@ -2030,11 +2032,10 @@ function abrirFormModal(editId) {
     $("f-tension").value           = l.tension || "";
     $("f-dificultad").value        = l.dificultad || "Accesible";
     $("f-puntuacion").value        = l.puntuacion || "";
-    $("libro-form").dataset.editId = editId;
   } else {
+    editandoId = null;
     $("form-title-text").textContent = "Nueva entrada";
     $("f-fecha").value = new Date().toISOString().split("T")[0];
-    delete $("libro-form").dataset.editId;
   }
   abrirModal("form-overlay");
 }
@@ -2067,11 +2068,12 @@ function guardarLibro(e) {
     puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null
   };
 
-  const editId = $("libro-form").dataset.editId;
-  if (editId) {
-    const idx = libros.findIndex(x => x.id === parseInt(editId));
-    if (idx !== -1) libros[idx] = { ...libros[idx], ...datos };
-    mostrarToast("Entrada actualizada.");
+  if (editandoId !== null) {
+    const idx = libros.findIndex(x => x.id === editandoId);
+    if (idx !== -1) {
+      libros[idx] = { ...libros[idx], ...datos };
+      mostrarToast("Entrada actualizada.");
+    }
   } else {
     libros.push({ id: nextId++, ...datos });
     mostrarToast("Entrada guardada.");
