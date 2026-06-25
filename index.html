@@ -268,6 +268,25 @@
   .sort-btn.desc::before { content: "↓ "; }
   .sort-btn.asc::before  { content: "↑ "; }
 
+  #filtros-select {
+    display: none;
+    flex: 1;
+    background: var(--tarjeta);
+    border: 1.5px solid var(--borde);
+    color: var(--texto-2);
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: border-color var(--trans), color var(--trans);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  #filtros-select:focus { border-color: var(--negro); color: var(--negro); }
+
   .pill-filtro {
     background: transparent;
     border: 1.5px solid var(--borde);
@@ -1034,6 +1053,8 @@
     .hero-stats { gap: 16px; }
     .separador { padding: 0 16px 40px; }
     .filtros-wrap { padding: 0 16px 28px; }
+    #filtros-container { display: none; }
+    #filtros-select    { display: block; }
     .grid-wrap { padding: 0 16px 72px; }
     .cards-grid { grid-template-columns: 1fr; gap: 16px; }
     /* Modal como popup con márgenes visibles */
@@ -1389,6 +1410,7 @@
 <div class="filtros-wrap">
   <div class="filtros-row">
     <div class="filtros" id="filtros-container"></div>
+    <select id="filtros-select" onchange="setFiltro(this.value)"></select>
     <button class="sort-btn desc" id="sort-btn" onclick="toggleSort()" title="Ordenar por fecha">Reciente</button>
   </div>
 </div>
@@ -1755,6 +1777,9 @@ function renderFiltros() {
       ${labels[t] || t}
     </button>
   `).join("");
+  $("filtros-select").innerHTML = tipos.map(t =>
+    `<option value="${t}"${t === filtroActivo ? " selected" : ""}>${labels[t] || t}</option>`
+  ).join("");
 }
 
 function setFiltro(tipo) {
