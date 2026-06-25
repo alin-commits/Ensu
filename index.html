@@ -1050,7 +1050,9 @@
   }
   .tipo-badge.libro     { background: rgba(198,138,109,0.14); color: var(--terracota); }
   .tipo-badge.reflexion { background: rgba(167,174,161,0.18); color: #5c6358; }
+  .tipo-badge.articulo  { background: rgba(120,130,160,0.14); color: #5a6180; }
   html.dark .tipo-badge.reflexion { color: #8a9486; }
+  html.dark .tipo-badge.articulo  { color: #8a90a8; }
 
   html.dark .pill-filtro.activo {
     background: var(--terracota);
@@ -1555,7 +1557,7 @@
    async function h(p){const e=new TextEncoder(),d=await crypto.subtle.digest('SHA-256',e.encode(p));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('')} h("TuNuevaContraseña").then(console.log)
    Luego reemplaza ADMIN_HASH con el resultado.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const ADMIN_HASH = "ee2e46b9a9c89467f1de8d6f249d69f375df66b0ba2d037e866b9ca978d83bc7"; // EnSu2025!
+const ADMIN_HASH = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714"; // CosminEnciu*14
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    DATOS — edita este array para añadir entradas
@@ -1565,20 +1567,29 @@ const DATOS_INICIALES = [
   {
     id: 1,
     tipo:       "libro",
-    libro:      "Encontrando un hogar",
-    autor:      "Renezz",
+    libro:      "Encontrar un hogar",
+    autor:      "René Ponte (@renezz)",
     fecha:      "2025-06-01",
     estado:     "leyendo",
     progreso:   90,
-    tags:       ["Gratitud", "Control", "Fe", "Servicio"],
-    tituloRef:  "Soltar el control no es rendirse — es confiar en algo más grande",
-    idea:       "El libro explora cómo el desapego del resultado no es pasividad sino fe activa.",
-    reflexion:  "Renezz habla desde sus propias experiencias de cómo el intento obsesivo de controlar el resultado de las cosas genera más sufrimiento que la incertidumbre en sí. El libro gira en torno a tres ejes: soltar el control y confiar en un plan mayor, vivir desde la gratitud en lugar del mérito, y encontrar sentido en los momentos difíciles a través de ayudar a otros.",
-    cita:       "El plan de Dios es más grande que cualquier plan que yo podría haber diseñado para mí mismo.",
-    vida:       "Conecta directo con mi patrón de sobre-inversión en relaciones. Cuando invierto demasiado en alguien que da señales mixtas, estoy intentando controlar el resultado. En HOMI también: lo que puedo controlar es el trabajo diario, el resto soltarlo.",
-    tension:    "¿Cuándo soltar es madurez y cuándo es evasión? ¿Puede la gratitud convertirse en resignación?",
     dificultad: "Accesible",
-    puntuacion: 9
+    puntuacion: 9,
+
+    tags: [
+      "Identidad", "Amor propio", "Nostalgia",
+      "Control", "Gratitud", "Presente",
+      "Fe", "Introspección", "Disciplina"
+    ],
+
+    tituloRef: "El hogar que buscas fuera ya existe dentro de ti — solo tienes que construirlo",
+
+    reflexion: "René Ponte construye el libro desde sus propias experiencias y lo organiza en torno a cuatro ejes que se entrelazan: el amor, la nostalgia, la muerte y Dios. No ofrece respuestas fáciles — acompaña al lector en un proceso de cuestionamiento íntimo.\n\nEl libro propone que como nos amamos a nosotros mismos determinamos cómo permitimos que los demás nos amen y nos traten. No es autoayuda superficial: es la idea de que el amor real, sin apegos ni inseguridades, solo es posible cuando uno ya no necesita al otro para completarse. Somos lo que damos — y solo podemos dar lo que primero nos hemos dado a nosotros mismos.\n\nSobre la nostalgia, René señala algo incómodo: vivimos atrapados en lo que fue, ya sea añorando momentos buenos o reviviendo heridas. En el caso del amor, ese anclaje al pasado bloquea el presente e impide que nuevas personas entren de verdad. La nostalgia no es solo melancolía — es una forma de evitar vivir ahora.\n\nEl hogar del título no es físico. Es el proceso —incómodo y necesario— de reconciliarse con uno mismo. René sostiene que buscamos fuera lo que solo puede encontrarse dentro, y que esa búsqueda externa viene de inseguridades y sesgos adquiridos en la infancia. La salida es la incomodidad: estar con uno mismo, observar los pensamientos sin huir, hacer introspección real hasta cultivar un jardín interior desde el que relacionarse con el mundo.",
+
+    cita: "El hogar que todos anhelamos se encuentra al otro lado del sacrificio cuando uno renuncia a la fantasía de la autosuficiencia absoluta y cultiva la virtud, la paciencia y el coraje para mirar de frente aquello que le incomoda.",
+
+    vida: "El patrón que tengo de invertir demasiado en personas que dan señales mixtas tiene una raíz directa en lo que describe el libro: cuando no tienes el hogar construido dentro, lo buscas en el otro. La dependencia emocional no es amor — es búsqueda de completitud disfrazada de entrega.\n\nLa nostalgia me toca de cerca. El libro me hace preguntarme cuánto de lo que siento en relaciones es presente real y cuánto es apego a cómo fueron las cosas o a cómo quería que fueran. Vivir en esa película paralela impide ver lo que realmente hay.\n\nLa disciplina como amor propio — el gym, el BJJ, la rutina — ya la practicaba sin este marco. El libro le da nombre: no es obligación ni vanidad, es la forma más concreta de decirte a ti mismo que te importas.\n\nComo emprendedor me he acostumbrado a cargar con todo solo. René dice que el hogar aparece cuando renuncias a la fantasía de la autosuficiencia. Pedir ayuda, soltar el control, confiar — no es debilidad. Es madurez.",
+
+    tension: "La pregunta que el libro deja abierta es: ¿cuándo el deseo viene del amor propio y cuándo viene del vacío?\n\nMi respuesta: el deseo desde el vacío es un deseo de necesidad — urgente, desesperado, que no disfruta el proceso porque la incertidumbre supone una amenaza. Dependemos del resultado para sentirnos bien.\n\nEl deseo desde el amor propio es diferente: se disfruta el camino, y si no se cumple, no nos rompe — porque era un complemento, no una necesidad. La incertidumbre no amenaza porque no dependemos del resultado.\n\nEl detector más fiable: ¿cómo te sienta la incertidumbre de no tenerlo? Si genera ansiedad y urgencia, el deseo viene del vacío. Si puedes estar con ella y seguir disfrutando, viene del amor propio."
   }
 ];
 
@@ -1647,8 +1658,10 @@ function actualizarStats() {
 
 /* ── FILTROS por tipo ── */
 function renderFiltros() {
-  const tipos   = ["Todos", ...new Set(libros.map(l => l.tipo))];
-  const labels  = { Todos:"Todos", libro:"Libros", reflexion:"Reflexiones" };
+  const TIPOS_FIJOS = ["libro", "reflexion", "articulo"];
+  const tiposEnDatos = new Set(libros.map(l => l.tipo));
+  const tipos = ["Todos", ...TIPOS_FIJOS.filter(t => tiposEnDatos.has(t) || t === "articulo")];
+  const labels  = { Todos:"Todos", libro:"Libros", reflexion:"Reflexiones", articulo:"Artículos" };
   $("filtros-container").innerHTML = tipos.map(t => `
     <button class="pill-filtro${t === filtroActivo ? " activo" : ""}"
       onclick="setFiltro('${t}')">
