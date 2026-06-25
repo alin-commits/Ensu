@@ -579,6 +579,7 @@
     color: var(--texto-2);
     line-height: 1.75;
     margin-bottom: 24px;
+    white-space: pre-line;
   }
 
   .cita-bloque {
@@ -639,6 +640,7 @@
     font-size: 14.5px;
     color: var(--texto-2);
     line-height: 1.75;
+    white-space: pre-line;
   }
 
   /* Panel Ficha */
@@ -1363,19 +1365,19 @@
       <div class="detail-tags" id="d-tags"></div>
     </div>
     <div class="detail-tabs">
-      <button class="tab-btn activo" onclick="cambiarTab(this,'tab-reflexion')">Reflexión</button>
-      <button class="tab-btn" onclick="cambiarTab(this,'tab-vida')">Mi vida</button>
+      <button class="tab-btn activo" onclick="cambiarTab(this,'tab-resumen')">Resumen</button>
+      <button class="tab-btn" id="tab-btn-mis-ref" onclick="cambiarTab(this,'tab-mis-reflexiones')">Mis reflexiones</button>
+      <button class="tab-btn" id="tab-btn-vida" onclick="cambiarTab(this,'tab-vida')">Mi vida</button>
       <button class="tab-btn" onclick="cambiarTab(this,'tab-ficha')">Ficha</button>
     </div>
-    <div class="tab-panel activo" id="tab-reflexion">
+    <div class="tab-panel activo" id="tab-resumen">
       <p class="reflexion-texto" id="d-reflexion"></p>
       <div class="cita-bloque" id="d-cita-wrap">
         <p class="cita-texto" id="d-cita"></p>
       </div>
-      <div class="pregunta-bloque" id="d-pregunta-wrap">
-        <p class="pregunta-label">Tensión / Pregunta abierta</p>
-        <p class="pregunta-texto" id="d-pregunta"></p>
-      </div>
+    </div>
+    <div class="tab-panel" id="tab-mis-reflexiones">
+      <p class="reflexion-texto" id="d-mis-reflexiones"></p>
     </div>
     <div class="tab-panel" id="tab-vida">
       <div class="vida-bloque">
@@ -1590,11 +1592,32 @@ const DATOS_INICIALES = [
     vida: "El patrón que tengo de invertir demasiado en personas que dan señales mixtas tiene una raíz directa en lo que describe el libro: cuando no tienes el hogar construido dentro, lo buscas en el otro. La dependencia emocional no es amor — es búsqueda de completitud disfrazada de entrega.\n\nLa nostalgia me toca de cerca. El libro me hace preguntarme cuánto de lo que siento en relaciones es presente real y cuánto es apego a cómo fueron las cosas o a cómo quería que fueran. Vivir en esa película paralela impide ver lo que realmente hay.\n\nLa disciplina como amor propio — el gym, el BJJ, la rutina — ya la practicaba sin este marco. El libro le da nombre: no es obligación ni vanidad, es la forma más concreta de decirte a ti mismo que te importas.\n\nComo emprendedor me he acostumbrado a cargar con todo solo. René dice que el hogar aparece cuando renuncias a la fantasía de la autosuficiencia. Pedir ayuda, soltar el control, confiar — no es debilidad. Es madurez.",
 
     tension: "La pregunta que el libro deja abierta es: ¿cuándo el deseo viene del amor propio y cuándo viene del vacío?\n\nMi respuesta: el deseo desde el vacío es un deseo de necesidad — urgente, desesperado, que no disfruta el proceso porque la incertidumbre supone una amenaza. Dependemos del resultado para sentirnos bien.\n\nEl deseo desde el amor propio es diferente: se disfruta el camino, y si no se cumple, no nos rompe — porque era un complemento, no una necesidad. La incertidumbre no amenaza porque no dependemos del resultado.\n\nEl detector más fiable: ¿cómo te sienta la incertidumbre de no tenerlo? Si genera ansiedad y urgencia, el deseo viene del vacío. Si puedes estar con ella y seguir disfrutando, viene del amor propio."
+  },
+  {
+    id: 2,
+    tipo:       "articulo",
+    libro:      "Psicoanálisis / Freud",
+    autor:      "",
+    fecha:      "2026-06-25",
+    estado:     "terminado",
+    progreso:   100,
+    dificultad: "Medio",
+    puntuacion: null,
+
+    tags: ["Psicología", "Freud", "Mecanismos de defensa", "Proyección", "Represión", "Negación"],
+
+    tituloRef: "La proyección, represión y de Freud",
+
+    reflexion: "La proyección es un mecanismo de defensa por el cual atribuimos a otros emociones, deseos o rasgos propios que no queremos reconocer en nosotros mismos.\n\nNo solo se proyecta lo negativo. También ocurre con lo positivo: aquello que admiramos en los demás suele reflejar cualidades que deseamos o que potencialmente podríamos desarrollar.\n\nEn el enamoramiento esto se intensifica. Tendemos a proyectar una imagen idealizada del otro, atribuyéndole virtudes que en realidad están amplificadas o directamente no existen. Esto genera una figura «perfecta» que tarde o temprano choca con la realidad, provocando decepción.\n\nLa represión es el mecanismo mediante el cual la mente mantiene fuera de la conciencia pensamientos, deseos o emociones que resultan dolorosos, conflictivos o inaceptables.\n\nNo es simplemente «olvidar», sino un esfuerzo activo e inconsciente por apartar aquello que genera malestar.\n\nEl problema es que lo reprimido no desaparece. Permanece activo y puede manifestarse de otras formas: ansiedad, malestar emocional, conductas repetitivas o síntomas psicológicos.\n\nLa negación no es una teoría creada exactamente por Freud pero tiene bases suyas. Consiste en rechazar la realidad de un hecho doloroso como si no existiera.\n\nEs un mecanismo más primitivo que la represión: aquí no solo se oculta, sino que directamente se rechaza lo evidente. Se ve claramente en relaciones tóxicas —donde se minimiza el daño recibido—, adicciones —donde se insiste en «tenerlo bajo control»—, y pérdidas o diagnósticos difíciles de aceptar.\n\nLa lógica inconsciente es simple: «si no lo reconozco, no me afecta». Pero el coste es que el problema sigue activo y sin resolución.",
+
+    cita:    "",
+    vida:    "",
+    tension: ""
   }
 ];
 
 let libros       = [];
-let nextId       = 2;
+let nextId       = 3;
 let filtroActivo = "Todos";
 let busqueda     = "";
 let isAdmin      = false;
@@ -1610,7 +1633,13 @@ function cargarDesdeStorage() {
     const raw = localStorage.getItem("ensu-libros");
     if (raw) {
       libros = JSON.parse(raw);
-      nextId = parseInt(localStorage.getItem("ensu-nextId") || 2);
+      nextId = parseInt(localStorage.getItem("ensu-nextId") || "3");
+      DATOS_INICIALES.forEach(seed => {
+        if (!libros.some(l => l.id === seed.id)) {
+          libros.push(JSON.parse(JSON.stringify(seed)));
+          if (seed.id >= nextId) nextId = seed.id + 1;
+        }
+      });
     } else {
       libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
     }
@@ -1759,22 +1788,31 @@ function abrirDetalle(id) {
   $("d-titulo").textContent      = l.tituloRef;
   $("d-libro-autor").textContent = l.libro;
   $("d-tags").innerHTML          = l.tags.map(t=>`<span class="tag">${t}</span>`).join("");
-  $("d-reflexion").textContent   = l.reflexion;
+  $("d-reflexion").textContent = l.reflexion || "";
 
   const citaWrap = $("d-cita-wrap");
-  const pregWrap = $("d-pregunta-wrap");
-
   if (l.cita) {
     $("d-cita").textContent = `"${l.cita}"`;
     citaWrap.style.display = "";
   } else { citaWrap.style.display = "none"; }
 
+  const misRefBtn = $("tab-btn-mis-ref");
   if (l.tension) {
-    $("d-pregunta").textContent = l.tension;
-    pregWrap.style.display = "";
-  } else { pregWrap.style.display = "none"; }
+    $("d-mis-reflexiones").textContent = l.tension;
+    misRefBtn.style.display = "";
+  } else {
+    $("d-mis-reflexiones").textContent = "";
+    misRefBtn.style.display = "none";
+  }
 
-  $("d-vida").textContent = l.vida || "—";
+  const vidaBtn = $("tab-btn-vida");
+  if (l.vida) {
+    $("d-vida").textContent = l.vida;
+    vidaBtn.style.display = "";
+  } else {
+    $("d-vida").textContent = "";
+    vidaBtn.style.display = "none";
+  }
 
   $("d-ficha-grid").innerHTML = `
     <div class="ficha-item">
@@ -1815,7 +1853,7 @@ function abrirDetalle(id) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
   document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("activo"));
   document.querySelectorAll(".tab-btn")[0].classList.add("activo");
-  $("tab-reflexion").classList.add("activo");
+  $("tab-resumen").classList.add("activo");
 
   if (isAdmin) {
     $("btn-editar-detail").onclick   = () => { cerrarModal("detail-overlay"); abrirFormModal(id); };
