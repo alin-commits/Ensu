@@ -1577,7 +1577,8 @@
    async function h(p){const e=new TextEncoder(),d=await crypto.subtle.digest('SHA-256',e.encode(p));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('')} h("TuNuevaContraseña").then(console.log)
    Luego reemplaza ADMIN_HASH con el resultado.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const ADMIN_HASH = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714"; // CosminEnciu*14
+const ADMIN_HASH    = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714"; // CosminEnciu*14
+const DATA_VERSION  = "3";
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    DATOS — edita este array para añadir entradas
@@ -1626,11 +1627,11 @@ const DATOS_INICIALES = [
 
     tituloRef: "La proyección, represión y de Freud",
 
-    reflexion: "La proyección es un mecanismo de defensa por el cual atribuimos a otros emociones, deseos o rasgos propios que no queremos reconocer en nosotros mismos.\n\nNo solo se proyecta lo negativo. También ocurre con lo positivo: aquello que admiramos en los demás suele reflejar cualidades que deseamos o que potencialmente podríamos desarrollar.\n\nEn el enamoramiento esto se intensifica. Tendemos a proyectar una imagen idealizada del otro, atribuyéndole virtudes que en realidad están amplificadas o directamente no existen. Esto genera una figura «perfecta» que tarde o temprano choca con la realidad, provocando decepción.\n\nLa represión es el mecanismo mediante el cual la mente mantiene fuera de la conciencia pensamientos, deseos o emociones que resultan dolorosos, conflictivos o inaceptables.\n\nNo es simplemente «olvidar», sino un esfuerzo activo e inconsciente por apartar aquello que genera malestar.\n\nEl problema es que lo reprimido no desaparece. Permanece activo y puede manifestarse de otras formas: ansiedad, malestar emocional, conductas repetitivas o síntomas psicológicos.\n\nLa negación no es una teoría creada exactamente por Freud pero tiene bases suyas. Consiste en rechazar la realidad de un hecho doloroso como si no existiera.\n\nEs un mecanismo más primitivo que la represión: aquí no solo se oculta, sino que directamente se rechaza lo evidente. Se ve claramente en relaciones tóxicas —donde se minimiza el daño recibido—, adicciones —donde se insiste en «tenerlo bajo control»—, y pérdidas o diagnósticos difíciles de aceptar.\n\nLa lógica inconsciente es simple: «si no lo reconozco, no me afecta». Pero el coste es que el problema sigue activo y sin resolución.",
+    reflexion: "Los mecanismos de defensa son estrategias inconscientes mediante las cuales el yo gestiona la angustia generada por conflictos entre los impulsos del ello, las exigencias del superyó y las restricciones de la realidad. Freud los desarrolló desde los años 1890; Anna Freud los sistematizó en «El yo y los mecanismos de defensa» (1936).\n\nPROYECCIÓN (Projektion). El yo atribuye a otras personas impulsos, deseos o emociones propios que no puede aceptar como suyos. El mecanismo reduce la angustia al externalizar el conflicto: «no soy yo quien siente esto, es el otro». Freud lo observó con claridad en la paranoia —la hostilidad interna se proyecta y se experimenta como persecución exterior—. La proyección no opera solo con lo negativo: también proyectamos cualidades positivas no reconocidas en nosotros mismos. En el enamoramiento, el mecanismo se intensifica: idealizamos al otro atribuyéndole virtudes que pertenecen a nuestra imagen proyectada. Tarde o temprano la persona real rompe esa proyección, provocando decepción.\n\nREPRESIÓN (Verdrängung). Es el mecanismo nuclear de la teoría freudiana y la base de la neurosis. A diferencia de la supresión —consciente y voluntaria—, la represión opera de forma completamente inconsciente: el yo excluye de la conciencia representaciones vinculadas a impulsos inaceptables (deseos, recuerdos traumáticos, afectos perturbadores). Lo reprimido no se destruye: permanece activo en el inconsciente y ejerce presión constante. Su retorno se produce de forma disfrazada a través de síntomas psicológicos, sueños, lapsus linguae, actos fallidos o conductas compulsivas repetitivas. Freud denominó esto «el retorno de lo reprimido». El mantenimiento de la represión exige una inversión continua de energía psíquica que agota al sujeto.\n\nNEGACIÓN (Verleugnung). Mecanismo más primitivo que la represión. Mientras que la represión actúa sobre el mundo interno —empuja un contenido fuera de la conciencia aceptando la realidad exterior—, la negación actúa sobre la percepción de la realidad externa: el sujeto rechaza que un hecho doloroso exista. «No puede ser así». Freud lo describió inicialmente en la psicosis, pero aparece también en situaciones ordinarias de duelo, diagnóstico grave o ruptura. La negación protege al yo a corto plazo, pero impide el procesamiento del problema: la situación permanece sin resolución mientras la energía psíquica se invierte en sostener el rechazo de lo evidente.",
 
     cita:    "",
     vida:    "",
-    tension: ""
+    tension: "La proyección me parece el más cotidiano de los tres. Lo veo claramente en cómo a veces atribuyo a los demás intenciones que en realidad dicen más de mis propios miedos que de ellos. También en el enamoramiento: esa imagen perfecta que construimos del otro es más nuestra que suya — proyectamos lo que queremos ver, no lo que hay.\n\nLo que admiras intensamente en alguien también puede ser una proyección de algo que tú tienes o podrías desarrollar. Eso me parece útil como herramienta de autoconocimiento: si algo en otra persona te genera una admiración muy intensa, probablemente te está diciendo algo de ti.\n\nLa represión explica muchos patrones repetitivos que no entiendo desde la lógica consciente. No es falta de voluntad — es que el contenido reprimido sigue activo por debajo y se expresa de otras formas. La ansiedad sin causa aparente, las reacciones desproporcionadas, las conductas que no puedo parar aunque quiera.\n\nLa negación es la más difícil de detectar en uno mismo, precisamente porque opera negando. «Yo no estoy en negación» puede ser la forma más perfecta de estarlo. La señal de alerta es cuando algo que resulta evidente para todos los demás no lo es para ti."
   }
 ];
 
@@ -1642,14 +1643,16 @@ let isAdmin      = false;
 
 /* ── LOCALSTORAGE ── */
 function guardarEnStorage() {
-  localStorage.setItem("ensu-libros",  JSON.stringify(libros));
-  localStorage.setItem("ensu-nextId",  nextId);
+  localStorage.setItem("ensu-libros",   JSON.stringify(libros));
+  localStorage.setItem("ensu-nextId",   nextId);
+  localStorage.setItem("ensu-version",  DATA_VERSION);
 }
 
 function cargarDesdeStorage() {
   try {
     const raw = localStorage.getItem("ensu-libros");
-    if (raw) {
+    const ver = localStorage.getItem("ensu-version");
+    if (raw && ver === DATA_VERSION) {
       libros = JSON.parse(raw);
       nextId = parseInt(localStorage.getItem("ensu-nextId") || "3");
       DATOS_INICIALES.forEach(seed => {
@@ -1660,9 +1663,11 @@ function cargarDesdeStorage() {
       });
     } else {
       libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
+      guardarEnStorage();
     }
   } catch(e) {
     libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
+    guardarEnStorage();
   }
 }
 
@@ -1815,7 +1820,7 @@ function abrirDetalle(id) {
   $("d-libro-autor").textContent = l.libro;
   $("d-tags").innerHTML          = l.tags.map(t=>`<span class="tag">${t}</span>`).join("");
 
-  const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Sobre el artículo" };
+  const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Teoría" };
   $("d-resumen-label").textContent = resumenLabels[l.tipo] || "Resumen";
   $("d-reflexion").innerHTML = txP(l.reflexion);
 
