@@ -1482,10 +1482,15 @@
       </div>
       <div class="login-body">
         <div class="form-group">
+          <label for="login-user">Usuario</label>
+          <input type="text" id="login-user" placeholder="Usuario" autocomplete="username"
+            onkeydown="if(event.key==='Enter')$('login-pwd').focus()">
+        </div>
+        <div class="form-group" style="margin-top:14px">
           <label for="login-pwd">Contraseña</label>
           <input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password"
             onkeydown="if(event.key==='Enter')handleLogin()">
-          <span class="error-msg" id="login-error">Contraseña incorrecta. Inténtalo de nuevo.</span>
+          <span class="error-msg" id="login-error">Credenciales incorrectas. Inténtalo de nuevo.</span>
         </div>
       </div>
       <div class="login-footer">
@@ -1629,6 +1634,7 @@
    async function h(p){const e=new TextEncoder(),d=await crypto.subtle.digest('SHA-256',e.encode(p));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('')} h("TuNuevaContraseña").then(console.log)
    Luego reemplaza ADMIN_HASH con el resultado.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const ADMIN_USER    = "Alin";
 const ADMIN_HASH    = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714"; // CosminEnciu*14
 const DATA_VERSION  = "3";
 
@@ -2102,6 +2108,7 @@ function abrirLoginModal() {
   } else {
     $("login-section").style.display  = "";
     $("logout-section").style.display = "none";
+    $("login-user").value = "";
     $("login-pwd").value = "";
     $("login-error").classList.remove("visible");
   }
@@ -2109,9 +2116,10 @@ function abrirLoginModal() {
 }
 
 async function handleLogin() {
+  const user = $("login-user").value.trim();
   const pwd  = $("login-pwd").value;
   const hash = await sha256(pwd);
-  if (hash === ADMIN_HASH) {
+  if (user === ADMIN_USER && hash === ADMIN_HASH) {
     setAdminMode(true);
     cerrarModal("login-overlay");
     mostrarToast("Modo edición activado.", "✓");
