@@ -2112,14 +2112,24 @@ function mostrarToast(msg, icono="✓") {
 }
 
 /* ── MODALES ── */
+let _scrollY = 0;
+
 function abrirModal(overlayId) {
   $(overlayId).classList.add("open");
-  document.body.style.overflow = "hidden";
+  _scrollY = window.scrollY;
+  document.body.style.overflow  = "hidden";
+  document.body.style.position  = "fixed";
+  document.body.style.top       = `-${_scrollY}px`;
+  document.body.style.width     = "100%";
 }
 
 function cerrarModal(overlayId) {
   $(overlayId).classList.remove("open");
-  document.body.style.overflow = "";
+  document.body.style.overflow  = "";
+  document.body.style.position  = "";
+  document.body.style.top       = "";
+  document.body.style.width     = "";
+  window.scrollTo(0, _scrollY);
 }
 
 function overlayClick(e, overlayId) {
