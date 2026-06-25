@@ -529,6 +529,7 @@
     max-width: 680px;
     max-height: 88vh;
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     transform: translateY(16px) scale(0.98);
     transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
@@ -2140,7 +2141,10 @@ function mostrarToast(msg, icono="✓") {
 let _scrollY = 0;
 
 function abrirModal(overlayId) {
-  $(overlayId).classList.add("open");
+  const overlay = $(overlayId);
+  overlay.classList.add("open");
+  const modal = overlay.querySelector(".modal");
+  if (modal) modal.scrollTop = 0;
   _scrollY = window.scrollY;
   document.body.style.overflow  = "hidden";
   document.body.style.position  = "fixed";
