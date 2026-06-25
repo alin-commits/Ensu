@@ -97,6 +97,27 @@
     color: var(--negro);
   }
 
+  .btn-nuevo {
+    background: var(--negro);
+    color: #F5F5F5;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background var(--trans), transform var(--trans);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-nuevo:hover { background: #2a2a2a; transform: translateY(-1px); }
+  .btn-nuevo:active { transform: translateY(0); }
+  html.dark .btn-nuevo { background: var(--terracota); color: #121212; }
+  html.dark .btn-nuevo:hover { background: #b87a5d; }
+
+  .nav-actions { display: flex; align-items: center; gap: 8px; }
+
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      HERO
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
@@ -968,8 +989,9 @@
     .filtros-wrap { padding: 0 16px 28px; }
     .grid-wrap { padding: 0 16px 72px; }
     .cards-grid { grid-template-columns: 1fr; gap: 16px; }
-    .modal { border-radius: 14px 14px 0 0; max-height: 92vh; }
-    .modal-overlay { align-items: flex-end; padding: 0; }
+    /* Modal como popup con márgenes visibles */
+    .modal-overlay { align-items: center; padding: 16px; }
+    .modal { border-radius: 16px; max-height: 85vh; max-width: calc(100vw - 32px); }
     .detail-header { padding: 22px 20px 16px; }
     .detail-tabs { padding: 0 20px; }
     .tab-panel { padding: 22px 20px; }
@@ -1061,6 +1083,84 @@
     background: #1E1E1E;
     color: #F0EDE6;
     border-color: rgba(240,237,230,0.10);
+  }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ADMIN
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  body:not(.admin) .admin-only { display: none !important; }
+
+  .admin-bar {
+    position: fixed;
+    top: 66px; left: 0; right: 0;
+    z-index: 800;
+    background: var(--terracota);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 5px 16px;
+    display: none;
+  }
+
+  body.admin .admin-bar { display: block; }
+
+  /* Login modal */
+  .login-modal { max-width: 420px; }
+  .login-bar   { height: 4px; background: var(--terracota); border-radius: 16px 16px 0 0; }
+  .login-header { padding: 28px 32px 22px; border-bottom: 1px solid var(--borde); }
+  .login-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+  }
+  .login-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 400; color: var(--negro); margin-bottom: 4px;
+  }
+  .login-sub { font-size: 13px; color: var(--muted); }
+  .login-body { padding: 22px 32px 0; }
+  .login-footer {
+    padding: 20px 32px 28px;
+    border-top: 1px solid var(--borde);
+    margin-top: 22px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .logout-bloque {
+    padding: 22px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+  }
+  .logout-icon { font-size: 32px; }
+  .logout-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--negro); }
+  .logout-sub   { font-size: 13px; color: var(--muted); }
+  .logout-footer {
+    padding: 0 32px 28px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .btn-lock {
+    color: var(--muted) !important;
+    opacity: 0.55;
+    transition: opacity var(--trans), color var(--trans) !important;
+  }
+  .btn-lock:hover { opacity: 1; }
+  body.admin .btn-lock { opacity: 1; color: var(--terracota) !important; }
+
+  @media (max-width: 640px) {
+    .login-header { padding: 22px 20px 18px; }
+    .login-body   { padding: 18px 20px 0; }
+    .login-footer { padding: 16px 20px 24px; }
+    .logout-bloque { padding: 22px 20px; }
+    .logout-footer { padding: 0 20px 24px; }
+    .admin-bar { top: 66px; }
   }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1173,11 +1273,20 @@
       <img src="img/logo.png" alt="EnSu Logo" class="nav-logo">
       <span class="nav-name">EnSu</span>
     </a>
-    <button class="btn-dark-toggle" id="btn-dark" onclick="toggleDarkMode()" aria-label="Cambiar modo">
-      <span id="dark-icon">🌙</span>
-    </button>
+    <div class="nav-actions">
+      <button class="btn-nuevo admin-only" onclick="abrirFormModal()" aria-label="Nueva entrada">
+        <span>+</span> Nueva entrada
+      </button>
+      <button class="btn-dark-toggle" id="btn-dark" onclick="toggleDarkMode()" aria-label="Cambiar modo">
+        <span id="dark-icon">🌙</span>
+      </button>
+      <button class="btn-dark-toggle btn-lock" id="btn-lock" onclick="abrirLoginModal()" aria-label="Admin">
+        <span id="lock-icon">🔒</span>
+      </button>
+    </div>
   </div>
 </nav>
+<div class="admin-bar" id="admin-bar">✏ Modo edición — solo tú ves esto</div>
 
 <!-- ━━━━━━━━━━ HERO ━━━━━━━━━━ -->
 <section class="hero">
@@ -1275,6 +1384,161 @@
     <div class="tab-panel" id="tab-ficha">
       <div class="ficha-grid" id="d-ficha-grid"></div>
     </div>
+    <div class="detail-footer admin-only">
+      <button class="btn-editar" id="btn-editar-detail">Editar</button>
+      <button class="btn-eliminar" id="btn-eliminar-detail">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━ MODAL LOGIN ━━━━━━━━━━ -->
+<div class="modal-overlay" id="login-overlay" onclick="overlayClick(event,'login-overlay')">
+  <div class="modal login-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('login-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="login-bar"></div>
+    <!-- Formulario de acceso -->
+    <div id="login-section">
+      <div class="login-header">
+        <p class="login-eyebrow">Acceso privado</p>
+        <h2 class="login-title">Modo edición</h2>
+        <p class="login-sub">Solo el autor puede editar este blog.</p>
+      </div>
+      <div class="login-body">
+        <div class="form-group">
+          <label for="login-pwd">Contraseña</label>
+          <input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')handleLogin()">
+          <span class="error-msg" id="login-error">Contraseña incorrecta. Inténtalo de nuevo.</span>
+        </div>
+      </div>
+      <div class="login-footer">
+        <button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cancelar</button>
+        <button class="btn-save" onclick="handleLogin()" id="login-btn">Entrar</button>
+      </div>
+    </div>
+    <!-- Panel de sesión activa -->
+    <div id="logout-section" style="display:none">
+      <div class="logout-bloque">
+        <div class="logout-icon">🔓</div>
+        <p class="logout-title">Modo edición activo</p>
+        <p class="logout-sub">Estás editando el blog como autor. Cierra sesión para volver al modo lectura.</p>
+      </div>
+      <div class="logout-footer">
+        <button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cerrar</button>
+        <button class="btn-eliminar" style="padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500" onclick="handleLogout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━ MODAL FORMULARIO ━━━━━━━━━━ -->
+<div class="modal-overlay admin-only" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
+  <div class="modal form-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('form-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="form-header">
+      <h2 class="form-title" id="form-title-text">Nueva entrada</h2>
+      <p class="form-subtitle">Registra lo que esta lectura despertó en ti.</p>
+    </div>
+    <form id="libro-form" onsubmit="guardarLibro(event)" novalidate>
+      <div class="form-body">
+
+        <p class="form-section-label">Datos</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-tipo">Tipo</label>
+            <select id="f-tipo">
+              <option value="libro">Libro</option>
+              <option value="reflexion">Reflexión / Artículo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-estado">Estado</label>
+            <select id="f-estado">
+              <option value="leyendo">Leyendo</option>
+              <option value="terminado">Terminado</option>
+              <option value="proximo">Próximo</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-libro">Libro / Fuente <span class="req">*</span></label>
+            <input type="text" id="f-libro" placeholder="Título del libro o artículo">
+            <span class="error-msg" id="e-libro">Campo obligatorio.</span>
+          </div>
+          <div class="form-group">
+            <label for="f-autor">Autor</label>
+            <input type="text" id="f-autor" placeholder="Nombre del autor">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-fecha">Fecha</label>
+            <input type="date" id="f-fecha">
+          </div>
+          <div class="form-group">
+            <label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label>
+            <div class="range-wrap" style="margin-top:4px">
+              <input type="range" id="f-progreso" min="0" max="100" value="50"
+                oninput="$('progreso-val').textContent=this.value+'%'">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(separadas por comas)</small></label>
+          <input type="text" id="f-tags" placeholder="Ej: Gratitud, Fe, Control">
+        </div>
+
+        <p class="form-section-label">Reflexión</p>
+        <div class="form-group full">
+          <label for="f-titulo-reflexion">Título de la reflexión <span class="req">*</span></label>
+          <input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase...">
+          <span class="error-msg" id="e-titulo">Campo obligatorio.</span>
+        </div>
+        <div class="form-group full">
+          <label for="f-reflexion">Reflexión <span class="req">*</span></label>
+          <textarea id="f-reflexion" placeholder="Lo que esta lectura despertó en ti..." rows="5"></textarea>
+          <span class="error-msg" id="e-reflexion">Campo obligatorio.</span>
+        </div>
+        <div class="form-group full">
+          <label for="f-cita">Cita destacada</label>
+          <textarea id="f-cita" placeholder='"La frase que no puedes olvidar..."' rows="3"></textarea>
+        </div>
+
+        <p class="form-section-label">Mi vida</p>
+        <div class="form-group full">
+          <label for="f-vida">Aplicación a mi vida <span class="req">*</span></label>
+          <textarea id="f-vida" placeholder="¿Cómo aterrizas esto en tu día a día?" rows="4"></textarea>
+          <span class="error-msg" id="e-vida">Campo obligatorio.</span>
+        </div>
+        <div class="form-group full">
+          <label for="f-tension">Tensión / Pregunta abierta</label>
+          <textarea id="f-tension" placeholder="Una pregunta que esta lectura no resolvió del todo..." rows="3"></textarea>
+        </div>
+
+        <p class="form-section-label">Valoración</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-dificultad">Dificultad</label>
+            <select id="f-dificultad">
+              <option value="Accesible">Accesible</option>
+              <option value="Moderada">Moderada</option>
+              <option value="Densa">Densa</option>
+              <option value="Muy densa">Muy densa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-puntuacion">Puntuación (1–10)</label>
+            <input type="number" id="f-puntuacion" min="1" max="10" placeholder="8">
+          </div>
+        </div>
+
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn-cancel" onclick="cerrarModal('form-overlay')">Cancelar</button>
+        <button type="submit" class="btn-save">Guardar entrada</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -1286,10 +1550,18 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <script>
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ADMIN — hash SHA-256 de la contraseña
+   Para cambiarla: abre consola del navegador y ejecuta:
+   async function h(p){const e=new TextEncoder(),d=await crypto.subtle.digest('SHA-256',e.encode(p));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('')} h("TuNuevaContraseña").then(console.log)
+   Luego reemplaza ADMIN_HASH con el resultado.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+const ADMIN_HASH = "ee2e46b9a9c89467f1de8d6f249d69f375df66b0ba2d037e866b9ca978d83bc7"; // EnSu2025!
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    DATOS — edita este array para añadir entradas
    tipo: "libro" | "reflexion"
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-const libros = [
+const DATOS_INICIALES = [
   {
     id: 1,
     tipo:       "libro",
@@ -1310,8 +1582,31 @@ const libros = [
   }
 ];
 
+let libros       = [];
+let nextId       = 2;
 let filtroActivo = "Todos";
 let busqueda     = "";
+let isAdmin      = false;
+
+/* ── LOCALSTORAGE ── */
+function guardarEnStorage() {
+  localStorage.setItem("ensu-libros",  JSON.stringify(libros));
+  localStorage.setItem("ensu-nextId",  nextId);
+}
+
+function cargarDesdeStorage() {
+  try {
+    const raw = localStorage.getItem("ensu-libros");
+    if (raw) {
+      libros = JSON.parse(raw);
+      nextId = parseInt(localStorage.getItem("ensu-nextId") || 2);
+    } else {
+      libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
+    }
+  } catch(e) {
+    libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
+  }
+}
 
 /* ── UTILIDADES ── */
 const $ = id => document.getElementById(id);
@@ -1509,6 +1804,11 @@ function abrirDetalle(id) {
   document.querySelectorAll(".tab-btn")[0].classList.add("activo");
   $("tab-reflexion").classList.add("activo");
 
+  if (isAdmin) {
+    $("btn-editar-detail").onclick   = () => { cerrarModal("detail-overlay"); abrirFormModal(id); };
+    $("btn-eliminar-detail").onclick = () => eliminarLibro(id);
+  }
+
   abrirModal("detail-overlay");
 }
 
@@ -1517,6 +1817,166 @@ function cambiarTab(btn, panelId) {
   document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("activo"));
   btn.classList.add("activo");
   $(panelId).classList.add("activo");
+}
+
+/* ── CRUD (solo admin) ── */
+function eliminarLibro(id) {
+  if (!confirm("¿Eliminar esta entrada? Esta acción no se puede deshacer.")) return;
+  libros = libros.filter(l => l.id !== id);
+  guardarEnStorage();
+  cerrarModal("detail-overlay");
+  renderFiltros();
+  renderCards();
+  actualizarStats();
+  mostrarToast("Entrada eliminada.");
+}
+
+function abrirFormModal(editId) {
+  limpiarForm();
+  if (editId) {
+    const l = libros.find(x => x.id === editId);
+    if (!l) return;
+    $("form-title-text").textContent = "Editar entrada";
+    $("f-tipo").value              = l.tipo || "libro";
+    $("f-libro").value             = l.libro;
+    $("f-autor").value             = l.autor;
+    $("f-fecha").value             = l.fecha;
+    $("f-estado").value            = l.estado;
+    $("f-progreso").value          = l.progreso;
+    $("progreso-val").textContent  = l.progreso + "%";
+    $("f-tags").value              = l.tags.join(", ");
+    $("f-titulo-reflexion").value  = l.tituloRef;
+    $("f-reflexion").value         = l.reflexion;
+    $("f-cita").value              = l.cita    || "";
+    $("f-vida").value              = l.vida    || "";
+    $("f-tension").value           = l.tension || "";
+    $("f-dificultad").value        = l.dificultad || "Accesible";
+    $("f-puntuacion").value        = l.puntuacion || "";
+    $("libro-form").dataset.editId = editId;
+  } else {
+    $("form-title-text").textContent = "Nueva entrada";
+    $("f-fecha").value = new Date().toISOString().split("T")[0];
+    delete $("libro-form").dataset.editId;
+  }
+  abrirModal("form-overlay");
+}
+
+function limpiarForm() {
+  $("libro-form").reset();
+  $("progreso-val").textContent = "50%";
+  ["e-libro","e-titulo","e-reflexion","e-vida"].forEach(id => $(id).classList.remove("visible"));
+  ["f-libro","f-titulo-reflexion","f-reflexion","f-vida"].forEach(id => $(id).classList.remove("error"));
+}
+
+function guardarLibro(e) {
+  e.preventDefault();
+  let valid = true;
+  function validar(campoId, errId) {
+    if (!$(campoId).value.trim()) {
+      $(campoId).classList.add("error"); $(errId).classList.add("visible"); valid = false;
+    } else {
+      $(campoId).classList.remove("error"); $(errId).classList.remove("visible");
+    }
+  }
+  validar("f-libro","e-libro");
+  validar("f-titulo-reflexion","e-titulo");
+  validar("f-reflexion","e-reflexion");
+  validar("f-vida","e-vida");
+  if (!valid) return;
+
+  const tagsRaw = $("f-tags").value.trim();
+  const puntRaw = $("f-puntuacion").value.trim();
+  const datos = {
+    tipo:       $("f-tipo").value,
+    libro:      $("f-libro").value.trim(),
+    autor:      $("f-autor").value.trim(),
+    fecha:      $("f-fecha").value,
+    estado:     $("f-estado").value,
+    progreso:   parseInt($("f-progreso").value),
+    tags:       tagsRaw ? tagsRaw.split(",").map(t=>t.trim()).filter(Boolean) : [],
+    tituloRef:  $("f-titulo-reflexion").value.trim(),
+    reflexion:  $("f-reflexion").value.trim(),
+    cita:       $("f-cita").value.trim(),
+    vida:       $("f-vida").value.trim(),
+    tension:    $("f-tension").value.trim(),
+    dificultad: $("f-dificultad").value,
+    puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null
+  };
+
+  const editId = $("libro-form").dataset.editId;
+  if (editId) {
+    const idx = libros.findIndex(x => x.id === parseInt(editId));
+    if (idx !== -1) libros[idx] = { ...libros[idx], ...datos };
+    mostrarToast("Entrada actualizada.");
+  } else {
+    libros.push({ id: nextId++, ...datos });
+    mostrarToast("Entrada guardada.");
+  }
+  guardarEnStorage();
+  cerrarModal("form-overlay");
+  renderFiltros();
+  renderCards();
+  actualizarStats();
+}
+
+/* ── ADMIN AUTH ── */
+async function sha256(text) {
+  const buf  = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function setAdminMode(on) {
+  isAdmin = on;
+  document.body.classList.toggle("admin", on);
+  $("lock-icon").textContent = on ? "🔓" : "🔒";
+  if (on) sessionStorage.setItem("ensu-admin","1");
+  else    sessionStorage.removeItem("ensu-admin");
+}
+
+function initAdminMode() {
+  if (sessionStorage.getItem("ensu-admin") === "1") setAdminMode(true);
+}
+
+function abrirLoginModal() {
+  if (isAdmin) {
+    $("login-section").style.display  = "none";
+    $("logout-section").style.display = "";
+  } else {
+    $("login-section").style.display  = "";
+    $("logout-section").style.display = "none";
+    $("login-pwd").value = "";
+    $("login-error").classList.remove("visible");
+  }
+  abrirModal("login-overlay");
+}
+
+async function handleLogin() {
+  const pwd  = $("login-pwd").value;
+  const hash = await sha256(pwd);
+  if (hash === ADMIN_HASH) {
+    setAdminMode(true);
+    cerrarModal("login-overlay");
+    mostrarToast("Modo edición activado.", "✓");
+  } else {
+    $("login-error").classList.add("visible");
+    $("login-pwd").focus();
+  }
+}
+
+function handleLogout() {
+  setAdminMode(false);
+  cerrarModal("login-overlay");
+  mostrarToast("Sesión cerrada.");
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function mostrarToast(msg, icono="✓") {
+  const t = $("toast");
+  t.innerHTML = `<span>${icono}</span> ${msg}`;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
 }
 
 /* ── MODALES ── */
@@ -1535,7 +1995,11 @@ function overlayClick(e, overlayId) {
 }
 
 document.addEventListener("keydown", e => {
-  if (e.key === "Escape") cerrarModal("detail-overlay");
+  if (e.key === "Escape") {
+    cerrarModal("detail-overlay");
+    cerrarModal("form-overlay");
+    cerrarModal("login-overlay");
+  }
 });
 
 /* ── MODO OSCURO ── */
@@ -1560,7 +2024,9 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 /* ── INIT ── */
+cargarDesdeStorage();
 initDarkMode();
+initAdminMode();
 actualizarStats();
 renderFiltros();
 renderCards();
