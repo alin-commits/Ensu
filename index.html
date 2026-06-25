@@ -233,11 +233,40 @@
     padding: 0 28px 36px;
   }
 
+  .filtros-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
   .filtros {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    flex: 1;
   }
+
+  .sort-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 1.5px solid var(--borde);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: all var(--trans);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .sort-btn:hover { border-color: var(--negro); color: var(--negro); }
+  .sort-btn.desc::before { content: "↓ "; }
+  .sort-btn.asc::before  { content: "↑ "; }
 
   .pill-filtro {
     background: transparent;
@@ -1358,7 +1387,10 @@
 
 <!-- ━━━━━━━━━━ FILTROS ━━━━━━━━━━ -->
 <div class="filtros-wrap">
-  <div class="filtros" id="filtros-container"></div>
+  <div class="filtros-row">
+    <div class="filtros" id="filtros-container"></div>
+    <button class="sort-btn desc" id="sort-btn" onclick="toggleSort()" title="Ordenar por fecha">Reciente</button>
+  </div>
 </div>
 
 <!-- ━━━━━━━━━━ GRID ━━━━━━━━━━ -->
@@ -1484,9 +1516,8 @@
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label for="f-libro">Libro / Fuente <span class="req">*</span></label>
+            <label for="f-libro">Libro / Fuente</label>
             <input type="text" id="f-libro" placeholder="Título del libro o artículo">
-            <span class="error-msg" id="e-libro">Campo obligatorio.</span>
           </div>
           <div class="form-group">
             <label for="f-autor">Autor</label>
@@ -1513,14 +1544,12 @@
 
         <p class="form-section-label">Reflexión</p>
         <div class="form-group full">
-          <label for="f-titulo-reflexion">Título de la reflexión <span class="req">*</span></label>
+          <label for="f-titulo-reflexion">Título de la reflexión</label>
           <input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase...">
-          <span class="error-msg" id="e-titulo">Campo obligatorio.</span>
         </div>
         <div class="form-group full">
-          <label for="f-reflexion">Reflexión <span class="req">*</span></label>
+          <label for="f-reflexion">Resumen / Teoría</label>
           <textarea id="f-reflexion" placeholder="Lo que esta lectura despertó en ti..." rows="5"></textarea>
-          <span class="error-msg" id="e-reflexion">Campo obligatorio.</span>
         </div>
         <div class="form-group full">
           <label for="f-cita">Cita destacada</label>
@@ -1529,9 +1558,8 @@
 
         <p class="form-section-label">Mi vida</p>
         <div class="form-group full">
-          <label for="f-vida">Aplicación a mi vida <span class="req">*</span></label>
+          <label for="f-vida">Aplicación a mi vida</label>
           <textarea id="f-vida" placeholder="¿Cómo aterrizas esto en tu día a día?" rows="4"></textarea>
-          <span class="error-msg" id="e-vida">Campo obligatorio.</span>
         </div>
         <div class="form-group full">
           <label for="f-tension">Tensión / Pregunta abierta</label>
@@ -1640,6 +1668,7 @@ let nextId       = 3;
 let filtroActivo = "Todos";
 let busqueda     = "";
 let isAdmin      = false;
+let sortDesc     = true;
 
 /* ── LOCALSTORAGE ── */
 function guardarEnStorage() {
@@ -1733,6 +1762,14 @@ function setFiltro(tipo) {
   renderCards();
 }
 
+function toggleSort() {
+  sortDesc = !sortDesc;
+  const btn = $("sort-btn");
+  btn.className = `sort-btn ${sortDesc ? "desc" : "asc"}`;
+  btn.textContent = sortDesc ? "Reciente" : "Antiguo";
+  renderCards();
+}
+
 /* ── BÚSQUEDA ── */
 function setBusqueda(val) {
   busqueda = val.trim().toLowerCase();
@@ -1748,9 +1785,15 @@ function limpiarBusqueda() {
 /* ── TARJETAS ── */
 function renderCards() {
   const grid = $("cards-grid");
-  let lista = filtroActivo === "Todos"
+  let lista = (filtroActivo === "Todos"
     ? libros
-    : libros.filter(l => l.tipo === filtroActivo);
+    : libros.filter(l => l.tipo === filtroActivo))
+    .slice()
+    .sort((a, b) => {
+      const da = new Date(a.fecha || "1970-01-01");
+      const db = new Date(b.fecha || "1970-01-01");
+      return sortDesc ? db - da : da - db;
+    });
 
   if (busqueda) {
     lista = lista.filter(l => {
@@ -1966,25 +2009,11 @@ function abrirFormModal(editId) {
 function limpiarForm() {
   $("libro-form").reset();
   $("progreso-val").textContent = "50%";
-  ["e-libro","e-titulo","e-reflexion","e-vida"].forEach(id => $(id).classList.remove("visible"));
   ["f-libro","f-titulo-reflexion","f-reflexion","f-vida"].forEach(id => $(id).classList.remove("error"));
 }
 
 function guardarLibro(e) {
   e.preventDefault();
-  let valid = true;
-  function validar(campoId, errId) {
-    if (!$(campoId).value.trim()) {
-      $(campoId).classList.add("error"); $(errId).classList.add("visible"); valid = false;
-    } else {
-      $(campoId).classList.remove("error"); $(errId).classList.remove("visible");
-    }
-  }
-  validar("f-libro","e-libro");
-  validar("f-titulo-reflexion","e-titulo");
-  validar("f-reflexion","e-reflexion");
-  validar("f-vida","e-vida");
-  if (!valid) return;
 
   const tagsRaw = $("f-tags").value.trim();
   const puntRaw = $("f-puntuacion").value.trim();
