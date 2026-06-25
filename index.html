@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EnSu — Lo que leo me forma</title>
+<link rel="icon" href="img/logo.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -573,75 +574,90 @@
 
   .tab-panel.activo { display: block; }
 
-  /* Panel Reflexión */
-  .reflexion-texto {
-    font-size: 14.5px;
-    color: var(--texto-2);
-    line-height: 1.75;
-    margin-bottom: 24px;
-    white-space: pre-line;
+  /* Tab section label */
+  .tab-section-intro {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracota);
+    margin-bottom: 20px;
+    opacity: 0.85;
   }
 
+  .fecha-articulo {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    font-style: italic;
+    letter-spacing: 0.02em;
+  }
+
+  /* Rich text paragraphs (Resumen + Mis reflexiones) */
+  .rich-text p {
+    font-size: 14.5px;
+    color: var(--texto-2);
+    line-height: 1.82;
+    margin-bottom: 16px;
+  }
+  .rich-text p:last-child { margin-bottom: 0; }
+
+  /* Quote block */
   .cita-bloque {
     border-left: 3px solid var(--terracota);
-    padding: 14px 20px;
-    background: rgba(198,138,109,0.06);
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 24px;
+    padding: 18px 24px;
+    background: rgba(198,138,109,0.07);
+    border-radius: 0 12px 12px 0;
+    margin-top: 32px;
+  }
+
+  .cita-deco {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    line-height: 0.75;
+    color: rgba(198,138,109,0.3);
+    display: block;
+    margin-bottom: 10px;
+    user-select: none;
   }
 
   .cita-texto {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 19px;
+    font-size: 20px;
     font-weight: 400;
     font-style: italic;
     color: var(--negro);
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
-  .pregunta-bloque {
-    background: var(--beige);
-    border-radius: 10px;
-    padding: 18px 20px;
+  /* Panel Mis reflexiones */
+  .mis-ref-bloque {
+    border-left: 2px solid #a7aea1;
+    padding-left: 24px;
   }
-
-  .pregunta-label {
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  .pregunta-texto {
-    font-size: 14px;
-    color: var(--texto-2);
-    line-height: 1.65;
-  }
-
-  /* Panel Mi vida */
-  .vida-bloque {
-    background: var(--beige);
-    border-radius: 12px;
-    padding: 22px 24px;
-  }
-
-  .vida-label {
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .vida-texto {
+  .mis-ref-bloque p {
     font-size: 14.5px;
     color: var(--texto-2);
-    line-height: 1.75;
-    white-space: pre-line;
+    line-height: 1.82;
+    margin-bottom: 16px;
   }
+  .mis-ref-bloque p:last-child { margin-bottom: 0; }
+
+  /* Panel Mi vida */
+  .vida-rich p {
+    font-size: 14.5px;
+    color: var(--texto-2);
+    line-height: 1.82;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--borde);
+  }
+  .vida-rich p:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+  /* Ficha rating dots */
+  .ficha-rating { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+  .r-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(198,138,109,0.15); flex-shrink: 0; }
+  .r-dot.on { background: var(--terracota); }
 
   /* Panel Ficha */
   .ficha-grid {
@@ -1364,26 +1380,28 @@
       <p class="detail-autor" id="d-libro-autor"></p>
       <div class="detail-tags" id="d-tags"></div>
     </div>
-    <div class="detail-tabs">
+    <div class="detail-tabs" id="detail-tabs-bar">
       <button class="tab-btn activo" onclick="cambiarTab(this,'tab-resumen')">Resumen</button>
       <button class="tab-btn" id="tab-btn-mis-ref" onclick="cambiarTab(this,'tab-mis-reflexiones')">Mis reflexiones</button>
       <button class="tab-btn" id="tab-btn-vida" onclick="cambiarTab(this,'tab-vida')">Mi vida</button>
-      <button class="tab-btn" onclick="cambiarTab(this,'tab-ficha')">Ficha</button>
+      <button class="tab-btn" id="tab-btn-ficha" onclick="cambiarTab(this,'tab-ficha')">Ficha</button>
     </div>
     <div class="tab-panel activo" id="tab-resumen">
-      <p class="reflexion-texto" id="d-reflexion"></p>
+      <p class="tab-section-intro" id="d-resumen-label">Sobre el libro</p>
+      <p class="fecha-articulo" id="d-fecha-articulo"></p>
+      <div class="rich-text" id="d-reflexion"></div>
       <div class="cita-bloque" id="d-cita-wrap">
+        <span class="cita-deco">&#x201C;</span>
         <p class="cita-texto" id="d-cita"></p>
       </div>
     </div>
     <div class="tab-panel" id="tab-mis-reflexiones">
-      <p class="reflexion-texto" id="d-mis-reflexiones"></p>
+      <p class="tab-section-intro">Mi análisis</p>
+      <div class="mis-ref-bloque" id="d-mis-reflexiones"></div>
     </div>
     <div class="tab-panel" id="tab-vida">
-      <div class="vida-bloque">
-        <p class="vida-label">Aplicación a mi vida</p>
-        <p class="vida-texto" id="d-vida"></p>
-      </div>
+      <p class="tab-section-intro">Cómo lo aplico</p>
+      <div class="vida-rich" id="d-vida"></div>
     </div>
     <div class="tab-panel" id="tab-ficha">
       <div class="ficha-grid" id="d-ficha-grid"></div>
@@ -1651,6 +1669,11 @@ function cargarDesdeStorage() {
 /* ── UTILIDADES ── */
 const $ = id => document.getElementById(id);
 
+function txP(str) {
+  if (!str) return "";
+  return str.split("\n\n").map(p => `<p>${p.replace(/\n/g,"<br>")}</p>`).join("");
+}
+
 function fmtFecha(str) {
   if (!str) return "";
   const [y, m, d] = str.split("-");
@@ -1781,6 +1804,9 @@ function abrirDetalle(id) {
   const l = libros.find(x => x.id === id);
   if (!l) return;
 
+  const tipoAccent = { libro: "var(--terracota)", reflexion: "#a7aea1", articulo: "#7a80a0" };
+  document.querySelector(".detail-bar").style.background = tipoAccent[l.tipo] || "var(--terracota)";
+
   $("d-autor").textContent       = l.autor;
   const badge = $("d-badge");
   badge.textContent              = badgeLabel(l.estado);
@@ -1788,31 +1814,50 @@ function abrirDetalle(id) {
   $("d-titulo").textContent      = l.tituloRef;
   $("d-libro-autor").textContent = l.libro;
   $("d-tags").innerHTML          = l.tags.map(t=>`<span class="tag">${t}</span>`).join("");
-  $("d-reflexion").textContent = l.reflexion || "";
+
+  const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Sobre el artículo" };
+  $("d-resumen-label").textContent = resumenLabels[l.tipo] || "Resumen";
+  $("d-reflexion").innerHTML = txP(l.reflexion);
+
+  const fechaArticuloEl = $("d-fecha-articulo");
+  if (l.tipo === "articulo") {
+    fechaArticuloEl.textContent = fmtFecha(l.fecha);
+    fechaArticuloEl.style.display = "";
+  } else { fechaArticuloEl.style.display = "none"; }
 
   const citaWrap = $("d-cita-wrap");
   if (l.cita) {
-    $("d-cita").textContent = `"${l.cita}"`;
+    $("d-cita").textContent = l.cita;
     citaWrap.style.display = "";
   } else { citaWrap.style.display = "none"; }
 
   const misRefBtn = $("tab-btn-mis-ref");
   if (l.tension) {
-    $("d-mis-reflexiones").textContent = l.tension;
+    $("d-mis-reflexiones").innerHTML = txP(l.tension);
     misRefBtn.style.display = "";
   } else {
-    $("d-mis-reflexiones").textContent = "";
+    $("d-mis-reflexiones").innerHTML = "";
     misRefBtn.style.display = "none";
   }
 
   const vidaBtn = $("tab-btn-vida");
   if (l.vida) {
-    $("d-vida").textContent = l.vida;
+    $("d-vida").innerHTML = txP(l.vida);
     vidaBtn.style.display = "";
   } else {
-    $("d-vida").textContent = "";
+    $("d-vida").innerHTML = "";
     vidaBtn.style.display = "none";
   }
+
+  const fichaBtn = $("tab-btn-ficha");
+  fichaBtn.style.display = l.tipo === "articulo" ? "none" : "";
+
+  const hasOtherTabs = !!l.tension || !!l.vida || l.tipo !== "articulo";
+  $("detail-tabs-bar").style.display = hasOtherTabs ? "" : "none";
+
+  const ratingDots = l.puntuacion
+    ? `<div class="ficha-rating">${Array.from({length:10},(_,i)=>`<span class="r-dot${i<l.puntuacion?" on":""}"></span>`).join("")}</div>`
+    : "";
 
   $("d-ficha-grid").innerHTML = `
     <div class="ficha-item">
@@ -1847,6 +1892,7 @@ function abrirDetalle(id) {
     <div class="ficha-item">
       <p class="ficha-key">Puntuación</p>
       <p class="ficha-val">${l.puntuacion ? l.puntuacion + " / 10" : "—"}</p>
+      ${ratingDots}
     </div>
   `;
 
