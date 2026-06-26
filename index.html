@@ -305,11 +305,11 @@
     color: var(--negro);
   }
 
-  .pill-filtro.activo {
-    background: var(--negro);
-    border-color: var(--negro);
-    color: #FFFFFF;
-  }
+  .pill-filtro.activo { background: var(--negro); border-color: var(--negro); color: #FFFFFF; }
+  .pill-filtro[data-tipo="libro"].activo     { background: var(--terracota); border-color: var(--terracota); color: #fff; }
+  .pill-filtro[data-tipo="reflexion"].activo { background: #6b8c66; border-color: #6b8c66; color: #fff; }
+  .pill-filtro[data-tipo="articulo"].activo  { background: #7a80a0; border-color: #7a80a0; color: #fff; }
+  .pill-filtro[data-tipo="privado"].activo   { background: #9b7fa6; border-color: #9b7fa6; color: #fff; }
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      GRID DE TARJETAS
@@ -370,6 +370,8 @@
 
   .card-accent.terracota { background: var(--terracota); }
   .card-accent.salvia    { background: var(--salvia); }
+  .card-accent.pizarra   { background: #7a80a0; }
+  .card-accent.privado   { background: #9b7fa6; }
 
   .card-body {
     padding: 22px 22px 0;
@@ -473,6 +475,8 @@
 
   .card-progress-fill.terracota { background: var(--terracota); }
   .card-progress-fill.salvia    { background: var(--salvia); }
+  .card-progress-fill.pizarra   { background: #7a80a0; }
+  .card-progress-fill.privado   { background: #9b7fa6; }
 
   .card-footer {
     padding: 14px 22px 18px;
@@ -1118,16 +1122,12 @@
     flex-shrink: 0;
   }
   .tipo-badge.libro     { background: rgba(198,138,109,0.14); color: var(--terracota); }
-  .tipo-badge.reflexion { background: rgba(167,174,161,0.18); color: #5c6358; }
+  .tipo-badge.reflexion { background: rgba(107,140,102,0.15); color: #4d7248; }
   .tipo-badge.articulo  { background: rgba(120,130,160,0.14); color: #5a6180; }
-  html.dark .tipo-badge.reflexion { color: #8a9486; }
+  .tipo-badge.privado   { background: rgba(155,127,166,0.14); color: #7a5f87; }
+  html.dark .tipo-badge.reflexion { color: #8aad86; }
   html.dark .tipo-badge.articulo  { color: #8a90a8; }
-
-  html.dark .pill-filtro.activo {
-    background: var(--terracota);
-    border-color: var(--terracota);
-    color: #121212;
-  }
+  html.dark .tipo-badge.privado   { color: #b09ac0; }
 
   html.dark .card:hover {
     box-shadow: 0 16px 40px rgba(0,0,0,0.5);
@@ -1532,6 +1532,7 @@
               <option value="libro">Libro</option>
               <option value="articulo">Artículo</option>
               <option value="reflexion">Reflexión</option>
+              <option value="privado">🔒 Privado</option>
             </select>
           </div>
           <div class="form-group">
@@ -1824,10 +1825,12 @@ function badgeLabel(estado) {
 }
 
 function tipoLabel(tipo) {
-  return { libro:"Libro", reflexion:"Reflexión" }[tipo] || tipo;
+  return { libro:"Libro", reflexion:"Reflexión", articulo:"Artículo", privado:"Privado" }[tipo] || tipo;
 }
 
-function accentClass(l) { return l.tipo === "reflexion" ? "salvia" : "terracota"; }
+function accentClass(l) {
+  return { libro:"terracota", reflexion:"salvia", articulo:"pizarra", privado:"privado" }[l.tipo] || "terracota";
+}
 
 function allAreas() {
   const areas = new Set();
@@ -1847,10 +1850,11 @@ function renderFiltros() {
   const TIPOS_FIJOS = ["libro", "reflexion", "articulo"];
   const tiposEnDatos = new Set(libros.map(l => l.tipo));
   const tipos = ["Todos", ...TIPOS_FIJOS.filter(t => tiposEnDatos.has(t))];
-  const labels  = { Todos:"Todos", libro:"Libros", reflexion:"Reflexiones", articulo:"Artículos" };
+  if (isAdmin && tiposEnDatos.has("privado")) tipos.push("privado");
+  const labels = { Todos:"Todos", libro:"Libros", reflexion:"Reflexiones", articulo:"Artículos", privado:"🔒 Privado" };
   $("filtros-container").innerHTML = tipos.map(t => `
     <button class="pill-filtro${t === filtroActivo ? " activo" : ""}"
-      onclick="setFiltro('${t}')">
+      data-tipo="${t}" onclick="setFiltro('${t}')">
       ${labels[t] || t}
     </button>
   `).join("");
@@ -1889,8 +1893,8 @@ function limpiarBusqueda() {
 function renderCards() {
   const grid = $("cards-grid");
   let lista = (filtroActivo === "Todos"
-    ? libros
-    : libros.filter(l => l.tipo === filtroActivo))
+    ? libros.filter(l => isAdmin || l.tipo !== "privado")
+    : libros.filter(l => l.tipo === filtroActivo && (isAdmin || l.tipo !== "privado")))
     .slice()
     .sort((a, b) => {
       const da = new Date(a.fecha || "1970-01-01");
@@ -1955,7 +1959,7 @@ function abrirDetalle(id) {
   const l = libros.find(x => x.id === id);
   if (!l) return;
 
-  const tipoAccent = { libro: "var(--terracota)", reflexion: "#a7aea1", articulo: "#7a80a0" };
+  const tipoAccent = { libro: "var(--terracota)", reflexion: "#6b8c66", articulo: "#7a80a0", privado: "#9b7fa6" };
   document.querySelector(".detail-bar").style.background = tipoAccent[l.tipo] || "var(--terracota)";
 
   $("d-autor").textContent       = l.autor;
@@ -1966,7 +1970,7 @@ function abrirDetalle(id) {
   $("d-libro-autor").textContent = l.libro;
   $("d-tags").innerHTML          = l.tags.map(t=>`<span class="tag">${t}</span>`).join("");
 
-  const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Teoría" };
+  const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Teoría", privado: "Nota privada" };
   $("d-resumen-label").textContent = resumenLabels[l.tipo] || "Resumen";
   $("d-reflexion").innerHTML = txP(l.reflexion);
 
@@ -2001,9 +2005,9 @@ function abrirDetalle(id) {
   }
 
   const fichaBtn = $("tab-btn-ficha");
-  fichaBtn.style.display = l.tipo === "articulo" ? "none" : "";
+  fichaBtn.style.display = l.tipo === "libro" ? "" : "none";
 
-  const hasOtherTabs = !!l.tension || !!l.vida || l.tipo !== "articulo";
+  const hasOtherTabs = !!l.tension || !!l.vida || l.tipo === "libro";
   $("detail-tabs-bar").style.display = hasOtherTabs ? "" : "none";
 
   const ratingDots = l.puntuacion
@@ -2272,6 +2276,15 @@ window.addEventListener("scroll", () => {
   if (window.scrollY > 20) nav.classList.add("scrolled");
   else nav.classList.remove("scrolled");
 }, { passive: true });
+
+/* ── DEVTOOLS PREVENTION ── */
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("keydown", function(e) {
+  if (e.key === "F12") { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.shiftKey && ["I","J","C","K"].includes(e.key.toUpperCase())) { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.key.toUpperCase() === "U") { e.preventDefault(); return false; }
+  if (e.metaKey && e.altKey && e.key.toUpperCase() === "I") { e.preventDefault(); return false; }
+});
 
 /* ── INIT ── */
 cargarDesdeStorage();
