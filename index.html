@@ -1662,8 +1662,8 @@
       </div>
     </div>
     <div class="form-footer">
-      <button class="btn-cancelar" onclick="cerrarModal('tarea-form-overlay')">Cancelar</button>
-      <button class="btn-guardar" onclick="guardarTarea()">Guardar tarea</button>
+      <button class="btn-cancel" onclick="cerrarModal('tarea-form-overlay')">Cancelar</button>
+      <button class="btn-save" onclick="guardarTarea()">Guardar tarea</button>
     </div>
   </div>
 </div>
@@ -2452,8 +2452,10 @@ async function handleLogin() {
 }
 
 function handleLogout() {
+  irAHome();
   setAdminMode(false);
   cerrarModal("login-overlay");
+  renderFiltros();
   mostrarToast("Sesión cerrada.");
 }
 
