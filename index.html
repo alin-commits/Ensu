@@ -1333,6 +1333,183 @@
   @media (max-width: 640px) {
     .busqueda-wrap { padding: 0 16px 16px; }
   }
+
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     TAREAS / KANBAN
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+  .tareas-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 28px 96px;
+    display: none;
+  }
+  .tareas-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .tareas-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .tareas-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--negro);
+    margin: 0;
+  }
+  .btn-nueva-tarea {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--negro);
+    color: var(--fondo);
+    border: none;
+    border-radius: 100px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--trans);
+    white-space: nowrap;
+  }
+  .btn-nueva-tarea:hover { background: #3a3530; }
+  html.dark .btn-nueva-tarea { background: var(--crema); color: #121212; }
+  html.dark .btn-nueva-tarea:hover { background: #d4cfc8; }
+
+  .kanban-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .kanban-col {
+    background: var(--crema-card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--borde);
+  }
+  .kanban-col-header {
+    padding: 13px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .kanban-count {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 20px;
+    opacity: 0.8;
+  }
+  .kanban-col[data-estado="pendiente"]   .kanban-col-header { background: rgba(198,138,109,0.12); color: var(--terracota); }
+  .kanban-col[data-estado="en-progreso"] .kanban-col-header { background: rgba(107,140,102,0.12); color: #4d7248; }
+  .kanban-col[data-estado="completado"]  .kanban-col-header { background: rgba(120,130,160,0.12); color: #5a6180; }
+  .kanban-col[data-estado="pendiente"]   .kanban-count { background: rgba(198,138,109,0.2); color: var(--terracota); }
+  .kanban-col[data-estado="en-progreso"] .kanban-count { background: rgba(107,140,102,0.2); color: #4d7248; }
+  .kanban-col[data-estado="completado"]  .kanban-count { background: rgba(120,130,160,0.2); color: #5a6180; }
+  html.dark .kanban-col[data-estado="en-progreso"] .kanban-col-header { color: #8aad86; }
+  html.dark .kanban-col[data-estado="en-progreso"] .kanban-count { color: #8aad86; }
+  html.dark .kanban-col[data-estado="articulo"]  .kanban-col-header { color: #8a90a8; }
+
+  .kanban-col-body {
+    padding: 10px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .kanban-empty {
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: center;
+    padding: 20px 0 12px;
+    opacity: 0.7;
+  }
+  .tarea-card {
+    background: var(--fondo);
+    border-radius: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--borde);
+    transition: box-shadow var(--trans);
+  }
+  .tarea-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+  .tarea-titulo {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--negro);
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+  .tarea-detalles {
+    font-size: 12.5px;
+    color: var(--gris);
+    line-height: 1.55;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+  }
+  .tarea-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .tarea-fecha {
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .tarea-actions { display: flex; gap: 2px; }
+  .tarea-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--gris);
+    line-height: 1;
+    transition: background var(--trans), color var(--trans);
+  }
+  .tarea-btn:hover { background: rgba(0,0,0,0.06); color: var(--negro); }
+  html.dark .tarea-btn:hover { background: rgba(255,255,255,0.08); color: var(--crema); }
+  .tarea-btn.move { font-size: 14px; opacity: 0.55; }
+  .tarea-btn.move:hover { opacity: 1; }
+
+  .tarea-estado-done .tarea-titulo { text-decoration: line-through; opacity: 0.55; }
+
+  /* nav tareas link */
+  .btn-tareas {
+    background: none;
+    border: 1px solid var(--borde);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--negro);
+    cursor: pointer;
+    transition: all var(--trans);
+  }
+  .btn-tareas:hover { background: var(--beige); border-color: var(--muted); }
+  .btn-tareas.activa { background: var(--negro); color: var(--fondo); border-color: var(--negro); }
+  html.dark .btn-tareas { color: var(--crema); }
+  html.dark .btn-tareas:hover { background: rgba(255,255,255,0.06); }
+  html.dark .btn-tareas.activa { background: var(--crema); color: #121212; }
+
+  @media (max-width: 640px) {
+    .kanban-board { grid-template-columns: 1fr; }
+    .tareas-page { padding: 90px 16px 80px; }
+    .tareas-title { font-size: 24px; }
+  }
 </style>
 </head>
 <body>
@@ -1340,11 +1517,12 @@
 <!-- ━━━━━━━━━━ NAV ━━━━━━━━━━ -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="#" class="nav-brand">
+    <a href="#" class="nav-brand" onclick="irAHome(); return false;">
       <img src="img/logo.png" alt="EnSu Logo" class="nav-logo">
       <span class="nav-name">EnSu</span>
     </a>
     <div class="nav-actions">
+      <button class="btn-tareas admin-only" id="btn-tareas-nav" onclick="irATareas()">Tareas</button>
       <button class="btn-nuevo admin-only" onclick="abrirFormModal()" aria-label="Nueva entrada">
         <span>+</span> Nueva entrada
       </button>
@@ -1360,7 +1538,7 @@
 <div class="admin-bar" id="admin-bar">✏ Modo edición — solo tú ves esto</div>
 
 <!-- ━━━━━━━━━━ HERO ━━━━━━━━━━ -->
-<section class="hero">
+<section class="hero" id="home-hero">
   <div class="hero-left">
     <p class="hero-eyebrow">Diario de lectura</p>
     <h1 class="hero-title">Lo que leo me <em>forma.</em></h1>
@@ -1408,7 +1586,7 @@
 </div>
 
 <!-- ━━━━━━━━━━ FILTROS ━━━━━━━━━━ -->
-<div class="filtros-wrap">
+<div class="filtros-wrap" id="home-filtros">
   <div class="filtros-row">
     <div class="filtros" id="filtros-container"></div>
     <select id="filtros-select" onchange="setFiltro(this.value)"></select>
@@ -1417,8 +1595,77 @@
 </div>
 
 <!-- ━━━━━━━━━━ GRID ━━━━━━━━━━ -->
-<div class="grid-wrap">
+<div class="grid-wrap" id="home-grid">
   <div class="cards-grid" id="cards-grid"></div>
+</div>
+
+<!-- ━━━━━━━━━━ TAREAS ━━━━━━━━━━ -->
+<div class="tareas-page" id="tareas-page">
+  <div class="tareas-top">
+    <div>
+      <p class="tareas-eyebrow">Admin</p>
+      <h2 class="tareas-title">Mis tareas</h2>
+    </div>
+    <button class="btn-nueva-tarea" onclick="abrirFormTarea()">+ Nueva tarea</button>
+  </div>
+  <div class="kanban-board">
+    <div class="kanban-col" data-estado="pendiente">
+      <div class="kanban-col-header">
+        Pendiente <span class="kanban-count" id="count-pendiente">0</span>
+      </div>
+      <div class="kanban-col-body" id="col-pendiente"></div>
+    </div>
+    <div class="kanban-col" data-estado="en-progreso">
+      <div class="kanban-col-header">
+        En progreso <span class="kanban-count" id="count-en-progreso">0</span>
+      </div>
+      <div class="kanban-col-body" id="col-en-progreso"></div>
+    </div>
+    <div class="kanban-col" data-estado="completado">
+      <div class="kanban-col-header">
+        Completado <span class="kanban-count" id="count-completado">0</span>
+      </div>
+      <div class="kanban-col-body" id="col-completado"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━ MODAL TAREA ━━━━━━━━━━ -->
+<div class="modal-overlay" id="tarea-form-overlay" onclick="overlayClick(event,'tarea-form-overlay')">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('tarea-form-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="form-header">
+      <span id="tarea-form-title-text" class="form-title-text">Nueva tarea</span>
+    </div>
+    <div class="form-body">
+      <div class="form-group">
+        <label for="t-titulo">Título</label>
+        <input type="text" id="t-titulo" placeholder="¿Qué hay que hacer?">
+      </div>
+      <div class="form-group">
+        <label for="t-detalles">Detalles</label>
+        <textarea id="t-detalles" rows="4" placeholder="Descripción, notas o pasos..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="t-estado">Estado</label>
+          <select id="t-estado">
+            <option value="pendiente">Pendiente</option>
+            <option value="en-progreso">En progreso</option>
+            <option value="completado">Completado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="t-fecha">Fecha</label>
+          <input type="date" id="t-fecha">
+        </div>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn-cancelar" onclick="cerrarModal('tarea-form-overlay')">Cancelar</button>
+      <button class="btn-guardar" onclick="guardarTarea()">Guardar tarea</button>
+    </div>
+  </div>
 </div>
 
 <!-- ━━━━━━━━━━ MODAL DETALLE ━━━━━━━━━━ -->
@@ -2277,6 +2524,123 @@ window.addEventListener("scroll", () => {
   else nav.classList.remove("scrolled");
 }, { passive: true });
 
+/* ── TAREAS ── */
+let tareas = [];
+let editandoTareaId = null;
+let paginaActiva = "home";
+
+function cargarTareas() {
+  try { tareas = JSON.parse(localStorage.getItem("ensu-tareas") || "[]"); }
+  catch { tareas = []; }
+}
+function guardarTareas() {
+  localStorage.setItem("ensu-tareas", JSON.stringify(tareas));
+}
+
+function irATareas() {
+  if (!isAdmin) return;
+  paginaActiva = "tareas";
+  $("home-hero").style.display    = "none";
+  $("home-filtros").style.display = "none";
+  $("home-grid").style.display    = "none";
+  $("tareas-page").style.display  = "block";
+  $("btn-tareas-nav").classList.add("activa");
+  renderTareas();
+}
+function irAHome() {
+  paginaActiva = "home";
+  $("tareas-page").style.display  = "none";
+  $("home-hero").style.display    = "";
+  $("home-filtros").style.display = "";
+  $("home-grid").style.display    = "";
+  $("btn-tareas-nav").classList.remove("activa");
+}
+
+function renderTareas() {
+  const ESTADOS = ["pendiente", "en-progreso", "completado"];
+  ESTADOS.forEach(estado => {
+    const col   = $("col-" + estado);
+    const count = $("count-" + estado);
+    const lista = tareas.filter(t => t.estado === estado)
+      .sort((a, b) => (a.fecha || "") < (b.fecha || "") ? -1 : 1);
+    count.textContent = lista.length;
+    if (!lista.length) {
+      col.innerHTML = `<p class="kanban-empty">Sin tareas</p>`;
+      return;
+    }
+    const PREV = { "en-progreso":"pendiente", "completado":"en-progreso" };
+    const NEXT = { "pendiente":"en-progreso", "en-progreso":"completado" };
+    col.innerHTML = lista.map(t => `
+      <div class="tarea-card${estado === "completado" ? " tarea-estado-done" : ""}">
+        <div class="tarea-titulo">${t.titulo}</div>
+        ${t.detalles ? `<div class="tarea-detalles">${t.detalles.replace(/</g,"&lt;")}</div>` : ""}
+        <div class="tarea-footer">
+          <span class="tarea-fecha">${t.fecha ? formatFechaCorta(t.fecha) : ""}</span>
+          <div class="tarea-actions">
+            ${PREV[estado] ? `<button class="tarea-btn move" onclick="moverTarea(${t.id},'${PREV[estado]}')" title="Retroceder">&#8592;</button>` : ""}
+            ${NEXT[estado] ? `<button class="tarea-btn move" onclick="moverTarea(${t.id},'${NEXT[estado]}')" title="Avanzar">&#8594;</button>` : ""}
+            <button class="tarea-btn" onclick="abrirFormTarea(${t.id})" title="Editar">&#9998;</button>
+            <button class="tarea-btn" onclick="eliminarTarea(${t.id})" title="Eliminar">&#128465;</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  });
+}
+
+function formatFechaCorta(iso) {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function abrirFormTarea(id) {
+  editandoTareaId = id || null;
+  const t = id ? tareas.find(x => x.id === id) : null;
+  $("tarea-form-title-text").textContent = t ? "Editar tarea" : "Nueva tarea";
+  $("t-titulo").value   = t ? t.titulo   : "";
+  $("t-detalles").value = t ? t.detalles : "";
+  $("t-estado").value   = t ? t.estado   : "pendiente";
+  $("t-fecha").value    = t ? t.fecha    : "";
+  abrirModal("tarea-form-overlay");
+}
+
+function guardarTarea() {
+  const titulo = $("t-titulo").value.trim();
+  if (!titulo) { alert("El título es obligatorio."); $("t-titulo").focus(); return; }
+  const datos = {
+    titulo,
+    detalles: $("t-detalles").value.trim(),
+    estado:   $("t-estado").value,
+    fecha:    $("t-fecha").value,
+  };
+  if (editandoTareaId) {
+    const idx = tareas.findIndex(x => x.id === editandoTareaId);
+    if (idx !== -1) tareas[idx] = { ...tareas[idx], ...datos };
+  } else {
+    const maxId = tareas.reduce((m, t) => Math.max(m, t.id), 0);
+    tareas.push({ id: maxId + 1, ...datos });
+  }
+  guardarTareas();
+  cerrarModal("tarea-form-overlay");
+  renderTareas();
+}
+
+function eliminarTarea(id) {
+  if (!confirm("¿Eliminar esta tarea?")) return;
+  tareas = tareas.filter(t => t.id !== id);
+  guardarTareas();
+  renderTareas();
+}
+
+function moverTarea(id, nuevoEstado) {
+  const t = tareas.find(x => x.id === id);
+  if (!t) return;
+  t.estado = nuevoEstado;
+  guardarTareas();
+  renderTareas();
+}
+
 /* ── DEVTOOLS PREVENTION ── */
 document.addEventListener("contextmenu", e => e.preventDefault());
 document.addEventListener("keydown", function(e) {
@@ -2288,6 +2652,7 @@ document.addEventListener("keydown", function(e) {
 
 /* ── INIT ── */
 cargarDesdeStorage();
+cargarTareas();
 initDarkMode();
 initAdminMode();
 actualizarStats();
