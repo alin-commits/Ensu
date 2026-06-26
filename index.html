@@ -1505,8 +1505,105 @@
   html.dark .btn-tareas:hover { background: rgba(255,255,255,0.06); }
   html.dark .btn-tareas.activa { background: var(--crema); color: #121212; }
 
+  /* stats */
+  .tareas-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  .tstat-card {
+    background: var(--crema-card);
+    border: 1.5px solid var(--borde);
+    border-radius: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: border-color var(--trans), background var(--trans);
+    user-select: none;
+  }
+  .tstat-card:hover { border-color: var(--muted); }
+  .tstat-num {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 5px;
+    color: var(--negro);
+    transition: color var(--trans);
+  }
+  .tstat-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .tstat-card.activa[data-estado="todas"]      { border-color: var(--negro); background: rgba(0,0,0,0.03); }
+  .tstat-card.activa[data-estado="pendiente"]  { border-color: var(--terracota); background: rgba(198,138,109,0.07); }
+  .tstat-card.activa[data-estado="pendiente"]  .tstat-num { color: var(--terracota); }
+  .tstat-card.activa[data-estado="en-progreso"]{ border-color: #6b8c66; background: rgba(107,140,102,0.07); }
+  .tstat-card.activa[data-estado="en-progreso"].tstat-num { color: #6b8c66; }
+  .tstat-card.activa[data-estado="completado"] { border-color: #7a80a0; background: rgba(120,130,160,0.07); }
+  .tstat-card.activa[data-estado="completado"] .tstat-num { color: #7a80a0; }
+  html.dark .tstat-card.activa[data-estado="todas"] { background: rgba(255,255,255,0.04); }
+
+  /* filtros + sort bar */
+  .tareas-filtros-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .tareas-filtros { display: flex; gap: 7px; flex-wrap: wrap; flex: 1; }
+  .pill-t {
+    background: transparent;
+    border: 1.5px solid var(--borde);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--gris);
+    cursor: pointer;
+    transition: all var(--trans);
+    white-space: nowrap;
+  }
+  .pill-t:hover { border-color: var(--negro); color: var(--negro); }
+  .pill-t.activa                        { background: var(--negro); border-color: var(--negro); color: #fff; }
+  .pill-t[data-f="pendiente"].activa    { background: var(--terracota); border-color: var(--terracota); color: #fff; }
+  .pill-t[data-f="en-progreso"].activa  { background: #6b8c66; border-color: #6b8c66; color: #fff; }
+  .pill-t[data-f="completado"].activa   { background: #7a80a0; border-color: #7a80a0; color: #fff; }
+  .tareas-sort-sel {
+    background: var(--tarjeta);
+    border: 1.5px solid var(--borde);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--negro);
+    cursor: pointer;
+    transition: border-color var(--trans);
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .tareas-sort-sel:focus { border-color: var(--negro); outline: none; }
+  html.dark .tareas-sort-sel { background-color: var(--tarjeta); color: var(--crema); }
+
+  /* kanban filtrado (1 columna visible) */
+  .kanban-board.filtrado {
+    grid-template-columns: minmax(0, 520px);
+    justify-content: center;
+  }
+
   @media (max-width: 640px) {
     .kanban-board { grid-template-columns: 1fr; }
+    .kanban-board.filtrado { grid-template-columns: 1fr; }
+    .tareas-stats { grid-template-columns: repeat(2, 1fr); }
     .tareas-page { padding: 90px 16px 80px; }
     .tareas-title { font-size: 24px; }
   }
@@ -1608,6 +1705,43 @@
     </div>
     <button class="btn-nueva-tarea" onclick="abrirFormTarea()">+ Nueva tarea</button>
   </div>
+
+  <!-- Stats -->
+  <div class="tareas-stats">
+    <div class="tstat-card activa" data-estado="todas" onclick="setFiltroT('todas')">
+      <span class="tstat-num" id="stat-total">0</span>
+      <span class="tstat-label">Total</span>
+    </div>
+    <div class="tstat-card" data-estado="pendiente" onclick="setFiltroT('pendiente')">
+      <span class="tstat-num" id="stat-pendiente">0</span>
+      <span class="tstat-label">Pendiente</span>
+    </div>
+    <div class="tstat-card" data-estado="en-progreso" onclick="setFiltroT('en-progreso')">
+      <span class="tstat-num" id="stat-en-progreso">0</span>
+      <span class="tstat-label">En progreso</span>
+    </div>
+    <div class="tstat-card" data-estado="completado" onclick="setFiltroT('completado')">
+      <span class="tstat-num" id="stat-completado">0</span>
+      <span class="tstat-label">Completado</span>
+    </div>
+  </div>
+
+  <!-- Filtros + ordenación -->
+  <div class="tareas-filtros-row">
+    <div class="tareas-filtros">
+      <button class="pill-t activa" data-f="todas"       onclick="setFiltroT('todas')">Todas</button>
+      <button class="pill-t"        data-f="pendiente"   onclick="setFiltroT('pendiente')">Pendiente</button>
+      <button class="pill-t"        data-f="en-progreso" onclick="setFiltroT('en-progreso')">En progreso</button>
+      <button class="pill-t"        data-f="completado"  onclick="setFiltroT('completado')">Completado</button>
+    </div>
+    <select class="tareas-sort-sel" id="tareas-sort" onchange="setSortT(this.value)">
+      <option value="fecha-asc">Fecha ↑</option>
+      <option value="fecha-desc">Fecha ↓</option>
+      <option value="titulo-az">Título A–Z</option>
+      <option value="titulo-za">Título Z–A</option>
+    </select>
+  </div>
+
   <div class="kanban-board">
     <div class="kanban-col" data-estado="pendiente">
       <div class="kanban-col-header">
@@ -2530,6 +2664,8 @@ window.addEventListener("scroll", () => {
 let tareas = [];
 let editandoTareaId = null;
 let paginaActiva = "home";
+let filtroTareas = "todas";
+let sortTareas   = "fecha-asc";
 
 function cargarTareas() {
   try { tareas = JSON.parse(localStorage.getItem("ensu-tareas") || "[]"); }
@@ -2547,6 +2683,10 @@ function irATareas() {
   $("home-grid").style.display    = "none";
   $("tareas-page").style.display  = "block";
   $("btn-tareas-nav").classList.add("activa");
+  filtroTareas = "todas";
+  sortTareas   = "fecha-asc";
+  if ($("tareas-sort")) $("tareas-sort").value = "fecha-asc";
+  setFiltroT("todas");
   renderTareas();
 }
 function irAHome() {
@@ -2558,20 +2698,59 @@ function irAHome() {
   $("btn-tareas-nav").classList.remove("activa");
 }
 
+function sortLista(lista) {
+  return lista.slice().sort((a, b) => {
+    if (sortTareas === "fecha-asc")  return (a.fecha || "") < (b.fecha || "") ? -1 : 1;
+    if (sortTareas === "fecha-desc") return (a.fecha || "") > (b.fecha || "") ? -1 : 1;
+    if (sortTareas === "titulo-az")  return a.titulo.localeCompare(b.titulo, "es");
+    if (sortTareas === "titulo-za")  return b.titulo.localeCompare(a.titulo, "es");
+    return 0;
+  });
+}
+
+function setFiltroT(f) {
+  filtroTareas = f;
+  document.querySelectorAll(".pill-t").forEach(b =>
+    b.classList.toggle("activa", b.dataset.f === f)
+  );
+  document.querySelectorAll(".tstat-card").forEach(c =>
+    c.classList.toggle("activa", c.dataset.estado === f)
+  );
+  const board = document.querySelector(".kanban-board");
+  if (board) board.classList.toggle("filtrado", f !== "todas");
+  document.querySelectorAll(".kanban-col").forEach(col => {
+    col.style.display = (f === "todas" || col.dataset.estado === f) ? "" : "none";
+  });
+}
+
+function setSortT(val) {
+  sortTareas = val;
+  renderTareas();
+}
+
 function renderTareas() {
+  // stats
+  const total = tareas.length;
+  const cPend = tareas.filter(t => t.estado === "pendiente").length;
+  const cProg = tareas.filter(t => t.estado === "en-progreso").length;
+  const cDone = tareas.filter(t => t.estado === "completado").length;
+  if ($("stat-total"))      $("stat-total").textContent      = total;
+  if ($("stat-pendiente"))  $("stat-pendiente").textContent  = cPend;
+  if ($("stat-en-progreso"))$("stat-en-progreso").textContent = cProg;
+  if ($("stat-completado")) $("stat-completado").textContent = cDone;
+
   const ESTADOS = ["pendiente", "en-progreso", "completado"];
+  const PREV = { "en-progreso":"pendiente", "completado":"en-progreso" };
+  const NEXT = { "pendiente":"en-progreso", "en-progreso":"completado" };
   ESTADOS.forEach(estado => {
     const col   = $("col-" + estado);
     const count = $("count-" + estado);
-    const lista = tareas.filter(t => t.estado === estado)
-      .sort((a, b) => (a.fecha || "") < (b.fecha || "") ? -1 : 1);
+    const lista = sortLista(tareas.filter(t => t.estado === estado));
     count.textContent = lista.length;
     if (!lista.length) {
       col.innerHTML = `<p class="kanban-empty">Sin tareas</p>`;
       return;
     }
-    const PREV = { "en-progreso":"pendiente", "completado":"en-progreso" };
-    const NEXT = { "pendiente":"en-progreso", "en-progreso":"completado" };
     col.innerHTML = lista.map(t => `
       <div class="tarea-card${estado === "completado" ? " tarea-estado-done" : ""}">
         <div class="tarea-titulo">${t.titulo}</div>
@@ -2588,6 +2767,8 @@ function renderTareas() {
       </div>
     `).join("");
   });
+  // re-apply current filter visibility
+  setFiltroT(filtroTareas);
 }
 
 function formatFechaCorta(iso) {
