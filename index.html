@@ -2006,6 +2006,10 @@
 <!-- Toast -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
 <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      JAVASCRIPT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
@@ -2016,6 +2020,18 @@
    async function h(p){const e=new TextEncoder(),d=await crypto.subtle.digest('SHA-256',e.encode(p));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('')} h("TuNuevaContraseña").then(console.log)
    Luego reemplaza ADMIN_HASH con el resultado.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── FIREBASE ── */
+firebase.initializeApp({
+  apiKey:            "AIzaSyCzqDu7SLE_Gj8OoSWABn4RMyt5i3z1Y-Q",
+  authDomain:        "ensu-tareas.firebaseapp.com",
+  databaseURL:       "https://ensu-tareas-default-rtdb.firebaseio.com",
+  projectId:         "ensu-tareas",
+  storageBucket:     "ensu-tareas.firebasestorage.app",
+  messagingSenderId: "589644635319",
+  appId:             "1:589644635319:web:fbe2e4073f8e4e49bac132"
+});
+const db = firebase.database();
+
 const ADMIN_USER    = "Alin";
 const ADMIN_HASH    = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714"; // CosminEnciu*14
 const DATA_VERSION  = "3";
@@ -2668,11 +2684,11 @@ let filtroTareas = "todas";
 let sortTareas   = "fecha-asc";
 
 function cargarTareas() {
-  try { tareas = JSON.parse(localStorage.getItem("ensu-tareas") || "[]"); }
-  catch { tareas = []; }
-}
-function guardarTareas() {
-  localStorage.setItem("ensu-tareas", JSON.stringify(tareas));
+  db.ref("tareas").on("value", snapshot => {
+    const data = snapshot.val();
+    tareas = data ? Object.values(data) : [];
+    if (paginaActiva === "tareas") renderTareas();
+  });
 }
 
 function irATareas() {
@@ -2798,30 +2814,21 @@ function guardarTarea() {
     fecha:    $("t-fecha").value,
   };
   if (editandoTareaId) {
-    const idx = tareas.findIndex(x => x.id === editandoTareaId);
-    if (idx !== -1) tareas[idx] = { ...tareas[idx], ...datos };
+    db.ref("tareas/" + editandoTareaId).update(datos);
   } else {
-    const maxId = tareas.reduce((m, t) => Math.max(m, t.id), 0);
-    tareas.push({ id: maxId + 1, ...datos });
+    const maxId = tareas.reduce((m, t) => Math.max(m, t.id), 0) + 1;
+    db.ref("tareas/" + maxId).set({ id: maxId, ...datos });
   }
-  guardarTareas();
   cerrarModal("tarea-form-overlay");
-  renderTareas();
 }
 
 function eliminarTarea(id) {
   if (!confirm("¿Eliminar esta tarea?")) return;
-  tareas = tareas.filter(t => t.id !== id);
-  guardarTareas();
-  renderTareas();
+  db.ref("tareas/" + id).remove();
 }
 
 function moverTarea(id, nuevoEstado) {
-  const t = tareas.find(x => x.id === id);
-  if (!t) return;
-  t.estado = nuevoEstado;
-  guardarTareas();
-  renderTareas();
+  db.ref("tareas/" + id + "/estado").set(nuevoEstado);
 }
 
 /* ── DEVTOOLS PREVENTION ── */
