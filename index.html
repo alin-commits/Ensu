@@ -2161,41 +2161,43 @@ const DATOS_INICIALES = [
 ];
 
 let libros       = [];
-let nextId       = 6;
 let filtroActivo = "Todos";
 let busqueda     = "";
 let isAdmin      = false;
 let sortDesc     = true;
 let editandoId   = null;
 
-/* ── LOCALSTORAGE ── */
+/* ── FIREBASE STORAGE ── */
 function guardarEnStorage() {
-  localStorage.setItem("ensu-libros",   JSON.stringify(libros));
-  localStorage.setItem("ensu-nextId",   nextId);
-  localStorage.setItem("ensu-version",  DATA_VERSION);
+  const obj = {};
+  libros.forEach(l => { obj[l.id] = l; });
+  db.ref("libros").set(obj);
 }
 
 function cargarDesdeStorage() {
-  try {
-    const raw = localStorage.getItem("ensu-libros");
-    const ver = localStorage.getItem("ensu-version");
-    if (raw && ver === DATA_VERSION) {
-      libros = JSON.parse(raw);
-      nextId = parseInt(localStorage.getItem("ensu-nextId") || "3");
-      DATOS_INICIALES.forEach(seed => {
-        if (!libros.some(l => l.id === seed.id)) {
-          libros.push(JSON.parse(JSON.stringify(seed)));
-          if (seed.id >= nextId) nextId = seed.id + 1;
-        }
-      });
-    } else {
-      libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
-      guardarEnStorage();
+  db.ref("libros").once("value").then(snapshot => {
+    if (!snapshot.val()) {
+      // Primera vez: migrar localStorage o usar datos iniciales
+      let seed = null;
+      try {
+        const raw = localStorage.getItem("ensu-libros");
+        const ver = localStorage.getItem("ensu-version");
+        if (raw && ver === DATA_VERSION) seed = JSON.parse(raw);
+      } catch {}
+      if (!seed || !seed.length) seed = JSON.parse(JSON.stringify(DATOS_INICIALES));
+      const obj = {};
+      seed.forEach(l => { obj[l.id] = l; });
+      db.ref("libros").set(obj);
     }
-  } catch(e) {
-    libros = JSON.parse(JSON.stringify(DATOS_INICIALES));
-    guardarEnStorage();
-  }
+    // Listener en tiempo real para sync entre dispositivos
+    db.ref("libros").on("value", snap => {
+      const data = snap.val();
+      libros = data ? Object.values(data) : [];
+      actualizarStats();
+      renderFiltros();
+      renderCards();
+    });
+  });
 }
 
 /* ── UTILIDADES ── */
@@ -2471,12 +2473,9 @@ function cambiarTab(btn, panelId) {
 /* ── CRUD (solo admin) ── */
 function eliminarLibro(id) {
   if (!confirm("¿Eliminar esta entrada? Esta acción no se puede deshacer.")) return;
-  libros = libros.filter(l => l.id !== id);
-  guardarEnStorage();
+  db.ref("libros/" + id).remove();
   cerrarModal("detail-overlay");
-  renderFiltros();
-  renderCards();
-  actualizarStats();
+  // El listener de Firebase actualiza libros y llama a render automáticamente
   mostrarToast("Entrada eliminada.");
 }
 
@@ -2545,7 +2544,7 @@ function guardarLibro(e) {
       mostrarToast("Entrada actualizada.");
     }
   } else {
-    libros.push({ id: nextId++, ...datos });
+    libros.push({ id: libros.reduce((m, l) => Math.max(m, l.id), 0) + 1, ...datos });
     mostrarToast("Entrada guardada.");
   }
   guardarEnStorage();
@@ -2841,13 +2840,10 @@ document.addEventListener("keydown", function(e) {
 });
 
 /* ── INIT ── */
-cargarDesdeStorage();
-cargarTareas();
 initDarkMode();
 initAdminMode();
-actualizarStats();
-renderFiltros();
-renderCards();
+cargarDesdeStorage(); // arranca listener Firebase → llama actualizarStats/renderFiltros/renderCards
+cargarTareas();       // arranca listener Firebase → llama renderTareas cuando en página de tareas
 </script>
 </body>
 </html>
