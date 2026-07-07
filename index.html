@@ -2333,8 +2333,8 @@ function limpiarBusqueda() {
 function renderCards() {
   const grid = $("cards-grid");
 
-  // Cards próximo: solo en "Todos", siempre al final, ordenadas por l.orden
-  const proximoCards = filtroActivo === "Todos"
+  // Cards próximo: en "Todos" y en "libro", siempre al final, ordenadas por l.orden
+  const proximoCards = (filtroActivo === "Todos" || filtroActivo === "libro")
     ? libros.filter(l => l.estado === "proximo").sort((a, b) => (a.orden||99) - (b.orden||99))
     : [];
 
