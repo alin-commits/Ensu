@@ -407,7 +407,48 @@
 
   .badge-leyendo  { background: rgba(198,138,109,0.14); color: var(--terracota); }
   .badge-terminado{ background: rgba(167,174,161,0.18); color: #5c6358; }
-  .badge-proximo  { background: rgba(230,224,214,0.7); color: var(--muted); }
+  .badge-proximo  { background: rgba(138,144,184,0.15); color: #5a6080; }
+
+  /* Cards próximo */
+  .card-accent.proximo {
+    background: repeating-linear-gradient(
+      90deg, #8a90b8 0, #8a90b8 5px, transparent 5px, transparent 13px
+    );
+    opacity: 0.5;
+    height: 4px;
+  }
+  .card.card-proximo {
+    border: 1.5px dashed rgba(138,144,184,0.5);
+    background: var(--crema-card);
+    cursor: default;
+    position: relative;
+    opacity: 0.82;
+  }
+  .card.card-proximo:hover { transform: none; box-shadow: none; border-color: rgba(138,144,184,0.7); }
+  .proximo-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(138,144,184,0.15);
+    border: 1.5px solid rgba(138,144,184,0.3);
+    color: #5a6080;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .proximo-hint {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 10px;
+    opacity: 0.8;
+  }
+  html.dark .badge-proximo { color: #8a90b8; background: rgba(138,144,184,0.12); }
+  html.dark .proximo-num   { color: #8a90b8; border-color: rgba(138,144,184,0.25); }
 
   .card-titulo {
     font-family: 'Cormorant Garamond', serif;
@@ -2227,6 +2268,7 @@ function tipoLabel(tipo) {
 }
 
 function accentClass(l) {
+  if (l.estado === "proximo") return "proximo";
   return { libro:"terracota", reflexion:"salvia", articulo:"pizarra", privado:"privado" }[l.tipo] || "terracota";
 }
 
@@ -2238,9 +2280,9 @@ function allAreas() {
 
 /* ── ESTADÍSTICAS ── */
 function actualizarStats() {
-  $("stat-libros").textContent      = libros.filter(l => l.tipo === "libro").length;
-  $("stat-reflexiones").textContent = libros.filter(l => l.tipo === "reflexion").length;
-  $("stat-articulos").textContent   = libros.filter(l => l.tipo === "articulo").length;
+  $("stat-libros").textContent      = libros.filter(l => l.tipo === "libro"     && l.estado !== "proximo").length;
+  $("stat-reflexiones").textContent = libros.filter(l => l.tipo === "reflexion" && l.estado !== "proximo").length;
+  $("stat-articulos").textContent   = libros.filter(l => l.tipo === "articulo"  && l.estado !== "proximo").length;
 }
 
 /* ── FILTROS por tipo ── */
@@ -2290,9 +2332,15 @@ function limpiarBusqueda() {
 /* ── TARJETAS ── */
 function renderCards() {
   const grid = $("cards-grid");
+
+  // Cards próximo: solo en "Todos", siempre al final, ordenadas por l.orden
+  const proximoCards = filtroActivo === "Todos"
+    ? libros.filter(l => l.estado === "proximo").sort((a, b) => (a.orden||99) - (b.orden||99))
+    : [];
+
   let lista = (filtroActivo === "Todos"
-    ? libros.filter(l => isAdmin || l.tipo !== "privado")
-    : libros.filter(l => l.tipo === filtroActivo && (isAdmin || l.tipo !== "privado")))
+    ? libros.filter(l => (isAdmin || l.tipo !== "privado") && l.estado !== "proximo")
+    : libros.filter(l => l.tipo === filtroActivo && (isAdmin || l.tipo !== "privado") && l.estado !== "proximo"))
     .slice()
     .sort((a, b) => {
       const da = new Date(a.fecha || "1970-01-01");
@@ -2320,9 +2368,9 @@ function renderCards() {
     return;
   }
 
-  grid.innerHTML = lista.map(l => {
+  const regularHtml = lista.map(l => {
     const ac   = accentClass(l);
-    const tags = l.tags.map(t => `<span class="tag">${t}</span>`).join("");
+    const tags = (l.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
     return `
     <article class="card" onclick="abrirDetalle(${l.id})">
       <div class="card-accent ${ac}"></div>
@@ -2350,6 +2398,27 @@ function renderCards() {
       </div>
     </article>`;
   }).join("");
+
+  const proximoHtml = proximoCards.map(l => `
+    <article class="card card-proximo">
+      <div class="card-accent proximo"></div>
+      <div class="card-body">
+        <div class="card-eyebrow">
+          <span class="card-autor">${l.autor}</span>
+          <span class="tipo-badge libro">Libro</span>
+        </div>
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:4px">
+          <h3 class="card-titulo" style="margin-bottom:0">${l.libro}</h3>
+          <div class="proximo-num">${l.orden}</div>
+        </div>
+        <p class="proximo-hint">Próximo en la lista de lectura</p>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-proximo">🔜 Próximo</span>
+      </div>
+    </article>`).join("");
+
+  grid.innerHTML = regularHtml + proximoHtml;
 }
 
 /* ── MODAL DETALLE ── */
