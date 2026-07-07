@@ -2682,10 +2682,24 @@ let filtroTareas = "todas";
 let sortTareas   = "fecha-asc";
 
 function cargarTareas() {
-  db.ref("tareas").on("value", snapshot => {
-    const data = snapshot.val();
-    tareas = data ? Object.values(data) : [];
-    if (paginaActiva === "tareas") renderTareas();
+  db.ref("tareas").once("value").then(snapshot => {
+    if (!snapshot.val()) {
+      // Migrar tareas del localStorage si existen
+      try {
+        const local = JSON.parse(localStorage.getItem("ensu-tareas") || "[]");
+        if (local.length > 0) {
+          const obj = {};
+          local.forEach(t => { obj[t.id] = t; });
+          db.ref("tareas").set(obj);
+        }
+      } catch {}
+    }
+    // Listener en tiempo real para sync entre dispositivos
+    db.ref("tareas").on("value", snap => {
+      const data = snap.val();
+      tareas = data ? Object.values(data) : [];
+      if (paginaActiva === "tareas") renderTareas();
+    });
   });
 }
 
