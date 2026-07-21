@@ -2382,8 +2382,8 @@ function renderCards() {
             <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
           </div>
         </div>
-        <h3 class="card-titulo">${l.tituloRef}</h3>
-        <p class="card-libro">${l.libro}</p>
+        <h3 class="card-titulo">${l.tipo !== 'reflexion' ? l.libro : l.tituloRef}</h3>
+        <p class="card-libro">${l.tipo !== 'reflexion' ? l.tituloRef : l.libro}</p>
         <div class="card-tags">${tags}</div>
         <p class="card-extracto">${l.reflexion}</p>
       </div>
