@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EnSu — Lista de lectura</title>
+<link rel="icon" href="img/logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fondo:     #F5F5F5;
+    --negro:     #121212;
+    --tarjeta:   #FFFFFF;
+    --terracota: #C68A6D;
+    --salvia:    #A7AEA1;
+    --beige:     #E6E0D6;
+    --texto-2:   #4A4540;
+    --muted:     #9C9189;
+    --borde:     rgba(18,18,18,0.12);
+    --radius:    12px;
+    --trans:     0.22s ease;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--fondo); color: var(--negro); line-height: 1.6; min-height: 100vh; }
+  img  { display: block; max-width: 100%; }
+  button { cursor: pointer; font-family: 'Inter', sans-serif; }
+  a { color: inherit; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+    background: rgba(245,245,245,0.72); backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    border-bottom: 1px solid var(--borde);
+    transition: background var(--trans), box-shadow var(--trans);
+  }
+  nav.scrolled { background: rgba(245,245,245,0.92); box-shadow: 0 2px 24px rgba(18,18,18,0.07); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 28px; height: 66px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-brand { display: flex; align-items: center; text-decoration: none; }
+  .nav-logo  { height: 36px; width: auto; }
+  .nav-actions { display: flex; align-items: center; gap: 10px; }
+  .btn-back {
+    background: transparent; border: 1.5px solid var(--borde); border-radius: 100px;
+    padding: 7px 16px; font-size: 13px; font-weight: 500; color: var(--texto-2);
+    text-decoration: none; transition: all var(--trans); white-space: nowrap;
+  }
+  .btn-back:hover { border-color: var(--negro); color: var(--negro); }
+  .btn-dark-toggle {
+    background: transparent; border: 1.5px solid var(--borde); border-radius: 8px;
+    width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
+    font-size: 17px; line-height: 1; transition: background var(--trans), border-color var(--trans), color var(--trans);
+    color: var(--negro); flex-shrink: 0;
+  }
+  html.dark .btn-dark-toggle { border-color: rgba(240,237,230,0.15); }
+  .btn-dark-toggle:hover { background: var(--beige); border-color: var(--muted); }
+  .btn-lock {
+    color: var(--muted) !important; opacity: 0.55;
+    transition: opacity var(--trans), color var(--trans) !important;
+  }
+  .btn-lock:hover { opacity: 1; }
+  body.admin .btn-lock { opacity: 1; color: var(--terracota) !important; }
+
+  /* ADMIN BAR */
+  body:not(.admin) .admin-only { display: none !important; }
+  .admin-bar {
+    position: fixed; top: 66px; left: 0; right: 0; z-index: 800;
+    background: var(--terracota); color: #fff; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; text-align: center; padding: 5px 16px; display: none;
+  }
+  body.admin .admin-bar { display: block; }
+
+  /* HERO */
+  .lista-hero {
+    max-width: 1200px; margin: 0 auto; padding: 110px 28px 40px;
+  }
+  .lista-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  .lista-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 400;
+    line-height: 1.1; color: var(--negro); margin-bottom: 16px;
+  }
+  .lista-title em { font-style: italic; color: var(--terracota); }
+  .lista-stats {
+    display: flex; gap: 28px; flex-wrap: wrap;
+  }
+  .lstat { display: flex; flex-direction: column; }
+  .lstat-num { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--negro); line-height: 1; }
+  .lstat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .lstat-divider { width: 1px; background: var(--borde); align-self: stretch; }
+
+  /* SECCIONES */
+  .lista-wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px 100px; }
+  .seccion { margin-bottom: 48px; }
+  .seccion-header {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 20px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--borde);
+  }
+  .seccion-titulo {
+    font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; color: var(--negro);
+  }
+  .seccion-count {
+    font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 100px;
+    background: var(--beige); color: var(--muted);
+  }
+
+  /* FILA DE LIBRO */
+  .libro-row {
+    display: grid;
+    grid-template-columns: 32px 1fr auto auto auto auto;
+    gap: 10px 14px;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: box-shadow var(--trans), border-color var(--trans), transform var(--trans);
+  }
+  .libro-row:hover { box-shadow: 0 4px 16px rgba(18,18,18,0.08); border-color: rgba(18,18,18,0.2); transform: translateX(2px); }
+  .libro-row.pendiente { opacity: 0.82; border-style: dashed; border-color: rgba(120,130,160,0.3); }
+  .libro-row.pendiente:hover { border-color: rgba(120,130,160,0.55); }
+
+  .row-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--beige); color: var(--muted);
+    font-family: 'Cormorant Garamond', serif; font-size: 14px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .row-num.leyendo { background: rgba(198,138,109,0.15); color: var(--terracota); }
+  .row-num.terminado { background: rgba(167,174,161,0.18); color: #5c6358; }
+
+  .row-info { min-width: 0; }
+  .row-titulo { font-size: 14.5px; font-weight: 600; color: var(--negro); line-height: 1.3; display: block; }
+  .row-autor  { font-size: 12px; color: var(--muted); margin-top: 2px; display: block; }
+
+  .row-cat {
+    font-size: 11.5px; color: var(--texto-2); font-weight: 500; white-space: nowrap; text-align: right;
+  }
+  .row-dif {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 100px; border: 1px solid var(--borde); color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* Badges */
+  .badge { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+  .badge-leyendo   { background: rgba(198,138,109,0.14); color: var(--terracota); }
+  .badge-terminado { background: rgba(167,174,161,0.18); color: #5c6358; }
+  .badge-proximo   { background: rgba(138,144,184,0.15); color: #5a6080; }
+  .badge-pendiente { background: rgba(120,130,160,0.10); color: #6a7090; }
+
+  .finalidad-badge { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; flex-shrink: 0; white-space: nowrap; }
+  .finalidad-badge.formacion        { background: rgba(80,100,190,0.12); color: #4a5cb0; }
+  .finalidad-badge.autoconocimiento { background: rgba(107,140,102,0.14); color: #4d7248; }
+  .finalidad-badge.ocio             { background: rgba(198,138,109,0.14); color: var(--terracota); }
+
+  .btn-edit-row {
+    background: none; border: none; color: var(--muted); font-size: 14px; padding: 4px 6px;
+    border-radius: 6px; transition: background var(--trans), color var(--trans);
+    cursor: pointer; opacity: 0;
+  }
+  .libro-row:hover .btn-edit-row { opacity: 1; }
+  .btn-edit-row:hover { background: var(--beige); color: var(--negro); }
+
+  /* FILTROS */
+  .lista-filtros {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--borde);
+  }
+  .filtro-sec-sel {
+    background: var(--tarjeta); border: 1.5px solid var(--borde); border-radius: 8px;
+    padding: 6px 28px 6px 10px; font-size: 12.5px; font-weight: 500; color: var(--texto-2);
+    cursor: pointer; outline: none; font-family: 'Inter', sans-serif;
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center;
+    transition: border-color var(--trans);
+  }
+  .filtro-sec-sel.activo { border-color: var(--terracota); }
+  html.dark .filtro-sec-sel { background-color: #252220; color: var(--negro); border-color: rgba(240,237,230,0.12); }
+  .btn-limpiar {
+    font-size: 11.5px; color: var(--muted); background: none; border: none;
+    cursor: pointer; text-decoration: underline; font-family: 'Inter', sans-serif;
+  }
+  .btn-limpiar:hover { color: var(--negro); }
+
+  /* EMPTY */
+  .lista-empty { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+
+  /* MODAL BASE */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(18,18,18,0.52); backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center;
+    justify-content: center; padding: 20px; opacity: 0; visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+  .modal {
+    background: var(--tarjeta); border-radius: 16px; width: 100%; max-width: 680px;
+    max-height: 88vh; overflow-y: auto; overflow-x: hidden; position: relative;
+    transform: translateY(16px) scale(0.98);
+    transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
+    box-shadow: 0 32px 80px rgba(18,18,18,0.2);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+  .modal-close {
+    position: absolute; top: 18px; right: 20px; background: none; border: none;
+    font-size: 22px; color: var(--muted); line-height: 1; width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center; border-radius: 50%;
+    transition: background var(--trans), color var(--trans); z-index: 10;
+  }
+  .modal-close:hover { background: var(--beige); color: var(--negro); }
+
+  /* FORM */
+  .form-modal { max-width: 720px; }
+  .form-header { padding: 28px 32px 20px; border-bottom: 1px solid var(--borde); }
+  .form-title  { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--negro); margin-bottom: 4px; }
+  .form-subtitle { font-size: 13px; color: var(--muted); }
+  .form-body   { padding: 24px 32px; display: flex; flex-direction: column; gap: 20px; }
+  .form-section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--borde); margin-bottom: 4px; }
+  .form-row    { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group  { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; font-weight: 600; color: var(--texto-2); letter-spacing: 0.02em; }
+  label .req { color: var(--terracota); margin-left: 2px; }
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    font-family: 'Inter', sans-serif; font-size: 13.5px; color: var(--negro);
+    background: var(--fondo); border: 1.5px solid var(--borde); border-radius: 8px;
+    padding: 10px 14px; outline: none; transition: border-color var(--trans), box-shadow var(--trans); width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--terracota); box-shadow: 0 0 0 3px rgba(198,138,109,0.12); }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; height: 4px; background: var(--beige); border-radius: 4px; border: none; padding: 0; box-shadow: none; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--terracota); }
+  .range-wrap { position: relative; }
+  .form-footer { padding: 20px 32px 28px; border-top: 1px solid var(--borde); display: flex; gap: 10px; justify-content: flex-end; }
+  .btn-save   { background: var(--negro); color: var(--fondo); border: none; border-radius: 8px; padding: 10px 22px; font-size: 13px; font-weight: 600; transition: background var(--trans); }
+  .btn-save:hover { background: #3a3530; }
+  .btn-cancel { background: transparent; border: 1.5px solid var(--borde); color: var(--texto-2); padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; transition: all var(--trans); }
+  .btn-cancel:hover { border-color: var(--negro); color: var(--negro); }
+  .btn-eliminar { background: transparent; border: 1.5px solid rgba(198,80,60,0.25); color: #b94030; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; transition: all var(--trans); }
+  .btn-eliminar:hover { background: rgba(198,80,60,0.07); border-color: rgba(198,80,60,0.45); }
+
+  /* LOGIN */
+  .login-modal { max-width: 420px; }
+  .login-bar { height: 4px; background: var(--terracota); border-radius: 16px 16px 0 0; }
+  .login-header { padding: 28px 32px 22px; border-bottom: 1px solid var(--borde); }
+  .login-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .login-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; color: var(--negro); margin-bottom: 4px; }
+  .login-sub { font-size: 13px; color: var(--muted); }
+  .login-body { padding: 22px 32px 0; }
+  .login-footer { padding: 20px 32px 28px; border-top: 1px solid var(--borde); margin-top: 22px; display: flex; gap: 10px; justify-content: flex-end; }
+  .logout-bloque { padding: 22px 32px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+  .logout-icon { font-size: 32px; }
+  .logout-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--negro); }
+  .logout-sub { font-size: 13px; color: var(--muted); }
+  .logout-footer { padding: 0 32px 28px; display: flex; gap: 10px; justify-content: center; }
+  .error-msg { font-size: 11.5px; color: #c04040; display: none; }
+  .error-msg.visible { display: block; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--negro); color: #fff; padding: 10px 20px; border-radius: 100px;
+    font-size: 13px; font-weight: 500; white-space: nowrap; opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease; z-index: 2000; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* DARK MODE */
+  html.dark {
+    --fondo: #121212; --negro: #F0EDE6; --tarjeta: #1E1E1E; --beige: #252220;
+    --texto-2: #C4BDB5; --muted: #7A7368; --borde: rgba(240,237,230,0.10); color-scheme: dark;
+  }
+  html.dark nav { background: rgba(18,18,18,0.82); }
+  html.dark nav.scrolled { background: rgba(18,18,18,0.96); box-shadow: 0 2px 24px rgba(0,0,0,0.45); }
+  html.dark .btn-save { background: var(--terracota); color: #121212; }
+  html.dark .btn-save:hover { background: #b87a5d; }
+  html.dark input[type="text"], html.dark input[type="date"], html.dark input[type="number"],
+  html.dark select, html.dark textarea { background: #252220; color: #F0EDE6; border-color: rgba(240,237,230,0.12); }
+  html.dark input[type="range"] { background: #3a3530; }
+  html.dark .badge-terminado { color: #8a9486; }
+  html.dark .badge-pendiente { color: #8890b0; }
+  html.dark .finalidad-badge.formacion { color: #8895d0; }
+  html.dark .finalidad-badge.autoconocimiento { color: #8aad86; }
+  html.dark .modal-close:hover { background: #2e2926; }
+  html.dark .libro-row { background: var(--tarjeta); }
+  html.dark .row-num.leyendo { background: rgba(198,138,109,0.12); }
+  html.dark .row-num.terminado { background: rgba(167,174,161,0.10); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .libro-row { grid-template-columns: 28px 1fr auto; gap: 8px 10px; }
+    .row-cat, .row-dif, .finalidad-badge { display: none; }
+    .lista-title { font-size: 32px; }
+  }
+  @media (max-width: 640px) {
+    .nav-inner { padding: 0 16px; }
+    .lista-hero { padding: 96px 16px 32px; }
+    .lista-wrap { padding: 0 16px 72px; }
+    .form-header { padding: 22px 20px 16px; }
+    .form-body { padding: 18px 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-footer { padding: 14px 20px 22px; }
+    .login-header { padding: 22px 20px 18px; }
+    .login-body { padding: 18px 20px 0; }
+    .login-footer { padding: 16px 20px 24px; }
+    .logout-bloque { padding: 22px 20px; }
+    .logout-footer { padding: 0 20px 24px; }
+    .admin-bar { top: 66px; }
+    .lista-stats { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="img/logo.png" alt="EnSu Logo" class="nav-logo">
+    </a>
+    <div class="nav-actions">
+      <a href="index.html" class="btn-back">← Volver</a>
+      <button class="btn-nuevo admin-only" onclick="abrirFormModal()" aria-label="Nueva entrada">+ Nueva entrada</button>
+      <button class="btn-dark-toggle" id="btn-dark" onclick="toggleDarkMode()" aria-label="Cambiar modo"><span id="dark-icon">🌙</span></button>
+      <button class="btn-dark-toggle btn-lock" id="btn-lock" onclick="abrirLoginModal()" aria-label="Admin"><span id="lock-icon">🔒</span></button>
+    </div>
+  </div>
+</nav>
+<div class="admin-bar" id="admin-bar">✏ Modo edición — solo tú ves esto</div>
+
+<!-- HERO -->
+<div class="lista-hero">
+  <p class="lista-eyebrow">EnSu — Biblioteca personal</p>
+  <h1 class="lista-title">Lista de <em>lectura</em></h1>
+  <div class="lista-stats">
+    <div class="lstat">
+      <span class="lstat-num" id="cnt-leyendo">0</span>
+      <span class="lstat-label">Leyendo</span>
+    </div>
+    <div class="lstat-divider"></div>
+    <div class="lstat">
+      <span class="lstat-num" id="cnt-terminado">0</span>
+      <span class="lstat-label">Terminados</span>
+    </div>
+    <div class="lstat-divider"></div>
+    <div class="lstat">
+      <span class="lstat-num" id="cnt-lista">0</span>
+      <span class="lstat-label">Por leer</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENIDO -->
+<div class="lista-wrap">
+  <!-- Filtros -->
+  <div class="lista-filtros">
+    <select class="filtro-sec-sel" id="f-final-list" onchange="aplicarFiltros()">
+      <option value="">Finalidad</option>
+      <option value="Formación">Formación</option>
+      <option value="Autoconocimiento">Autoconocimiento</option>
+      <option value="Ocio">Ocio</option>
+    </select>
+    <select class="filtro-sec-sel" id="f-cat-list" onchange="aplicarFiltros()">
+      <option value="">Categoría</option>
+      <option value="Psicología">Psicología</option>
+      <option value="Relaciones">Relaciones</option>
+      <option value="Desarrollo personal">Desarrollo personal</option>
+      <option value="Filosofía">Filosofía</option>
+      <option value="Productividad">Productividad</option>
+      <option value="Pensamiento y decisiones">Pensamiento y decisiones</option>
+      <option value="Finanzas">Finanzas</option>
+      <option value="Ciencia">Ciencia</option>
+      <option value="Geopolítica">Geopolítica</option>
+      <option value="Marketing">Marketing</option>
+      <option value="Novela">Novela</option>
+    </select>
+    <select class="filtro-sec-sel" id="f-dif-list" onchange="aplicarFiltros()">
+      <option value="">Dificultad</option>
+      <option value="Fácil">Fácil</option>
+      <option value="Intermedia">Intermedia</option>
+      <option value="Avanzada">Avanzada</option>
+      <option value="Accesible">Accesible</option>
+      <option value="Moderada">Moderada</option>
+    </select>
+    <button class="btn-limpiar" id="btn-limpiar-list" onclick="limpiarFiltrosList()" style="display:none">Limpiar</button>
+  </div>
+
+  <!-- Sección: Leyendo -->
+  <section class="seccion" id="sec-leyendo">
+    <div class="seccion-header">
+      <h2 class="seccion-titulo">Leyendo ahora</h2>
+      <span class="seccion-count" id="cnt-sec-leyendo">0</span>
+    </div>
+    <div id="lista-leyendo"></div>
+  </section>
+
+  <!-- Sección: Terminados -->
+  <section class="seccion" id="sec-terminado">
+    <div class="seccion-header">
+      <h2 class="seccion-titulo">Terminados</h2>
+      <span class="seccion-count" id="cnt-sec-terminado">0</span>
+    </div>
+    <div id="lista-terminado"></div>
+  </section>
+
+  <!-- Sección: Por leer -->
+  <section class="seccion" id="sec-lista">
+    <div class="seccion-header">
+      <h2 class="seccion-titulo">Lista de lectura</h2>
+      <span class="seccion-count" id="cnt-sec-lista">0</span>
+    </div>
+    <div id="lista-pendiente"></div>
+  </section>
+</div>
+
+<!-- MODAL FORMULARIO -->
+<div class="modal-overlay admin-only" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
+  <div class="modal form-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('form-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="form-header">
+      <h2 class="form-title" id="form-title-text">Nueva entrada</h2>
+      <p class="form-subtitle">Registra lo que esta lectura despertó en ti.</p>
+    </div>
+    <form id="libro-form" onsubmit="guardarLibro(event)" novalidate>
+      <div class="form-body">
+        <p class="form-section-label">Datos</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-tipo">Tipo</label>
+            <select id="f-tipo">
+              <option value="libro">Libro</option>
+              <option value="articulo">Artículo</option>
+              <option value="reflexion">Reflexión</option>
+              <option value="privado">🔒 Privado</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-estado">Estado</label>
+            <select id="f-estado">
+              <option value="leyendo">Leyendo</option>
+              <option value="terminado">Terminado</option>
+              <option value="proximo">Próximo (siguiente)</option>
+              <option value="pendiente">Pendiente (en lista)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-libro">Libro / Fuente</label>
+            <input type="text" id="f-libro" placeholder="Título del libro o artículo">
+          </div>
+          <div class="form-group">
+            <label for="f-autor">Autor</label>
+            <input type="text" id="f-autor" placeholder="Nombre del autor">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-finalidad">Finalidad</label>
+            <select id="f-finalidad">
+              <option value="">—</option>
+              <option value="Formación">Formación</option>
+              <option value="Autoconocimiento">Autoconocimiento</option>
+              <option value="Ocio">Ocio</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-categoria">Categoría</label>
+            <select id="f-categoria">
+              <option value="">—</option>
+              <option value="Psicología">Psicología</option>
+              <option value="Relaciones">Relaciones</option>
+              <option value="Desarrollo personal">Desarrollo personal</option>
+              <option value="Filosofía">Filosofía</option>
+              <option value="Productividad">Productividad</option>
+              <option value="Pensamiento y decisiones">Pensamiento y decisiones</option>
+              <option value="Finanzas">Finanzas</option>
+              <option value="Ciencia">Ciencia</option>
+              <option value="Geopolítica">Geopolítica</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Novela">Novela</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-fecha">Fecha</label>
+            <input type="date" id="f-fecha">
+          </div>
+          <div class="form-group">
+            <label for="f-orden">Orden en lista</label>
+            <input type="number" id="f-orden" min="1" placeholder="1, 2, 3…">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-progreso">Progreso — <span id="progreso-val">0%</span></label>
+            <div class="range-wrap" style="margin-top:4px">
+              <input type="range" id="f-progreso" min="0" max="100" value="0" oninput="$('progreso-val').textContent=this.value+'%'">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="f-dificultad">Dificultad</label>
+            <select id="f-dificultad">
+              <option value="Fácil">Fácil</option>
+              <option value="Intermedia">Intermedia</option>
+              <option value="Avanzada">Avanzada</option>
+              <option value="Accesible">Accesible</option>
+              <option value="Moderada">Moderada</option>
+              <option value="Densa">Densa</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(separadas por comas)</small></label>
+          <input type="text" id="f-tags" placeholder="Ej: Filosofía, Hábitos">
+        </div>
+        <p class="form-section-label">Reflexión</p>
+        <div class="form-group full">
+          <label for="f-titulo-reflexion">Título de la reflexión</label>
+          <input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase...">
+        </div>
+        <div class="form-group full">
+          <label for="f-reflexion">Resumen / Descripción</label>
+          <textarea id="f-reflexion" placeholder="Sobre qué va este libro..." rows="4"></textarea>
+        </div>
+        <div class="form-group full">
+          <label for="f-cita">Cita destacada</label>
+          <textarea id="f-cita" placeholder='"La frase que no puedes olvidar..."' rows="2"></textarea>
+        </div>
+        <div class="form-group full">
+          <label for="f-vida">Aplicación a mi vida</label>
+          <textarea id="f-vida" placeholder="¿Cómo aterrizas esto?" rows="3"></textarea>
+        </div>
+        <div class="form-group full">
+          <label for="f-tension">Tensión / Pregunta abierta</label>
+          <textarea id="f-tension" placeholder="Una pregunta que esta lectura no resolvió..." rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="f-puntuacion">Puntuación (1–10)</label>
+          <input type="number" id="f-puntuacion" min="1" max="10" placeholder="8">
+        </div>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn-cancel" onclick="cerrarModal('form-overlay')">Cancelar</button>
+        <button type="button" class="btn-eliminar admin-only" id="btn-eliminar-form" style="display:none" onclick="eliminarLibroActual()">Eliminar</button>
+        <button type="submit" class="btn-save">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="login-overlay" onclick="overlayClick(event,'login-overlay')">
+  <div class="modal login-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('login-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <div class="login-bar"></div>
+    <div id="login-section">
+      <div class="login-header">
+        <p class="login-eyebrow">Acceso privado</p>
+        <h2 class="login-title">Modo edición</h2>
+        <p class="login-sub">Solo el autor puede editar este blog.</p>
+      </div>
+      <div class="login-body">
+        <div class="form-group">
+          <label for="login-user">Usuario</label>
+          <input type="text" id="login-user" placeholder="Usuario" autocomplete="username" onkeydown="if(event.key==='Enter')$('login-pwd').focus()">
+        </div>
+        <div class="form-group" style="margin-top:14px">
+          <label for="login-pwd">Contraseña</label>
+          <input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')handleLogin()">
+          <span class="error-msg" id="login-error">Credenciales incorrectas. Inténtalo de nuevo.</span>
+        </div>
+      </div>
+      <div class="login-footer">
+        <button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cancelar</button>
+        <button class="btn-save" onclick="handleLogin()">Entrar</button>
+      </div>
+    </div>
+    <div id="logout-section" style="display:none">
+      <div class="logout-bloque">
+        <div class="logout-icon">🔓</div>
+        <p class="logout-title">Modo edición activo</p>
+        <p class="logout-sub">Estás editando el blog como autor.</p>
+      </div>
+      <div class="logout-footer">
+        <button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cerrar</button>
+        <button class="btn-eliminar" style="padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500" onclick="handleLogout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:            "AIzaSyCzqDu7SLE_Gj8OoSWABn4RMyt5i3z1Y-Q",
+  authDomain:        "ensu-tareas.firebaseapp.com",
+  databaseURL:       "https://ensu-tareas-default-rtdb.firebaseio.com",
+  projectId:         "ensu-tareas",
+  storageBucket:     "ensu-tareas.firebasestorage.app",
+  messagingSenderId: "589644635319",
+  appId:             "1:589644635319:web:fbe2e4073f8e4e49bac132"
+});
+const db = firebase.database();
+
+const ADMIN_USER = "Alin";
+const ADMIN_HASH = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714";
+
+let libros    = [];
+let isAdmin   = false;
+let editandoId = null;
+let filtFinal = "";
+let filtCat   = "";
+let filtDif   = "";
+
+const $ = id => document.getElementById(id);
+
+/* ── UTILS ── */
+function badgeClass(e) { return {leyendo:"badge-leyendo",terminado:"badge-terminado",proximo:"badge-proximo",pendiente:"badge-pendiente"}[e]||"badge-pendiente"; }
+function badgeLabel(e) { return {leyendo:"Leyendo",terminado:"Terminado",proximo:"Próximo",pendiente:"Pendiente"}[e]||e; }
+const FC = {"Formación":"formacion","Autoconocimiento":"autoconocimiento","Ocio":"ocio"};
+
+function finalidadBadge(f) {
+  if (!f) return "";
+  return `<span class="finalidad-badge ${FC[f]||''}">${f}</span>`;
+}
+
+/* ── FIREBASE ── */
+function guardarEnStorage() {
+  const obj = {};
+  libros.forEach(l => { obj[l.id] = l; });
+  db.ref("libros").set(obj);
+}
+
+db.ref("libros").on("value", snap => {
+  const data = snap.val();
+  libros = data ? Object.values(data) : [];
+  actualizarStats();
+  renderLista();
+});
+
+/* ── STATS ── */
+function actualizarStats() {
+  const solo = l => l.tipo === "libro";
+  $("cnt-leyendo").textContent   = libros.filter(l => solo(l) && l.estado === "leyendo").length;
+  $("cnt-terminado").textContent = libros.filter(l => solo(l) && l.estado === "terminado").length;
+  $("cnt-lista").textContent     = libros.filter(l => solo(l) && (l.estado === "proximo" || l.estado === "pendiente")).length;
+}
+
+/* ── FILTROS ── */
+function aplicarFiltros() {
+  filtFinal = $("f-final-list").value;
+  filtCat   = $("f-cat-list").value;
+  filtDif   = $("f-dif-list").value;
+  const hay = filtFinal || filtCat || filtDif;
+  $("btn-limpiar-list").style.display = hay ? "" : "none";
+  ["f-final-list","f-cat-list","f-dif-list"].forEach(id => {
+    const s = $(id); if (s) s.classList.toggle("activo", !!s.value);
+  });
+  renderLista();
+}
+
+function limpiarFiltrosList() {
+  filtFinal = filtCat = filtDif = "";
+  ["f-final-list","f-cat-list","f-dif-list"].forEach(id => {
+    const s = $(id); if (s) { s.value = ""; s.classList.remove("activo"); }
+  });
+  $("btn-limpiar-list").style.display = "none";
+  renderLista();
+}
+
+function pasaFiltros(l) {
+  if (filtFinal && l.finalidad !== filtFinal) return false;
+  if (filtCat   && l.categoria !== filtCat)   return false;
+  if (filtDif   && l.dificultad !== filtDif)  return false;
+  return true;
+}
+
+/* ── RENDER ── */
+function renderLista() {
+  const libFiltrados = libros.filter(l => l.tipo === "libro" && pasaFiltros(l));
+
+  function renderSeccion(estado, containerId, countId) {
+    const lista = estado === "lista"
+      ? libFiltrados.filter(l => l.estado === "proximo" || l.estado === "pendiente").sort((a,b) => (a.orden||99)-(b.orden||99))
+      : libFiltrados.filter(l => l.estado === estado).sort((a,b) => new Date(b.fecha||"1970")-new Date(a.fecha||"1970"));
+
+    $(countId).textContent = lista.length;
+    const container = $(containerId);
+    if (!lista.length) {
+      container.innerHTML = `<p class="lista-empty">Sin entradas.</p>`;
+      return;
+    }
+
+    container.innerHTML = lista.map((l, i) => {
+      const numCls = estado === "lista" ? "" : estado;
+      const numTxt = estado === "lista" ? (l.orden||i+1) : (i+1);
+      const rowCls = (estado === "lista" && l.estado === "pendiente") ? " pendiente" : "";
+      return `
+      <div class="libro-row${rowCls}" onclick="abrirForm(${l.id})">
+        <div class="row-num ${numCls}">${numTxt}</div>
+        <div class="row-info">
+          <span class="row-titulo">${l.libro}</span>
+          <span class="row-autor">${l.autor}</span>
+        </div>
+        <span class="row-cat">${l.categoria||''}</span>
+        <span class="row-dif">${l.dificultad||''}</span>
+        ${finalidadBadge(l.finalidad)}
+        <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
+        ${isAdmin ? `<button class="btn-edit-row admin-only" onclick="event.stopPropagation();abrirFormModal(${l.id})" title="Editar">✏</button>` : ''}
+      </div>`;
+    }).join("");
+  }
+
+  renderSeccion("leyendo",   "lista-leyendo",   "cnt-sec-leyendo");
+  renderSeccion("terminado", "lista-terminado",  "cnt-sec-terminado");
+  renderSeccion("lista",     "lista-pendiente",  "cnt-sec-lista");
+}
+
+/* ── CRUD ── */
+function abrirForm(id) {
+  if (isAdmin) abrirFormModal(id);
+}
+
+function abrirFormModal(editId) {
+  limpiarForm();
+  if (editId) {
+    const l = libros.find(x => x.id === editId);
+    if (!l) return;
+    editandoId = editId;
+    $("form-title-text").textContent = "Editar entrada";
+    $("f-tipo").value              = l.tipo || "libro";
+    $("f-libro").value             = l.libro;
+    $("f-autor").value             = l.autor;
+    $("f-fecha").value             = l.fecha;
+    $("f-estado").value            = l.estado;
+    $("f-progreso").value          = l.progreso;
+    $("progreso-val").textContent  = l.progreso + "%";
+    $("f-tags").value              = (l.tags||[]).join(", ");
+    $("f-titulo-reflexion").value  = l.tituloRef  || "";
+    $("f-reflexion").value         = l.reflexion  || "";
+    $("f-cita").value              = l.cita       || "";
+    $("f-vida").value              = l.vida       || "";
+    $("f-tension").value           = l.tension    || "";
+    $("f-dificultad").value        = l.dificultad || "Fácil";
+    $("f-puntuacion").value        = l.puntuacion || "";
+    $("f-finalidad").value         = l.finalidad  || "";
+    $("f-categoria").value         = l.categoria  || "";
+    $("f-orden").value             = l.orden      || "";
+    $("btn-eliminar-form").style.display = "";
+  } else {
+    editandoId = null;
+    $("form-title-text").textContent = "Nueva entrada";
+    $("f-fecha").value = new Date().toISOString().split("T")[0];
+    $("btn-eliminar-form").style.display = "none";
+  }
+  abrirModal("form-overlay");
+}
+
+function limpiarForm() {
+  $("libro-form").reset();
+  $("progreso-val").textContent = "0%";
+  $("btn-eliminar-form").style.display = "none";
+}
+
+function guardarLibro(e) {
+  e.preventDefault();
+  const tagsRaw = $("f-tags").value.trim();
+  const puntRaw = $("f-puntuacion").value.trim();
+  const datos = {
+    tipo:       $("f-tipo").value,
+    libro:      $("f-libro").value.trim(),
+    autor:      $("f-autor").value.trim(),
+    fecha:      $("f-fecha").value,
+    estado:     $("f-estado").value,
+    progreso:   parseInt($("f-progreso").value),
+    tags:       tagsRaw ? tagsRaw.split(",").map(t=>t.trim()).filter(Boolean) : [],
+    tituloRef:  $("f-titulo-reflexion").value.trim(),
+    reflexion:  $("f-reflexion").value.trim(),
+    cita:       $("f-cita").value.trim(),
+    vida:       $("f-vida").value.trim(),
+    tension:    $("f-tension").value.trim(),
+    dificultad: $("f-dificultad").value,
+    puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null,
+    finalidad:  $("f-finalidad").value,
+    categoria:  $("f-categoria").value,
+    orden:      $("f-orden").value ? parseInt($("f-orden").value) : null
+  };
+  if (editandoId !== null) {
+    const idx = libros.findIndex(x => x.id === editandoId);
+    if (idx !== -1) { libros[idx] = { ...libros[idx], ...datos }; mostrarToast("Entrada actualizada."); }
+  } else {
+    libros.push({ id: libros.reduce((m,l) => Math.max(m,l.id), 0) + 1, ...datos });
+    mostrarToast("Entrada guardada.");
+  }
+  guardarEnStorage();
+  cerrarModal("form-overlay");
+}
+
+function eliminarLibroActual() {
+  if (!editandoId) return;
+  if (!confirm("¿Eliminar esta entrada? Esta acción no se puede deshacer.")) return;
+  db.ref("libros/" + editandoId).remove();
+  cerrarModal("form-overlay");
+  mostrarToast("Entrada eliminada.");
+}
+
+/* ── AUTH ── */
+async function sha256(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function setAdminMode(on) {
+  isAdmin = on;
+  document.body.classList.toggle("admin", on);
+  $("lock-icon").textContent = on ? "🔓" : "🔒";
+  if (on) sessionStorage.setItem("ensu-admin","1");
+  else    sessionStorage.removeItem("ensu-admin");
+  renderLista();
+}
+
+function initAdminMode() {
+  if (sessionStorage.getItem("ensu-admin") === "1") setAdminMode(true);
+}
+
+function abrirLoginModal() {
+  if (isAdmin) {
+    $("login-section").style.display  = "none";
+    $("logout-section").style.display = "";
+  } else {
+    $("login-section").style.display  = "";
+    $("logout-section").style.display = "none";
+    $("login-user").value = "";
+    $("login-pwd").value  = "";
+    $("login-error").classList.remove("visible");
+  }
+  abrirModal("login-overlay");
+}
+
+async function handleLogin() {
+  const user = $("login-user").value.trim();
+  const pwd  = $("login-pwd").value;
+  const hash = await sha256(pwd);
+  if (user === ADMIN_USER && hash === ADMIN_HASH) {
+    setAdminMode(true);
+    cerrarModal("login-overlay");
+    mostrarToast("Modo edición activado.", "✓");
+  } else {
+    $("login-error").classList.add("visible");
+    $("login-pwd").focus();
+  }
+}
+
+function handleLogout() {
+  setAdminMode(false);
+  cerrarModal("login-overlay");
+  mostrarToast("Sesión cerrada.");
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function mostrarToast(msg, icono="✓") {
+  const t = $("toast");
+  t.innerHTML = `<span>${icono}</span> ${msg}`;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+/* ── MODALES ── */
+let _scrollY = 0;
+function abrirModal(id) {
+  $(id).classList.add("open");
+  const m = $(id).querySelector(".modal"); if (m) m.scrollTop = 0;
+  _scrollY = window.scrollY;
+  document.body.style.overflow = "hidden";
+  document.body.style.position = "fixed";
+  document.body.style.top      = `-${_scrollY}px`;
+  document.body.style.width    = "100%";
+}
+function cerrarModal(id) {
+  $(id).classList.remove("open");
+  document.body.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.top      = "";
+  document.body.style.width    = "";
+  window.scrollTo(0, _scrollY);
+}
+function overlayClick(e, id) { if (e.target.id === id) cerrarModal(id); }
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") { cerrarModal("form-overlay"); cerrarModal("login-overlay"); }
+});
+
+/* ── DARK MODE ── */
+function toggleDarkMode() {
+  const isDark = document.documentElement.classList.toggle("dark");
+  $("dark-icon").textContent = isDark ? "☀" : "🌙";
+  localStorage.setItem("ensu-dark", isDark ? "1" : "0");
+}
+function initDarkMode() {
+  if (localStorage.getItem("ensu-dark") === "1") {
+    document.documentElement.classList.add("dark");
+    $("dark-icon").textContent = "☀";
+  }
+}
+
+/* ── NAV SCROLL ── */
+window.addEventListener("scroll", () => {
+  $("main-nav").classList.toggle("scrolled", window.scrollY > 20);
+}, { passive: true });
+
+/* ── INIT ── */
+initDarkMode();
+initAdminMode();
+
+/* Devtools prevention */
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("keydown", function(e) {
+  if (e.key === "F12") { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.shiftKey && ["I","J","C","K"].includes(e.key.toUpperCase())) { e.preventDefault(); return false; }
+  if (e.ctrlKey && e.key.toUpperCase() === "U") { e.preventDefault(); return false; }
+});
+</script>
+</body>
+</html>

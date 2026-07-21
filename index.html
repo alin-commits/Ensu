@@ -408,6 +408,85 @@
   .badge-leyendo  { background: rgba(198,138,109,0.14); color: var(--terracota); }
   .badge-terminado{ background: rgba(167,174,161,0.18); color: #5c6358; }
   .badge-proximo  { background: rgba(138,144,184,0.15); color: #5a6080; }
+  .badge-pendiente{ background: rgba(120,130,160,0.10); color: #6a7090; }
+  html.dark .badge-pendiente { color: #8890b0; }
+
+  /* Finalidad badges */
+  .finalidad-badge {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 100px; flex-shrink: 0;
+  }
+  .finalidad-badge.formacion       { background: rgba(80,100,190,0.12); color: #4a5cb0; }
+  .finalidad-badge.autoconocimiento{ background: rgba(107,140,102,0.14); color: #4d7248; }
+  .finalidad-badge.ocio            { background: rgba(198,138,109,0.14); color: var(--terracota); }
+  html.dark .finalidad-badge.formacion        { color: #8895d0; }
+  html.dark .finalidad-badge.autoconocimiento { color: #8aad86; }
+
+  /* Meta row (categoria + dificultad) en card */
+  .card-cat {
+    font-size: 11px; color: var(--muted); font-weight: 500;
+    letter-spacing: 0.02em; margin-bottom: 10px;
+  }
+
+  /* Pendiente card */
+  .card.card-pendiente {
+    border: 1.5px dashed rgba(120,130,160,0.3);
+    opacity: 0.85; cursor: pointer;
+  }
+  .card.card-pendiente:hover { border-color: rgba(120,130,160,0.6); transform: translateY(-2px); }
+  .card-accent.pendiente-accent {
+    background: repeating-linear-gradient(90deg,#8a90b8 0,#8a90b8 3px,transparent 3px,transparent 10px);
+    opacity: 0.3; height: 4px;
+  }
+
+  /* Separador dentro del grid */
+  .lectura-sep {
+    grid-column: 1 / -1; display: flex; align-items: center;
+    gap: 20px; padding: 8px 0;
+  }
+
+  /* Secondary filters */
+  .filtros-secundarios {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde);
+  }
+  .filtro-sec-sel {
+    background: var(--tarjeta); border: 1.5px solid var(--borde); border-radius: 8px;
+    padding: 5px 28px 5px 10px; font-size: 12px; font-weight: 500;
+    color: var(--texto-2); cursor: pointer; outline: none; font-family: 'Inter', sans-serif;
+    -webkit-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center;
+    transition: border-color var(--trans);
+  }
+  .filtro-sec-sel.activo { border-color: var(--terracota); }
+  html.dark .filtro-sec-sel { background-color: #252220; color: var(--negro); border-color: rgba(240,237,230,0.12); }
+  .btn-limpiar-sec {
+    font-size: 11.5px; color: var(--muted); background: none; border: none;
+    cursor: pointer; text-decoration: underline; transition: color var(--trans); font-family: 'Inter', sans-serif;
+  }
+  .btn-limpiar-sec:hover { color: var(--negro); }
+
+  /* Toggle lista de lectura */
+  .toggle-lectura-row {
+    max-width: 1200px; margin: 0 auto; padding: 0 28px 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .btn-toggle-lectura {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--tarjeta); border: 1.5px solid var(--borde); border-radius: 100px;
+    padding: 8px 18px; font-size: 13px; font-weight: 500; color: var(--texto-2);
+    cursor: pointer; transition: all var(--trans); white-space: nowrap; font-family: 'Inter', sans-serif;
+  }
+  .btn-toggle-lectura:hover { border-color: var(--negro); color: var(--negro); }
+  .btn-toggle-lectura.abierto { border-color: var(--terracota); color: var(--terracota); }
+  .btn-lista-ext {
+    font-size: 12.5px; color: var(--muted); background: none; border: none;
+    cursor: pointer; text-decoration: underline; transition: color var(--trans);
+    font-family: 'Inter', sans-serif; white-space: nowrap;
+  }
+  .btn-lista-ext:hover { color: var(--negro); }
+  a.btn-lista-ext { display: inline; }
 
   /* Cards próximo */
   .card-accent.proximo {
@@ -420,11 +499,11 @@
   .card.card-proximo {
     border: 1.5px dashed rgba(138,144,184,0.5);
     background: var(--crema-card);
-    cursor: default;
+    cursor: pointer;
     position: relative;
     opacity: 0.82;
   }
-  .card.card-proximo:hover { transform: none; box-shadow: none; border-color: rgba(138,144,184,0.7); }
+  .card.card-proximo:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(138,144,184,0.15); border-color: rgba(138,144,184,0.7); }
   .proximo-num {
     width: 30px;
     height: 30px;
@@ -1103,6 +1182,8 @@
     #filtros-select    { display: block; }
     .grid-wrap { padding: 0 16px 72px; }
     .cards-grid { grid-template-columns: 1fr; gap: 16px; }
+    .toggle-lectura-row { padding: 0 16px 20px; }
+    .filtros-secundarios { gap: 6px; }
     /* Modal como popup con márgenes visibles */
     .modal-overlay { align-items: center; padding: 16px; }
     .modal { border-radius: 16px; max-height: 85vh; max-width: calc(100vw - 32px); }
@@ -1659,6 +1740,7 @@
       <img src="img/logo.png" alt="EnSu Logo" class="nav-logo">
     </a>
     <div class="nav-actions">
+      <a href="lista.html" class="btn-tareas" style="text-decoration:none">Lista de lectura</a>
       <button class="btn-tareas admin-only" id="btn-tareas-nav" onclick="irATareas()">Tareas</button>
       <button class="btn-nuevo admin-only" onclick="abrirFormModal()" aria-label="Nueva entrada">
         <span>+</span> Nueva entrada
@@ -1729,6 +1811,51 @@
     <select id="filtros-select" onchange="setFiltro(this.value)"></select>
     <button class="sort-btn desc" id="sort-btn" onclick="toggleSort()" title="Ordenar por fecha">Reciente</button>
   </div>
+  <div class="filtros-secundarios" id="filtros-secundarios">
+    <select class="filtro-sec-sel" id="filtro-finalidad" onchange="setFiltroSec('finalidad',this.value)">
+      <option value="">Finalidad</option>
+      <option value="Formación">Formación</option>
+      <option value="Autoconocimiento">Autoconocimiento</option>
+      <option value="Ocio">Ocio</option>
+    </select>
+    <select class="filtro-sec-sel" id="filtro-categoria" onchange="setFiltroSec('categoria',this.value)">
+      <option value="">Categoría</option>
+      <option value="Psicología">Psicología</option>
+      <option value="Relaciones">Relaciones</option>
+      <option value="Desarrollo personal">Desarrollo personal</option>
+      <option value="Filosofía">Filosofía</option>
+      <option value="Productividad">Productividad</option>
+      <option value="Pensamiento y decisiones">Pensamiento y decisiones</option>
+      <option value="Finanzas">Finanzas</option>
+      <option value="Ciencia">Ciencia</option>
+      <option value="Geopolítica">Geopolítica</option>
+      <option value="Marketing">Marketing</option>
+      <option value="Novela">Novela</option>
+    </select>
+    <select class="filtro-sec-sel" id="filtro-estadolib" onchange="setFiltroSec('estadolib',this.value)">
+      <option value="">Estado</option>
+      <option value="leyendo">Leyendo</option>
+      <option value="terminado">Terminado</option>
+    </select>
+    <select class="filtro-sec-sel" id="filtro-dificultad" onchange="setFiltroSec('dificultad',this.value)">
+      <option value="">Dificultad</option>
+      <option value="Fácil">Fácil</option>
+      <option value="Intermedia">Intermedia</option>
+      <option value="Avanzada">Avanzada</option>
+      <option value="Accesible">Accesible</option>
+      <option value="Moderada">Moderada</option>
+      <option value="Densa">Densa</option>
+    </select>
+    <button class="btn-limpiar-sec" id="btn-limpiar-sec" onclick="limpiarFiltrosSec()" style="display:none">Limpiar filtros</button>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━ TOGGLE LISTA LECTURA ━━━━━━━━━━ -->
+<div class="toggle-lectura-row" id="toggle-lectura-row">
+  <button class="btn-toggle-lectura" id="btn-toggle-lectura" onclick="toggleLectura()">
+    📚 Lista de lectura ▼
+  </button>
+  <a href="lista.html" class="btn-lista-ext">Ver lista completa →</a>
 </div>
 
 <!-- ━━━━━━━━━━ GRID ━━━━━━━━━━ -->
@@ -1961,7 +2088,8 @@
             <select id="f-estado">
               <option value="leyendo">Leyendo</option>
               <option value="terminado">Terminado</option>
-              <option value="proximo">Próximo</option>
+              <option value="proximo">Próximo (siguiente)</option>
+              <option value="pendiente">Pendiente (en lista)</option>
             </select>
           </div>
         </div>
@@ -1987,6 +2115,41 @@
                 oninput="$('progreso-val').textContent=this.value+'%'">
             </div>
           </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-finalidad">Finalidad</label>
+            <select id="f-finalidad">
+              <option value="">—</option>
+              <option value="Formación">Formación</option>
+              <option value="Autoconocimiento">Autoconocimiento</option>
+              <option value="Ocio">Ocio</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="f-categoria">Categoría</label>
+            <select id="f-categoria">
+              <option value="">—</option>
+              <option value="Psicología">Psicología</option>
+              <option value="Relaciones">Relaciones</option>
+              <option value="Desarrollo personal">Desarrollo personal</option>
+              <option value="Filosofía">Filosofía</option>
+              <option value="Productividad">Productividad</option>
+              <option value="Pensamiento y decisiones">Pensamiento y decisiones</option>
+              <option value="Finanzas">Finanzas</option>
+              <option value="Ciencia">Ciencia</option>
+              <option value="Geopolítica">Geopolítica</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Novela">Novela</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-orden">Orden en lista de lectura</label>
+            <input type="number" id="f-orden" min="1" placeholder="1, 2, 3…">
+          </div>
+          <div class="form-group"></div>
         </div>
         <div class="form-group">
           <label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(separadas por comas)</small></label>
@@ -2200,12 +2363,17 @@ const DATOS_INICIALES = [
   }
 ];
 
-let libros       = [];
-let filtroActivo = "Todos";
-let busqueda     = "";
-let isAdmin      = false;
-let sortDesc     = true;
-let editandoId   = null;
+let libros          = [];
+let filtroActivo    = "Todos";
+let filtroFinalidad = "";
+let filtroCategoria = "";
+let filtroEstadoLib = "";
+let filtroDificultad= "";
+let mostrarLectura  = false;
+let busqueda        = "";
+let isAdmin         = false;
+let sortDesc        = true;
+let editandoId      = null;
 
 /* ── FIREBASE STORAGE ── */
 function guardarEnStorage() {
@@ -2256,11 +2424,11 @@ function fmtFecha(str) {
 }
 
 function badgeClass(estado) {
-  return { leyendo:"badge-leyendo", terminado:"badge-terminado", proximo:"badge-proximo" }[estado] || "badge-proximo";
+  return { leyendo:"badge-leyendo", terminado:"badge-terminado", proximo:"badge-proximo", pendiente:"badge-pendiente" }[estado] || "badge-proximo";
 }
 
 function badgeLabel(estado) {
-  return { leyendo:"Leyendo", terminado:"Terminado", proximo:"Próximo" }[estado] || estado;
+  return { leyendo:"Leyendo", terminado:"Terminado", proximo:"Próximo", pendiente:"Pendiente" }[estado] || estado;
 }
 
 function tipoLabel(tipo) {
@@ -2280,9 +2448,10 @@ function allAreas() {
 
 /* ── ESTADÍSTICAS ── */
 function actualizarStats() {
-  $("stat-libros").textContent      = libros.filter(l => l.tipo === "libro"     && l.estado !== "proximo").length;
-  $("stat-reflexiones").textContent = libros.filter(l => l.tipo === "reflexion" && l.estado !== "proximo").length;
-  $("stat-articulos").textContent   = libros.filter(l => l.tipo === "articulo"  && l.estado !== "proximo").length;
+  const activos = l => l.estado !== "proximo" && l.estado !== "pendiente";
+  $("stat-libros").textContent      = libros.filter(l => l.tipo === "libro"     && activos(l)).length;
+  $("stat-reflexiones").textContent = libros.filter(l => l.tipo === "reflexion" && activos(l)).length;
+  $("stat-articulos").textContent   = libros.filter(l => l.tipo === "articulo"  && activos(l)).length;
 }
 
 /* ── FILTROS por tipo ── */
@@ -2332,45 +2501,63 @@ function limpiarBusqueda() {
 /* ── TARJETAS ── */
 function renderCards() {
   const grid = $("cards-grid");
+  const FC   = { "Formación":"formacion", "Autoconocimiento":"autoconocimiento", "Ocio":"ocio" };
 
-  // Cards próximo: en "Todos" y en "libro", siempre al final, ordenadas por l.orden
-  const proximoCards = (filtroActivo === "Todos" || filtroActivo === "libro")
-    ? libros.filter(l => l.estado === "proximo").sort((a, b) => (a.orden||99) - (b.orden||99))
+  // Update toggle button text
+  const lecturaCount = libros.filter(l => l.estado === "proximo" || l.estado === "pendiente").length;
+  const toggleBtn = $("btn-toggle-lectura");
+  if (toggleBtn) {
+    toggleBtn.className = `btn-toggle-lectura${mostrarLectura ? " abierto" : ""}`;
+    toggleBtn.innerHTML = `📚 Lista de lectura (${lecturaCount}) ${mostrarLectura ? "▲" : "▼"}`;
+  }
+
+  // Reading list cards (only when toggled on and tipo filter allows libros)
+  const lecturaCards = (mostrarLectura && (filtroActivo === "Todos" || filtroActivo === "libro"))
+    ? libros.filter(l => l.estado === "proximo" || l.estado === "pendiente")
+        .sort((a, b) => (a.orden||99) - (b.orden||99))
     : [];
 
-  let lista = (filtroActivo === "Todos"
-    ? libros.filter(l => (isAdmin || l.tipo !== "privado") && l.estado !== "proximo")
-    : libros.filter(l => l.tipo === filtroActivo && (isAdmin || l.tipo !== "privado") && l.estado !== "proximo"))
-    .slice()
-    .sort((a, b) => {
-      const da = new Date(a.fecha || "1970-01-01");
-      const db = new Date(b.fecha || "1970-01-01");
-      return sortDesc ? db - da : da - db;
-    });
+  // Main cards — exclude proximo/pendiente
+  let lista = libros.filter(l => {
+    if (l.estado === "proximo" || l.estado === "pendiente") return false;
+    if (filtroActivo !== "Todos" && l.tipo !== filtroActivo) return false;
+    if (!isAdmin && l.tipo === "privado") return false;
+    if (filtroFinalidad  && l.finalidad  !== filtroFinalidad)  return false;
+    if (filtroCategoria  && l.categoria  !== filtroCategoria)  return false;
+    if (filtroEstadoLib  && l.estado     !== filtroEstadoLib)  return false;
+    if (filtroDificultad && l.dificultad !== filtroDificultad) return false;
+    return true;
+  }).slice().sort((a, b) => {
+    const da = new Date(a.fecha || "1970-01-01");
+    const db2 = new Date(b.fecha || "1970-01-01");
+    return sortDesc ? db2 - da : da - db2;
+  });
 
   if (busqueda) {
     lista = lista.filter(l => {
-      const haystack = [l.tituloRef, l.autor, l.libro, l.reflexion, ...l.tags]
+      const hay = [l.tituloRef, l.autor, l.libro, l.reflexion, l.categoria, ...(l.tags||[])]
         .join(" ").toLowerCase();
-      return haystack.includes(busqueda);
+      return hay.includes(busqueda);
     });
   }
 
-  if (lista.length === 0) {
+  if (lista.length === 0 && !lecturaCards.length) {
     const msg = busqueda
       ? `No hay resultados para "<strong>${busqueda}</strong>".`
       : "Todavía no hay entradas en esta categoría.";
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📖</div>
-        <p>${msg}</p>
-      </div>`;
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📖</div><p>${msg}</p></div>`;
     return;
   }
 
   const regularHtml = lista.map(l => {
     const ac   = accentClass(l);
     const tags = (l.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
+    const badge1 = l.finalidad
+      ? `<span class="finalidad-badge ${FC[l.finalidad]||''}">${l.finalidad}</span>`
+      : `<span class="tipo-badge ${l.tipo}">${tipoLabel(l.tipo)}</span>`;
+    const meta = (l.categoria || l.dificultad)
+      ? `<p class="card-cat">${[l.categoria, l.dificultad].filter(Boolean).join(' · ')}</p>`
+      : '';
     return `
     <article class="card" onclick="abrirDetalle(${l.id})">
       <div class="card-accent ${ac}"></div>
@@ -2378,12 +2565,13 @@ function renderCards() {
         <div class="card-eyebrow">
           <span class="card-autor">${l.autor}</span>
           <div style="display:flex;gap:6px;align-items:center;">
-            <span class="tipo-badge ${l.tipo}">${tipoLabel(l.tipo)}</span>
+            ${badge1}
             <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
           </div>
         </div>
         <h3 class="card-titulo">${l.tipo !== 'reflexion' ? l.libro : l.tituloRef}</h3>
         <p class="card-libro">${l.tipo !== 'reflexion' ? l.tituloRef : l.libro}</p>
+        ${meta}
         <div class="card-tags">${tags}</div>
         <p class="card-extracto">${l.reflexion}</p>
       </div>
@@ -2399,26 +2587,67 @@ function renderCards() {
     </article>`;
   }).join("");
 
-  const proximoHtml = proximoCards.map(l => `
-    <article class="card card-proximo">
-      <div class="card-accent proximo"></div>
-      <div class="card-body">
-        <div class="card-eyebrow">
-          <span class="card-autor">${l.autor}</span>
-          <span class="tipo-badge libro">Libro</span>
+  const lecturaHtml = lecturaCards.length ? `
+    <div class="lectura-sep">
+      <div class="sep-line"></div>
+      <span class="sep-text">Lista de lectura</span>
+      <div class="sep-line"></div>
+    </div>
+    ${lecturaCards.map(l => {
+      const isPendiente = l.estado === "pendiente";
+      const cardCls    = isPendiente ? "card-pendiente" : "card-proximo";
+      const accentCls  = isPendiente ? "pendiente-accent" : "proximo";
+      return `
+      <article class="card ${cardCls}" onclick="abrirDetalle(${l.id})">
+        <div class="card-accent ${accentCls}"></div>
+        <div class="card-body">
+          <div class="card-eyebrow">
+            <span class="card-autor">${l.autor}</span>
+            <span class="tipo-badge libro">Libro</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:4px">
+            <h3 class="card-titulo" style="margin-bottom:0">${l.libro}</h3>
+            <div class="proximo-num">${l.orden||'?'}</div>
+          </div>
+          ${l.categoria ? `<p class="card-cat" style="margin-top:8px">${l.categoria}${l.dificultad ? ' · '+l.dificultad : ''}</p>` : ''}
+          <p class="proximo-hint">${isPendiente ? 'En lista de lectura' : 'Próximo en la lista'}</p>
         </div>
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:4px">
-          <h3 class="card-titulo" style="margin-bottom:0">${l.libro}</h3>
-          <div class="proximo-num">${l.orden}</div>
+        <div class="card-footer">
+          <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
         </div>
-        <p class="proximo-hint">Próximo en la lista de lectura</p>
-      </div>
-      <div class="card-footer">
-        <span class="badge badge-proximo">🔜 Próximo</span>
-      </div>
-    </article>`).join("");
+      </article>`;
+    }).join("")}
+  ` : "";
 
-  grid.innerHTML = regularHtml + proximoHtml;
+  grid.innerHTML = regularHtml + lecturaHtml;
+}
+
+function setFiltroSec(campo, valor) {
+  if (campo === "finalidad")  filtroFinalidad  = valor;
+  if (campo === "categoria")  filtroCategoria  = valor;
+  if (campo === "estadolib")  filtroEstadoLib  = valor;
+  if (campo === "dificultad") filtroDificultad = valor;
+  const hayActivos = filtroFinalidad || filtroCategoria || filtroEstadoLib || filtroDificultad;
+  const btn = $("btn-limpiar-sec");
+  if (btn) btn.style.display = hayActivos ? "" : "none";
+  ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id => {
+    const s = $(id); if (s) s.classList.toggle("activo", !!s.value);
+  });
+  renderCards();
+}
+
+function limpiarFiltrosSec() {
+  filtroFinalidad = filtroCategoria = filtroEstadoLib = filtroDificultad = "";
+  ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id => {
+    const s = $(id); if (s) { s.value = ""; s.classList.remove("activo"); }
+  });
+  const btn = $("btn-limpiar-sec"); if (btn) btn.style.display = "none";
+  renderCards();
+}
+
+function toggleLectura() {
+  mostrarLectura = !mostrarLectura;
+  renderCards();
 }
 
 /* ── MODAL DETALLE ── */
@@ -2516,6 +2745,9 @@ function abrirDetalle(id) {
       <p class="ficha-val">${l.puntuacion ? l.puntuacion + " / 10" : "—"}</p>
       ${ratingDots}
     </div>
+    ${l.finalidad ? `<div class="ficha-item"><p class="ficha-key">Finalidad</p><p class="ficha-val">${l.finalidad}</p></div>` : ""}
+    ${l.categoria ? `<div class="ficha-item"><p class="ficha-key">Categoría</p><p class="ficha-val">${l.categoria}</p></div>` : ""}
+    ${l.orden ? `<div class="ficha-item"><p class="ficha-key">Orden lectura</p><p class="ficha-val">#${l.orden}</p></div>` : ""}
   `;
 
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
@@ -2561,7 +2793,7 @@ function abrirFormModal(editId) {
     $("f-estado").value            = l.estado;
     $("f-progreso").value          = l.progreso;
     $("progreso-val").textContent  = l.progreso + "%";
-    $("f-tags").value              = l.tags.join(", ");
+    $("f-tags").value              = (l.tags||[]).join(", ");
     $("f-titulo-reflexion").value  = l.tituloRef;
     $("f-reflexion").value         = l.reflexion;
     $("f-cita").value              = l.cita    || "";
@@ -2569,6 +2801,9 @@ function abrirFormModal(editId) {
     $("f-tension").value           = l.tension || "";
     $("f-dificultad").value        = l.dificultad || "Accesible";
     $("f-puntuacion").value        = l.puntuacion || "";
+    $("f-finalidad").value         = l.finalidad  || "";
+    $("f-categoria").value         = l.categoria  || "";
+    $("f-orden").value             = l.orden      || "";
   } else {
     editandoId = null;
     $("form-title-text").textContent = "Nueva entrada";
@@ -2602,7 +2837,10 @@ function guardarLibro(e) {
     vida:       $("f-vida").value.trim(),
     tension:    $("f-tension").value.trim(),
     dificultad: $("f-dificultad").value,
-    puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null
+    puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null,
+    finalidad:  $("f-finalidad").value,
+    categoria:  $("f-categoria").value,
+    orden:      $("f-orden").value ? parseInt($("f-orden").value) : null
   };
 
   if (editandoId !== null) {
