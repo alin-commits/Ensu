@@ -447,9 +447,19 @@
 
   /* Secondary filters */
   .filtros-secundarios {
-    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    display: none; gap: 8px; flex-wrap: wrap; align-items: center;
     margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde);
   }
+  .filtros-secundarios.open { display: flex; }
+  .btn-filtrar {
+    display: flex; align-items: center; gap: 5px;
+    background: transparent; border: 1.5px solid var(--borde); color: var(--muted);
+    padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.02em; transition: all var(--trans); white-space: nowrap;
+    flex-shrink: 0; font-family: 'Inter', sans-serif;
+  }
+  .btn-filtrar:hover { border-color: var(--negro); color: var(--negro); }
+  .btn-filtrar.activo { border-color: var(--terracota); color: var(--terracota); }
   .filtro-sec-sel {
     background: var(--tarjeta); border: 1.5px solid var(--borde); border-radius: 8px;
     padding: 5px 28px 5px 10px; font-size: 12px; font-weight: 500;
@@ -1810,6 +1820,7 @@
     <div class="filtros" id="filtros-container"></div>
     <select id="filtros-select" onchange="setFiltro(this.value)"></select>
     <button class="sort-btn desc" id="sort-btn" onclick="toggleSort()" title="Ordenar por fecha">Reciente</button>
+    <button class="btn-filtrar" id="btn-filtrar" onclick="toggleFiltrosSecPanel()">Filtrar ▼</button>
   </div>
   <div class="filtros-secundarios" id="filtros-secundarios">
     <select class="filtro-sec-sel" id="filtro-finalidad" onchange="setFiltroSec('finalidad',this.value)">
@@ -2628,11 +2639,13 @@ function setFiltroSec(campo, valor) {
   if (campo === "estadolib")  filtroEstadoLib  = valor;
   if (campo === "dificultad") filtroDificultad = valor;
   const hayActivos = filtroFinalidad || filtroCategoria || filtroEstadoLib || filtroDificultad;
-  const btn = $("btn-limpiar-sec");
-  if (btn) btn.style.display = hayActivos ? "" : "none";
+  const btnLimpiar = $("btn-limpiar-sec");
+  if (btnLimpiar) btnLimpiar.style.display = hayActivos ? "" : "none";
   ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id => {
     const s = $(id); if (s) s.classList.toggle("activo", !!s.value);
   });
+  const btnF = $("btn-filtrar");
+  if (btnF) btnF.classList.toggle("activo", !!hayActivos || $("filtros-secundarios").classList.contains("open"));
   renderCards();
 }
 
@@ -2641,13 +2654,24 @@ function limpiarFiltrosSec() {
   ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id => {
     const s = $(id); if (s) { s.value = ""; s.classList.remove("activo"); }
   });
-  const btn = $("btn-limpiar-sec"); if (btn) btn.style.display = "none";
+  const btnLimpiar = $("btn-limpiar-sec"); if (btnLimpiar) btnLimpiar.style.display = "none";
+  const btnF = $("btn-filtrar");
+  if (btnF) btnF.classList.toggle("activo", $("filtros-secundarios").classList.contains("open"));
   renderCards();
 }
 
 function toggleLectura() {
   mostrarLectura = !mostrarLectura;
   renderCards();
+}
+
+function toggleFiltrosSecPanel() {
+  const panel = $("filtros-secundarios");
+  const btn   = $("btn-filtrar");
+  const open  = panel.classList.toggle("open");
+  const hayActivos = filtroFinalidad || filtroCategoria || filtroEstadoLib || filtroDificultad;
+  btn.textContent = open ? "Filtrar ▲" : "Filtrar ▼";
+  btn.classList.toggle("activo", open || !!hayActivos);
 }
 
 /* ── MODAL DETALLE ── */
