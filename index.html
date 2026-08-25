@@ -2570,7 +2570,7 @@ function renderCards() {
       ? `<p class="card-cat">${[l.categoria, l.dificultad].filter(Boolean).join(' · ')}</p>`
       : '';
     return `
-    <article class="card" onclick="abrirDetalle(${l.id})">
+    <article class="card" onclick="abrirDetalle('${l.id}')">
       <div class="card-accent ${ac}"></div>
       <div class="card-body">
         <div class="card-eyebrow">
@@ -2609,7 +2609,7 @@ function renderCards() {
       const cardCls    = isPendiente ? "card-pendiente" : "card-proximo";
       const accentCls  = isPendiente ? "pendiente-accent" : "proximo";
       return `
-      <article class="card ${cardCls}" onclick="abrirDetalle(${l.id})">
+      <article class="card ${cardCls}" onclick="abrirDetalle('${l.id}')">
         <div class="card-accent ${accentCls}"></div>
         <div class="card-body">
           <div class="card-eyebrow">

@@ -750,7 +750,7 @@ function renderLista() {
       const numTxt = estado === "lista" ? (l.orden||i+1) : (i+1);
       const rowCls = (estado === "lista" && l.estado === "pendiente") ? " pendiente" : "";
       return `
-      <div class="libro-row${rowCls}" onclick="abrirForm(${l.id})">
+      <div class="libro-row${rowCls}" onclick="abrirForm('${l.id}')">
         <div class="row-num ${numCls}">${numTxt}</div>
         <div class="row-info">
           <span class="row-titulo">${l.libro}</span>
@@ -760,7 +760,7 @@ function renderLista() {
         <span class="row-dif">${l.dificultad||''}</span>
         ${finalidadBadge(l.finalidad)}
         <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
-        ${isAdmin ? `<button class="btn-edit-row admin-only" onclick="event.stopPropagation();abrirFormModal(${l.id})" title="Editar">✏</button>` : ''}
+        ${isAdmin ? `<button class="btn-edit-row admin-only" onclick="event.stopPropagation();abrirFormModal('${l.id}')" title="Editar">✏</button>` : ''}
       </div>`;
     }).join("");
   }
