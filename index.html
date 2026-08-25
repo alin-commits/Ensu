@@ -581,7 +581,7 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
 </div>
 
 <!-- SEARCH -->
-<div class="search-wrap">
+<div class="search-wrap" id="search-section">
   <div class="search-inner">
     <span class="search-ico">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -1427,6 +1427,7 @@ function irATareas(){
   if(!isAdmin)return;
   paginaActiva="tareas";
   $("home-hero").style.display="none";
+  $("search-section").style.display="none";
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
@@ -1446,6 +1447,7 @@ function irAHome(){
   $("timeline-page").style.display="none";
   $("tag-page").style.display="none";
   $("home-hero").style.display="";
+  $("search-section").style.display="";
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
@@ -1658,6 +1660,7 @@ function renderTimeline(){
 function irATimeline(){
   irAHome();
   $("home-hero").style.display="none";
+  $("search-section").style.display="none";
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
@@ -1672,6 +1675,7 @@ function irATimeline(){
 function abrirTagPage(tag){
   irAHome();
   $("home-hero").style.display="none";
+  $("search-section").style.display="none";
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
