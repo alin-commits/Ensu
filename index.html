@@ -2688,7 +2688,7 @@ function abrirDetalle(id) {
   badge.className                = `badge ${badgeClass(l.estado)}`;
   $("d-titulo").textContent      = l.tituloRef;
   $("d-libro-autor").textContent = l.libro;
-  $("d-tags").innerHTML          = l.tags.map(t=>`<span class="tag">${t}</span>`).join("");
+  $("d-tags").innerHTML          = (l.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
 
   const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Teoría", privado: "Nota privada" };
   $("d-resumen-label").textContent = resumenLabels[l.tipo] || "Resumen";
