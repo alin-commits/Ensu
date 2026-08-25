@@ -2676,7 +2676,7 @@ function toggleFiltrosSecPanel() {
 
 /* ── MODAL DETALLE ── */
 function abrirDetalle(id) {
-  const l = libros.find(x => x.id === id);
+  const l = libros.find(x => x.id == id);
   if (!l) return;
 
   const tipoAccent = { libro: "var(--terracota)", reflexion: "#6b8c66", articulo: "#7a80a0", privado: "#9b7fa6" };
@@ -2806,7 +2806,7 @@ function eliminarLibro(id) {
 function abrirFormModal(editId) {
   limpiarForm();
   if (editId) {
-    const l = libros.find(x => x.id === editId);
+    const l = libros.find(x => x.id == editId);
     if (!l) return;
     editandoId = editId;
     $("form-title-text").textContent = "Editar entrada";
@@ -2868,7 +2868,7 @@ function guardarLibro(e) {
   };
 
   if (editandoId !== null) {
-    const idx = libros.findIndex(x => x.id === editandoId);
+    const idx = libros.findIndex(x => x.id == editandoId);
     if (idx !== -1) {
       libros[idx] = { ...libros[idx], ...datos };
       mostrarToast("Entrada actualizada.");
