@@ -3,1823 +3,499 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EnSu — Lo que leo me forma</title>
+<title>EnSu — Biblioteca de conocimiento</title>
 <link rel="icon" href="img/logo.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ── CSS CUSTOM PROPERTIES ── */
-  :root {
-    --fondo:      #F5F5F5;
-    --negro:      #121212;
-    --tarjeta:    #FFFFFF;
-    --terracota:  #C68A6D;
-    --salvia:     #A7AEA1;
-    --beige:      #E6E0D6;
-    --texto-2:    #4A4540;
-    --muted:      #9C9189;
-    --borde:      rgba(18,18,18,0.12);
-    --radius:     12px;
-    --trans:      0.22s ease;
-  }
-
-  /* ── RESET & BASE ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--fondo);
-    color: var(--negro);
-    line-height: 1.6;
-    min-height: 100vh;
-  }
-
-  img { display: block; max-width: 100%; }
-
-  button { cursor: pointer; font-family: 'Inter', sans-serif; }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--fondo); }
-  ::-webkit-scrollbar-thumb { background: var(--salvia); border-radius: 3px; }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     NAV
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 900;
-    background: rgba(245,245,245,0.72);
-    backdrop-filter: blur(16px) saturate(1.4);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    border-bottom: 1px solid var(--borde);
-    transition: background var(--trans), box-shadow var(--trans);
-  }
-
-  nav.scrolled {
-    background: rgba(245,245,245,0.92);
-    box-shadow: 0 2px 24px rgba(18,18,18,0.07);
-  }
-
-  .nav-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 28px;
-    height: 66px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .nav-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--negro);
-  }
-
-  .nav-logo {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    border-radius: 8px;
-  }
-
-  .nav-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: var(--negro);
-  }
-
-  .btn-nuevo {
-    background: var(--negro);
-    color: #F5F5F5;
-    border: none;
-    padding: 7px 18px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: background var(--trans), transform var(--trans);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .btn-nuevo:hover { background: #2a2a2a; transform: translateY(-1px); }
-  .btn-nuevo:active { transform: translateY(0); }
-  html.dark .btn-nuevo { background: var(--terracota); color: #121212; }
-  html.dark .btn-nuevo:hover { background: #b87a5d; }
-
-  .nav-actions { display: flex; align-items: center; gap: 8px; }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     HERO
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .hero {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 126px 28px 72px;
-  }
-
-  .hero-left {}
-
-  .hero-eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
-
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(42px, 5vw, 58px);
-    font-weight: 300;
-    line-height: 1.12;
-    margin-bottom: 20px;
-    color: var(--negro);
-  }
-
-  .hero-title em {
-    font-style: italic;
-    color: var(--terracota);
-  }
-
-  .hero-desc {
-    font-size: 15px;
-    color: var(--texto-2);
-    line-height: 1.7;
-    max-width: 460px;
-    margin-bottom: 36px;
-  }
-
-  .hero-stats {
-    display: flex;
-    gap: 28px;
-    flex-wrap: wrap;
-  }
-
-  .hero-stat {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 34px;
-    font-weight: 500;
-    color: var(--negro);
-    line-height: 1;
-  }
-
-  .stat-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-
-  .stat-divider {
-    width: 1px;
-    height: 44px;
-    background: var(--borde);
-    align-self: center;
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     SEPARADOR
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .separador {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 28px 48px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .sep-line {
-    flex: 1;
-    height: 1px;
-    background: var(--borde);
-  }
-
-  .sep-text {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    white-space: nowrap;
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     FILTROS
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .filtros-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 28px 36px;
-  }
-
-  .filtros-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: space-between;
-  }
-
-  .filtros {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    flex: 1;
-  }
-
-  .sort-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: transparent;
-    border: 1.5px solid var(--borde);
-    color: var(--muted);
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: all var(--trans);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .sort-btn:hover { border-color: var(--negro); color: var(--negro); }
-  .sort-btn.desc::before { content: "↓ "; }
-  .sort-btn.asc::before  { content: "↑ "; }
-
-  #filtros-select {
-    display: none;
-    flex: 1;
-    background: var(--tarjeta);
-    border: 1.5px solid var(--borde);
-    color: var(--texto-2);
-    padding: 7px 14px;
-    border-radius: 100px;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: inherit;
-    outline: none;
-    cursor: pointer;
-    transition: border-color var(--trans), color var(--trans);
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  #filtros-select:focus { border-color: var(--negro); color: var(--negro); }
-
-  .pill-filtro {
-    background: transparent;
-    border: 1.5px solid var(--borde);
-    color: var(--texto-2);
-    padding: 6px 16px;
-    border-radius: 100px;
-    font-size: 12.5px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    transition: all var(--trans);
-    white-space: nowrap;
-  }
-
-  .pill-filtro:hover {
-    border-color: var(--negro);
-    color: var(--negro);
-  }
-
-  .pill-filtro.activo { background: var(--negro); border-color: var(--negro); color: #FFFFFF; }
-  .pill-filtro[data-tipo="libro"].activo     { background: var(--terracota); border-color: var(--terracota); color: #fff; }
-  .pill-filtro[data-tipo="reflexion"].activo { background: #6b8c66; border-color: #6b8c66; color: #fff; }
-  .pill-filtro[data-tipo="articulo"].activo  { background: #7a80a0; border-color: #7a80a0; color: #fff; }
-  .pill-filtro[data-tipo="privado"].activo   { background: #9b7fa6; border-color: #9b7fa6; color: #fff; }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     GRID DE TARJETAS
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .grid-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 28px 96px;
-  }
-
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--muted);
-  }
-
-  .empty-state .empty-icon {
-    font-size: 40px;
-    margin-bottom: 16px;
-    opacity: 0.4;
-  }
-
-  .empty-state p {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-
-  /* TARJETA */
-  .card {
-    background: var(--tarjeta);
-    border-radius: var(--radius);
-    border: 1px solid var(--borde);
-    overflow: hidden;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    transition: transform var(--trans), box-shadow var(--trans), border-color var(--trans);
-    position: relative;
-  }
-
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(18,18,18,0.10);
-    border-color: rgba(18,18,18,0.22);
-  }
-
-  .card-accent {
-    height: 3px;
-    width: 100%;
-  }
-
-  .card-accent.terracota { background: var(--terracota); }
-  .card-accent.salvia    { background: var(--salvia); }
-  .card-accent.pizarra   { background: #7a80a0; }
-  .card-accent.privado   { background: #9b7fa6; }
-
-  .card-body {
-    padding: 22px 22px 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card-eyebrow {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  .card-autor {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 9px;
-    border-radius: 100px;
-  }
-
-  .badge-leyendo  { background: rgba(198,138,109,0.14); color: var(--terracota); }
-  .badge-terminado{ background: rgba(167,174,161,0.18); color: #5c6358; }
-  .badge-proximo  { background: rgba(138,144,184,0.15); color: #5a6080; }
-  .badge-pendiente{ background: rgba(120,130,160,0.10); color: #6a7090; }
-  html.dark .badge-pendiente { color: #8890b0; }
-
-  /* Finalidad badges */
-  .finalidad-badge {
-    font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; padding: 2px 8px; border-radius: 100px; flex-shrink: 0;
-  }
-  .finalidad-badge.formacion       { background: rgba(80,100,190,0.12); color: #4a5cb0; }
-  .finalidad-badge.autoconocimiento{ background: rgba(107,140,102,0.14); color: #4d7248; }
-  .finalidad-badge.ocio            { background: rgba(198,138,109,0.14); color: var(--terracota); }
-  html.dark .finalidad-badge.formacion        { color: #8895d0; }
-  html.dark .finalidad-badge.autoconocimiento { color: #8aad86; }
-
-  /* Meta row (categoria + dificultad) en card */
-  .card-cat {
-    font-size: 11px; color: var(--muted); font-weight: 500;
-    letter-spacing: 0.02em; margin-bottom: 10px;
-  }
-
-  /* Pendiente card */
-  .card.card-pendiente {
-    border: 1.5px dashed rgba(120,130,160,0.3);
-    opacity: 0.85; cursor: pointer;
-  }
-  .card.card-pendiente:hover { border-color: rgba(120,130,160,0.6); transform: translateY(-2px); }
-  .card-accent.pendiente-accent {
-    background: repeating-linear-gradient(90deg,#8a90b8 0,#8a90b8 3px,transparent 3px,transparent 10px);
-    opacity: 0.3; height: 4px;
-  }
-
-  /* Separador dentro del grid */
-  .lectura-sep {
-    grid-column: 1 / -1; display: flex; align-items: center;
-    gap: 20px; padding: 8px 0;
-  }
-
-  /* Secondary filters */
-  .filtros-secundarios {
-    display: none; gap: 8px; flex-wrap: wrap; align-items: center;
-    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--borde);
-  }
-  .filtros-secundarios.open { display: flex; }
-  .btn-filtrar {
-    display: flex; align-items: center; gap: 5px;
-    background: transparent; border: 1.5px solid var(--borde); color: var(--muted);
-    padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 500;
-    letter-spacing: 0.02em; transition: all var(--trans); white-space: nowrap;
-    flex-shrink: 0; font-family: 'Inter', sans-serif;
-  }
-  .btn-filtrar:hover { border-color: var(--negro); color: var(--negro); }
-  .btn-filtrar.activo { border-color: var(--terracota); color: var(--terracota); }
-  .filtro-sec-sel {
-    background: var(--tarjeta); border: 1.5px solid var(--borde); border-radius: 8px;
-    padding: 5px 28px 5px 10px; font-size: 12px; font-weight: 500;
-    color: var(--texto-2); cursor: pointer; outline: none; font-family: 'Inter', sans-serif;
-    -webkit-appearance: none; appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 8px center;
-    transition: border-color var(--trans);
-  }
-  .filtro-sec-sel.activo { border-color: var(--terracota); }
-  html.dark .filtro-sec-sel { background-color: #252220; color: var(--negro); border-color: rgba(240,237,230,0.12); }
-  .btn-limpiar-sec {
-    font-size: 11.5px; color: var(--muted); background: none; border: none;
-    cursor: pointer; text-decoration: underline; transition: color var(--trans); font-family: 'Inter', sans-serif;
-  }
-  .btn-limpiar-sec:hover { color: var(--negro); }
-
-  /* Toggle lista de lectura */
-  .toggle-lectura-row {
-    max-width: 1200px; margin: 0 auto; padding: 0 28px 24px;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .btn-toggle-lectura {
-    display: flex; align-items: center; gap: 7px;
-    background: var(--tarjeta); border: 1.5px solid var(--borde); border-radius: 100px;
-    padding: 8px 18px; font-size: 13px; font-weight: 500; color: var(--texto-2);
-    cursor: pointer; transition: all var(--trans); white-space: nowrap; font-family: 'Inter', sans-serif;
-  }
-  .btn-toggle-lectura:hover { border-color: var(--negro); color: var(--negro); }
-  .btn-toggle-lectura.abierto { border-color: var(--terracota); color: var(--terracota); }
-  .btn-lista-ext {
-    font-size: 12.5px; color: var(--muted); background: none; border: none;
-    cursor: pointer; text-decoration: underline; transition: color var(--trans);
-    font-family: 'Inter', sans-serif; white-space: nowrap;
-  }
-  .btn-lista-ext:hover { color: var(--negro); }
-  a.btn-lista-ext { display: inline; }
-
-  /* Cards próximo */
-  .card-accent.proximo {
-    background: repeating-linear-gradient(
-      90deg, #8a90b8 0, #8a90b8 5px, transparent 5px, transparent 13px
-    );
-    opacity: 0.5;
-    height: 4px;
-  }
-  .card.card-proximo {
-    border: 1.5px dashed rgba(138,144,184,0.5);
-    background: var(--crema-card);
-    cursor: pointer;
-    position: relative;
-    opacity: 0.82;
-  }
-  .card.card-proximo:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(138,144,184,0.15); border-color: rgba(138,144,184,0.7); }
-  .proximo-num {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: rgba(138,144,184,0.15);
-    border: 1.5px solid rgba(138,144,184,0.3);
-    color: #5a6080;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 14px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .proximo-hint {
-    font-size: 12px;
-    color: var(--muted);
-    font-style: italic;
-    margin-top: 10px;
-    opacity: 0.8;
-  }
-  html.dark .badge-proximo { color: #8a90b8; background: rgba(138,144,184,0.12); }
-  html.dark .proximo-num   { color: #8a90b8; border-color: rgba(138,144,184,0.25); }
-
-  .card-titulo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 21px;
-    font-weight: 500;
-    line-height: 1.25;
-    color: var(--negro);
-    margin-bottom: 6px;
-  }
-
-  .card-libro {
-    font-size: 12px;
-    color: var(--muted);
-    font-style: italic;
-    margin-bottom: 14px;
-  }
-
-  .card-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-  }
-
-  .tag {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--texto-2);
-    border: 1px solid var(--borde);
-    padding: 2px 9px;
-    border-radius: 100px;
-    letter-spacing: 0.02em;
-  }
-
-  .card-extracto {
-    font-size: 13.5px;
-    color: var(--texto-2);
-    line-height: 1.65;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    flex: 1;
-    margin-bottom: 18px;
-  }
-
-  .card-progress-wrap {
-    margin: 0 -0px;
-    padding: 0 22px;
-  }
-
-  .card-progress-bar {
-    height: 2px;
-    border-radius: 2px;
-    background: var(--beige);
-    overflow: hidden;
-    margin-bottom: 0;
-  }
-
-  .card-progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.6s ease;
-  }
-
-  .card-progress-fill.terracota { background: var(--terracota); }
-  .card-progress-fill.salvia    { background: var(--salvia); }
-  .card-progress-fill.pizarra   { background: #7a80a0; }
-  .card-progress-fill.privado   { background: #9b7fa6; }
-
-  .card-footer {
-    padding: 14px 22px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .card-fecha {
-    font-size: 11.5px;
-    color: var(--muted);
-  }
-
-  .card-arrow {
-    font-size: 18px;
-    color: var(--muted);
-    transition: color var(--trans), transform var(--trans);
-    line-height: 1;
-  }
-
-  .card:hover .card-arrow {
-    color: var(--terracota);
-    transform: translateX(3px);
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     MODAL BASE
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(18,18,18,0.52);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s ease, visibility 0.25s ease;
-  }
-
-  .modal-overlay.open {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .modal {
-    background: var(--tarjeta);
-    border-radius: 16px;
-    width: 100%;
-    max-width: 680px;
-    max-height: 88vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    position: relative;
-    transform: translateY(16px) scale(0.98);
-    transition: transform 0.28s cubic-bezier(0.22,1,0.36,1);
-    box-shadow: 0 32px 80px rgba(18,18,18,0.2);
-  }
-
-  .modal-overlay.open .modal {
-    transform: translateY(0) scale(1);
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     MODAL DETALLE
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .detail-bar {
-    height: 4px;
-    background: var(--terracota);
-    border-radius: 16px 16px 0 0;
-  }
-
-  .detail-header {
-    padding: 28px 32px 20px;
-    border-bottom: 1px solid var(--borde);
-  }
-
-  .detail-eyebrow {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .detail-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 30px;
-    font-weight: 400;
-    line-height: 1.2;
-    color: var(--negro);
-    margin-bottom: 6px;
-  }
-
-  .detail-autor {
-    font-size: 13px;
-    color: var(--muted);
-    font-style: italic;
-    margin-bottom: 16px;
-  }
-
-  .detail-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  /* Tabs */
-  .detail-tabs {
-    padding: 0 32px;
-    border-bottom: 1px solid var(--borde);
-    display: flex;
-    gap: 0;
-  }
-
-  .tab-btn {
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    padding: 14px 0;
-    margin-right: 28px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted);
-    transition: color var(--trans), border-color var(--trans);
-    letter-spacing: 0.02em;
-  }
-
-  .tab-btn.activo {
-    color: var(--negro);
-    border-bottom-color: var(--terracota);
-  }
-
-  .tab-btn:hover { color: var(--negro); }
-
-  .tab-panel {
-    display: none;
-    padding: 28px 32px;
-  }
-
-  .tab-panel.activo { display: block; }
-
-  /* Tab section label */
-  .tab-section-intro {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--terracota);
-    margin-bottom: 20px;
-    opacity: 0.85;
-  }
-
-  .fecha-articulo {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 24px;
-    font-style: italic;
-    letter-spacing: 0.02em;
-  }
-
-  /* Rich text paragraphs (Resumen + Mis reflexiones) */
-  .rich-text p {
-    font-size: 14.5px;
-    color: var(--texto-2);
-    line-height: 1.82;
-    margin-bottom: 16px;
-  }
-  .rich-text p:last-child { margin-bottom: 0; }
-
-  /* Quote block */
-  .cita-bloque {
-    border-left: 3px solid var(--terracota);
-    padding: 18px 24px;
-    background: rgba(198,138,109,0.07);
-    border-radius: 0 12px 12px 0;
-    margin-top: 32px;
-  }
-
-  .cita-deco {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 56px;
-    line-height: 0.75;
-    color: rgba(198,138,109,0.3);
-    display: block;
-    margin-bottom: 10px;
-    user-select: none;
-  }
-
-  .cita-texto {
-    font-family: 'Inter', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--negro);
-    line-height: 1.7;
-  }
-
-  /* Panel Mis reflexiones */
-  .mis-ref-bloque {
-    border-left: 2px solid #a7aea1;
-    padding-left: 24px;
-  }
-  .mis-ref-bloque p {
-    font-size: 14.5px;
-    color: var(--texto-2);
-    line-height: 1.82;
-    margin-bottom: 16px;
-  }
-  .mis-ref-bloque p:last-child { margin-bottom: 0; }
-
-  /* Panel Mi vida */
-  .vida-rich p {
-    font-size: 14.5px;
-    color: var(--texto-2);
-    line-height: 1.82;
-    margin-bottom: 18px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--borde);
-  }
-  .vida-rich p:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-
-  /* Ficha rating dots */
-  .ficha-rating { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
-  .r-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(198,138,109,0.15); flex-shrink: 0; }
-  .r-dot.on { background: var(--terracota); }
-
-  /* Panel Ficha */
-  .ficha-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  .ficha-item {
-    background: var(--beige);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-
-  .ficha-key {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-
-  .ficha-val {
-    font-size: 14.5px;
-    color: var(--negro);
-    font-weight: 500;
-  }
-
-  .ficha-progress-wrap { margin-top: 6px; }
-
-  .ficha-bar {
-    height: 4px;
-    background: rgba(18,18,18,0.08);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-top: 8px;
-  }
-
-  .ficha-bar-fill {
-    height: 100%;
-    background: var(--terracota);
-    border-radius: 4px;
-    transition: width 0.6s ease;
-  }
-
-  /* Modal footer */
-  .detail-footer {
-    padding: 20px 32px 28px;
-    border-top: 1px solid var(--borde);
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-  }
-
-  .btn-editar {
-    background: transparent;
-    border: 1.5px solid var(--borde);
-    color: var(--texto-2);
-    padding: 9px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all var(--trans);
-  }
-
-  .btn-editar:hover {
-    border-color: var(--negro);
-    color: var(--negro);
-  }
-
-  .btn-eliminar {
-    background: transparent;
-    border: 1.5px solid rgba(198,80,60,0.25);
-    color: #b94030;
-    padding: 9px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all var(--trans);
-  }
-
-  .btn-eliminar:hover {
-    background: rgba(198,80,60,0.07);
-    border-color: rgba(198,80,60,0.45);
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 18px;
-    right: 20px;
-    background: none;
-    border: none;
-    font-size: 22px;
-    color: var(--muted);
-    line-height: 1;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background var(--trans), color var(--trans);
-    z-index: 10;
-  }
-
-  .modal-close:hover {
-    background: var(--beige);
-    color: var(--negro);
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     MODAL FORMULARIO
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .form-modal {
-    max-width: 720px;
-  }
-
-  .form-header {
-    padding: 28px 32px 20px;
-    border-bottom: 1px solid var(--borde);
-  }
-
-  .form-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 500;
-    color: var(--negro);
-    margin-bottom: 4px;
-  }
-
-  .form-subtitle {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .form-body {
-    padding: 24px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .form-section-label {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--borde);
-    margin-bottom: 4px;
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .form-group.full { grid-column: 1 / -1; }
-
-  label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--texto-2);
-    letter-spacing: 0.02em;
-  }
-
-  label .req {
-    color: var(--terracota);
-    margin-left: 2px;
-  }
-
-  input[type="text"],
-  input[type="date"],
-  input[type="number"],
-  select,
-  textarea {
-    font-family: 'Inter', sans-serif;
-    font-size: 13.5px;
-    color: var(--negro);
-    background: var(--fondo);
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    padding: 10px 14px;
-    outline: none;
-    transition: border-color var(--trans), box-shadow var(--trans);
-    width: 100%;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--terracota);
-    box-shadow: 0 0 0 3px rgba(198,138,109,0.12);
-  }
-
-  input.error, select.error, textarea.error {
-    border-color: #c04040;
-    box-shadow: 0 0 0 3px rgba(192,64,64,0.1);
-  }
-
-  .error-msg {
-    font-size: 11.5px;
-    color: #c04040;
-    display: none;
-  }
-
-  .error-msg.visible { display: block; }
-
-  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    background: var(--beige);
-    border-radius: 4px;
-    border: none;
-    padding: 0;
-    box-shadow: none;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--terracota);
-    cursor: pointer;
-    border: 2px solid white;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  }
-
-  input[type="range"]:focus {
-    border: none;
-    box-shadow: none;
-    outline: none;
-  }
-
-  .range-wrap {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .range-wrap input { flex: 1; }
-
-  .range-val {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--terracota);
-    min-width: 36px;
-    text-align: right;
-  }
-
-  .form-footer {
-    padding: 18px 32px 28px;
-    border-top: 1px solid var(--borde);
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-  }
-
-  .btn-cancel {
-    background: transparent;
-    border: 1.5px solid var(--borde);
-    color: var(--texto-2);
-    padding: 10px 22px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all var(--trans);
-  }
-
-  .btn-cancel:hover {
-    border-color: var(--negro);
-    color: var(--negro);
-  }
-
-  .btn-save {
-    background: var(--negro);
-    color: #F5F5F5;
-    border: none;
-    padding: 10px 26px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    transition: background var(--trans), transform var(--trans);
-  }
-
-  .btn-save:hover {
-    background: #2a2a2a;
-    transform: translateY(-1px);
-  }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    background: var(--negro);
-    color: #F5F5F5;
-    padding: 12px 20px;
-    border-radius: 10px;
-    font-size: 13.5px;
-    font-weight: 500;
-    z-index: 2000;
-    box-shadow: 0 8px 24px rgba(18,18,18,0.22);
-    transform: translateY(16px);
-    opacity: 0;
-    transition: all 0.28s cubic-bezier(0.22,1,0.36,1);
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .toast.show {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     RESPONSIVE
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  @media (max-width: 1024px) {
-    .hero {
-      grid-template-columns: 1fr;
-      padding-top: 100px;
-    }
-    .cards-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 640px) {
-    .nav-inner { padding: 0 16px; }
-    .hero { padding: 100px 16px 52px; }
-    .hero-stats { gap: 16px; }
-    .separador { padding: 0 16px 40px; }
-    .filtros-wrap { padding: 0 16px 28px; }
-    #filtros-container { display: none; }
-    #filtros-select    { display: block; }
-    .grid-wrap { padding: 0 16px 72px; }
-    .cards-grid { grid-template-columns: 1fr; gap: 16px; }
-    .toggle-lectura-row { padding: 0 16px 20px; }
-    .filtros-secundarios { gap: 6px; }
-    /* Modal como popup con márgenes visibles */
-    .modal-overlay { align-items: center; padding: 16px; }
-    .modal { border-radius: 16px; max-height: 85vh; max-width: calc(100vw - 32px); }
-    .detail-header { padding: 22px 20px 16px; }
-    .detail-tabs { padding: 0 20px; }
-    .tab-panel { padding: 22px 20px; }
-    .detail-footer { padding: 16px 20px 22px; }
-    .form-header { padding: 22px 20px 16px; }
-    .form-body { padding: 18px 20px; }
-    .form-row { grid-template-columns: 1fr; }
-    .form-footer { padding: 14px 20px 22px; }
-    .ficha-grid { grid-template-columns: 1fr; }
-  }
-
-  @media (max-width: 400px) {
-    .hero-title { font-size: 36px; }
-    .stat-num { font-size: 26px; }
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     MODO OSCURO
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  html.dark {
-    --fondo:    #121212;
-    --negro:    #F0EDE6;
-    --tarjeta:  #1E1E1E;
-    --beige:    #252220;
-    --texto-2:  #C4BDB5;
-    --muted:    #7A7368;
-    --borde:    rgba(240,237,230,0.10);
-    color-scheme: dark;
-  }
-
-  html.dark nav {
-    background: rgba(18,18,18,0.82);
-  }
-
-  html.dark nav.scrolled {
-    background: rgba(18,18,18,0.96);
-    box-shadow: 0 2px 24px rgba(0,0,0,0.45);
-  }
-
-  html.dark .btn-save {
-    background: var(--terracota);
-    color: #121212;
-  }
-
-  html.dark .btn-save:hover { background: #b87a5d; }
-
-  /* Tipo badges */
-  .tipo-badge {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 2px 8px;
-    border-radius: 100px;
-    flex-shrink: 0;
-  }
-  .tipo-badge.libro     { background: rgba(198,138,109,0.14); color: var(--terracota); }
-  .tipo-badge.reflexion { background: rgba(107,140,102,0.15); color: #4d7248; }
-  .tipo-badge.articulo  { background: rgba(120,130,160,0.14); color: #5a6180; }
-  .tipo-badge.privado   { background: rgba(155,127,166,0.14); color: #7a5f87; }
-  html.dark .tipo-badge.reflexion { color: #8aad86; }
-  html.dark .tipo-badge.articulo  { color: #8a90a8; }
-  html.dark .tipo-badge.privado   { color: #b09ac0; }
-
-  html.dark .card:hover {
-    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-    border-color: rgba(240,237,230,0.18);
-  }
-
-  html.dark .badge-terminado { color: #8a9486; }
-
-  html.dark input[type="text"],
-  html.dark input[type="date"],
-  html.dark input[type="number"],
-  html.dark select,
-  html.dark textarea {
-    background: #252220;
-    color: #F0EDE6;
-    border-color: rgba(240,237,230,0.12);
-  }
-
-  html.dark input[type="range"] { background: #3a3530; }
-
-  html.dark .modal-close:hover { background: #2e2926; }
-
-  html.dark #busqueda-input {
-    background: #1E1E1E;
-    color: #F0EDE6;
-    border-color: rgba(240,237,230,0.10);
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     ADMIN
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  body:not(.admin) .admin-only { display: none !important; }
-
-  .admin-bar {
-    position: fixed;
-    top: 66px; left: 0; right: 0;
-    z-index: 800;
-    background: var(--terracota);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-align: center;
-    padding: 5px 16px;
-    display: none;
-  }
-
-  body.admin .admin-bar { display: block; }
-
-  /* Login modal */
-  .login-modal { max-width: 420px; }
-  .login-bar   { height: 4px; background: var(--terracota); border-radius: 16px 16px 0 0; }
-  .login-header { padding: 28px 32px 22px; border-bottom: 1px solid var(--borde); }
-  .login-eyebrow {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
-  }
-  .login-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px; font-weight: 400; color: var(--negro); margin-bottom: 4px;
-  }
-  .login-sub { font-size: 13px; color: var(--muted); }
-  .login-body { padding: 22px 32px 0; }
-  .login-footer {
-    padding: 20px 32px 28px;
-    border-top: 1px solid var(--borde);
-    margin-top: 22px;
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-  }
-  .logout-bloque {
-    padding: 22px 32px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    text-align: center;
-  }
-  .logout-icon { font-size: 32px; }
-  .logout-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--negro); }
-  .logout-sub   { font-size: 13px; color: var(--muted); }
-  .logout-footer {
-    padding: 0 32px 28px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-  .btn-lock {
-    color: var(--muted) !important;
-    opacity: 0.55;
-    transition: opacity var(--trans), color var(--trans) !important;
-  }
-  .btn-lock:hover { opacity: 1; }
-  body.admin .btn-lock { opacity: 1; color: var(--terracota) !important; }
-
-  @media (max-width: 640px) {
-    .login-header { padding: 22px 20px 18px; }
-    .login-body   { padding: 18px 20px 0; }
-    .login-footer { padding: 16px 20px 24px; }
-    .logout-bloque { padding: 22px 20px; }
-    .logout-footer { padding: 0 20px 24px; }
-    .admin-bar { top: 66px; }
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     BÚSQUEDA
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .busqueda-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 28px 20px;
-  }
-
-  .busqueda-inner {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-
-  .busqueda-icono {
-    position: absolute;
-    left: 14px;
-    color: var(--muted);
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-  }
-
-  #busqueda-input {
-    width: 100%;
-    background: var(--tarjeta);
-    border: 1.5px solid var(--borde);
-    border-radius: 10px;
-    padding: 11px 44px 11px 42px;
-    font-size: 14px;
-    color: var(--negro);
-    font-family: 'Inter', sans-serif;
-    outline: none;
-    transition: border-color var(--trans), box-shadow var(--trans);
-  }
-
-  #busqueda-input::placeholder { color: var(--muted); }
-
-  #busqueda-input:focus {
-    border-color: var(--terracota);
-    box-shadow: 0 0 0 3px rgba(198,138,109,0.12);
-  }
-
-  .busqueda-clear {
-    position: absolute;
-    right: 10px;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 20px;
-    line-height: 1;
-    padding: 4px 6px;
-    border-radius: 4px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--trans), color var(--trans);
-  }
-
-  .busqueda-clear.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .busqueda-clear:hover { color: var(--negro); }
-
-  /* Toggle modo oscuro */
-  .nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .btn-dark-toggle {
-    background: transparent;
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    width: 38px;
-    height: 38px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    line-height: 1;
-    transition: background var(--trans), border-color var(--trans), color var(--trans);
-    color: var(--negro);
-    flex-shrink: 0;
-  }
-
-  html.dark .btn-dark-toggle { border-color: rgba(240,237,230,0.15); }
-
-  .btn-dark-toggle:hover {
-    background: var(--beige);
-    border-color: var(--muted);
-  }
-
-  @media (max-width: 640px) {
-    .busqueda-wrap { padding: 0 16px 16px; }
-  }
-
-  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     TAREAS / KANBAN
-  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  .tareas-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 100px 28px 96px;
-    display: none;
-  }
-  .tareas-top {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-bottom: 32px;
-  }
-  .tareas-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  .tareas-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 30px;
-    font-weight: 600;
-    color: var(--negro);
-    margin: 0;
-  }
-  .btn-nueva-tarea {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--negro);
-    color: var(--fondo);
-    border: none;
-    border-radius: 100px;
-    padding: 9px 18px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background var(--trans);
-    white-space: nowrap;
-  }
-  .btn-nueva-tarea:hover { background: #3a3530; }
-  html.dark .btn-nueva-tarea { background: var(--crema); color: #121212; }
-  html.dark .btn-nueva-tarea:hover { background: #d4cfc8; }
-
-  .kanban-board {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-    align-items: start;
-  }
-  .kanban-col {
-    background: var(--crema-card);
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid var(--borde);
-  }
-  .kanban-col-header {
-    padding: 13px 16px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .kanban-count {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 1px 7px;
-    border-radius: 20px;
-    opacity: 0.8;
-  }
-  .kanban-col[data-estado="pendiente"]   .kanban-col-header { background: rgba(198,138,109,0.12); color: var(--terracota); }
-  .kanban-col[data-estado="en-progreso"] .kanban-col-header { background: rgba(107,140,102,0.12); color: #4d7248; }
-  .kanban-col[data-estado="completado"]  .kanban-col-header { background: rgba(120,130,160,0.12); color: #5a6180; }
-  .kanban-col[data-estado="pendiente"]   .kanban-count { background: rgba(198,138,109,0.2); color: var(--terracota); }
-  .kanban-col[data-estado="en-progreso"] .kanban-count { background: rgba(107,140,102,0.2); color: #4d7248; }
-  .kanban-col[data-estado="completado"]  .kanban-count { background: rgba(120,130,160,0.2); color: #5a6180; }
-  html.dark .kanban-col[data-estado="en-progreso"] .kanban-col-header { color: #8aad86; }
-  html.dark .kanban-col[data-estado="en-progreso"] .kanban-count { color: #8aad86; }
-  html.dark .kanban-col[data-estado="articulo"]  .kanban-col-header { color: #8a90a8; }
-
-  .kanban-col-body {
-    padding: 10px;
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .kanban-empty {
-    font-size: 12.5px;
-    color: var(--muted);
-    text-align: center;
-    padding: 20px 0 12px;
-    opacity: 0.7;
-  }
-  .tarea-card {
-    background: var(--fondo);
-    border-radius: 12px;
-    padding: 13px 14px;
-    border: 1px solid var(--borde);
-    transition: box-shadow var(--trans);
-  }
-  .tarea-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
-  .tarea-titulo {
-    font-weight: 600;
-    font-size: 13.5px;
-    color: var(--negro);
-    margin-bottom: 5px;
-    line-height: 1.3;
-  }
-  .tarea-detalles {
-    font-size: 12.5px;
-    color: var(--gris);
-    line-height: 1.55;
-    margin-bottom: 10px;
-    white-space: pre-wrap;
-  }
-  .tarea-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-  .tarea-fecha {
-    font-size: 11px;
-    color: var(--muted);
-    flex-shrink: 0;
-  }
-  .tarea-actions { display: flex; gap: 2px; }
-  .tarea-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px 6px;
-    border-radius: 6px;
-    font-size: 13px;
-    color: var(--gris);
-    line-height: 1;
-    transition: background var(--trans), color var(--trans);
-  }
-  .tarea-btn:hover { background: rgba(0,0,0,0.06); color: var(--negro); }
-  html.dark .tarea-btn:hover { background: rgba(255,255,255,0.08); color: var(--crema); }
-  .tarea-btn.move { font-size: 14px; opacity: 0.55; }
-  .tarea-btn.move:hover { opacity: 1; }
-
-  .tarea-estado-done .tarea-titulo { text-decoration: line-through; opacity: 0.55; }
-
-  /* nav tareas link */
-  .btn-tareas {
-    background: none;
-    border: 1.5px solid var(--borde);
-    border-radius: 100px;
-    padding: 7px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--negro);
-    cursor: pointer;
-    transition: all var(--trans);
-  }
-  .btn-tareas:hover { background: var(--beige); border-color: var(--muted); }
-  .btn-tareas.activa { background: var(--negro); color: var(--fondo); border-color: var(--negro); }
-  html.dark .btn-tareas { color: var(--crema); }
-  html.dark .btn-tareas:hover { background: rgba(255,255,255,0.06); }
-  html.dark .btn-tareas.activa { background: var(--crema); color: #121212; }
-
-  /* stats */
-  .tareas-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 22px;
-  }
-  .tstat-card {
-    background: var(--crema-card);
-    border: 1.5px solid var(--borde);
-    border-radius: 14px;
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: border-color var(--trans), background var(--trans);
-    user-select: none;
-  }
-  .tstat-card:hover { border-color: var(--muted); }
-  .tstat-num {
-    display: block;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: 5px;
-    color: var(--negro);
-    transition: color var(--trans);
-  }
-  .tstat-label {
-    font-size: 10.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    color: var(--muted);
-    font-weight: 500;
-  }
-  .tstat-card.activa[data-estado="todas"]      { border-color: var(--negro); background: rgba(0,0,0,0.03); }
-  .tstat-card.activa[data-estado="pendiente"]  { border-color: var(--terracota); background: rgba(198,138,109,0.07); }
-  .tstat-card.activa[data-estado="pendiente"]  .tstat-num { color: var(--terracota); }
-  .tstat-card.activa[data-estado="en-progreso"]{ border-color: #6b8c66; background: rgba(107,140,102,0.07); }
-  .tstat-card.activa[data-estado="en-progreso"].tstat-num { color: #6b8c66; }
-  .tstat-card.activa[data-estado="completado"] { border-color: #7a80a0; background: rgba(120,130,160,0.07); }
-  .tstat-card.activa[data-estado="completado"] .tstat-num { color: #7a80a0; }
-  html.dark .tstat-card.activa[data-estado="todas"] { background: rgba(255,255,255,0.04); }
-
-  /* filtros + sort bar */
-  .tareas-filtros-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .tareas-filtros { display: flex; gap: 7px; flex-wrap: wrap; flex: 1; }
-  .pill-t {
-    background: transparent;
-    border: 1.5px solid var(--borde);
-    border-radius: 100px;
-    padding: 6px 14px;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--gris);
-    cursor: pointer;
-    transition: all var(--trans);
-    white-space: nowrap;
-  }
-  .pill-t:hover { border-color: var(--negro); color: var(--negro); }
-  .pill-t.activa                        { background: var(--negro); border-color: var(--negro); color: #fff; }
-  .pill-t[data-f="pendiente"].activa    { background: var(--terracota); border-color: var(--terracota); color: #fff; }
-  .pill-t[data-f="en-progreso"].activa  { background: #6b8c66; border-color: #6b8c66; color: #fff; }
-  .pill-t[data-f="completado"].activa   { background: #7a80a0; border-color: #7a80a0; color: #fff; }
-  .tareas-sort-sel {
-    background: var(--tarjeta);
-    border: 1.5px solid var(--borde);
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 12.5px;
-    font-weight: 500;
-    color: var(--negro);
-    cursor: pointer;
-    transition: border-color var(--trans);
-    -webkit-appearance: none;
-    appearance: none;
-    padding-right: 28px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-  }
-  .tareas-sort-sel:focus { border-color: var(--negro); outline: none; }
-  html.dark .tareas-sort-sel { background-color: var(--tarjeta); color: var(--crema); }
-
-  /* kanban filtrado (1 columna visible) */
-  .kanban-board.filtrado {
-    grid-template-columns: minmax(0, 520px);
-    justify-content: center;
-  }
-
-  @media (max-width: 640px) {
-    .kanban-board { grid-template-columns: 1fr; }
-    .kanban-board.filtrado { grid-template-columns: 1fr; }
-    .tareas-stats { grid-template-columns: repeat(2, 1fr); }
-    .tareas-page { padding: 90px 16px 80px; }
-    .tareas-title { font-size: 24px; }
-  }
+/* ════════════════════════════════════
+   TOKENS
+════════════════════════════════════ */
+:root {
+  --bg:        #F7F4EF;
+  --surface:   #FFFFFF;
+  --surface2:  #EFECEA;
+  --accent:    #C4A97D;
+  --accent-dk: #A08952;
+  --sage:      #7B9E87;
+  --text:      #1A1714;
+  --text2:     #5C5650;
+  --muted:     #9C9690;
+  --borde:     rgba(26,23,20,0.1);
+  --danger:    #C05A4A;
+  --r:         14px;
+  --r-sm:      8px;
+  --tr:        0.2s ease;
+  --sh-sm:     0 1px 6px rgba(0,0,0,0.06);
+  --sh-md:     0 6px 24px rgba(0,0,0,0.1);
+  --sh-lg:     0 16px 56px rgba(0,0,0,0.16);
+}
+html.dark {
+  --bg:        #0E0E10;
+  --surface:   #17171A;
+  --surface2:  #1E1E23;
+  --text:      #EDE8E1;
+  --text2:     #9C9690;
+  --muted:     #5A5550;
+  --borde:     rgba(255,255,255,0.08);
+  --sh-sm:     0 1px 6px rgba(0,0,0,0.35);
+  --sh-md:     0 6px 24px rgba(0,0,0,0.45);
+  --sh-lg:     0 16px 56px rgba(0,0,0,0.6);
+}
+
+/* ════════════════════════════════════
+   RESET
+════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
+a{color:inherit;text-decoration:none}
+input,select,textarea{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface2);border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:10px 14px;width:100%;outline:none;transition:border-color var(--tr),background var(--tr);-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);background:var(--surface)}
+textarea{resize:vertical;line-height:1.65}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--borde);border-radius:4px}
+
+/* ════════════════════════════════════
+   ADMIN
+════════════════════════════════════ */
+body:not(.admin) .admin-only{display:none!important}
+body.admin .non-admin-only{display:none!important}
+
+/* ════════════════════════════════════
+   NAV
+════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;background:rgba(247,244,239,0.88);backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--borde);transition:box-shadow var(--tr)}
+html.dark nav{background:rgba(14,14,16,0.9)}
+nav.scrolled{box-shadow:0 1px 24px rgba(0,0,0,0.08)}
+html.dark nav.scrolled{box-shadow:0 1px 24px rgba(0,0,0,0.5)}
+.nav-inner{max-width:1160px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{width:34px;height:34px;object-fit:contain;border-radius:7px}
+.nav-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;letter-spacing:.05em;color:var(--text)}
+.nav-actions{display:flex;align-items:center;gap:7px}
+.btn-nav{height:34px;padding:0 15px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);display:flex;align-items:center;transition:all var(--tr);white-space:nowrap;background:transparent}
+.btn-nav:hover,.btn-nav.activa{color:var(--text);border-color:var(--text)}
+.btn-nuevo{height:34px;padding:0 17px;border-radius:100px;font-size:13px;font-weight:500;background:var(--text);color:var(--bg);display:flex;align-items:center;gap:6px;transition:all var(--tr);white-space:nowrap}
+.btn-nuevo:hover{opacity:.85;transform:translateY(-1px)}
+html.dark .btn-nuevo{background:var(--accent);color:#1A1714}
+.btn-icon{width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:15px;border:1.5px solid var(--borde);color:var(--text2);transition:all var(--tr);background:transparent}
+.btn-icon:hover{border-color:var(--text);color:var(--text);background:var(--surface2)}
+
+/* Admin bar */
+.admin-bar{position:fixed;top:58px;left:0;right:0;z-index:850;background:var(--accent);color:#1A1714;text-align:center;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:5px;display:none}
+body.admin .admin-bar{display:block}
+
+/* ════════════════════════════════════
+   BOTTOM NAV (mobile)
+════════════════════════════════════ */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:var(--surface);border-top:1px solid var(--borde);padding-bottom:env(safe-area-inset-bottom,0px)}
+.bnav-grid{display:grid;grid-template-columns:repeat(4,1fr);height:56px}
+.bnav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:500;color:var(--muted);transition:color var(--tr);cursor:pointer;background:none;border:none;padding:0}
+.bnav-btn.activo{color:var(--accent)}
+.bnav-ico{font-size:19px;line-height:1}
+.bnav-btn-plus{display:flex;align-items:center;justify-content:center;cursor:pointer;background:none;border:none;padding:0}
+.bnav-plus-circle{width:42px;height:42px;border-radius:50%;background:var(--text);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--bg);margin-top:-10px;box-shadow:0 4px 18px rgba(0,0,0,0.22);transition:transform var(--tr)}
+html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
+.bnav-btn-plus:hover .bnav-plus-circle{transform:scale(1.08)}
+
+@media(max-width:767px){
+  .bottom-nav{display:block}
+  body{padding-bottom:60px}
+  .nav-actions .btn-nav{display:none}
+  .btn-nuevo{display:none}
+  .nav-name{display:none}
+}
+
+/* ════════════════════════════════════
+   PAGE OFFSET
+════════════════════════════════════ */
+.page-offset{padding-top:58px}
+body.admin .page-offset{padding-top:86px}
+
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+.hero{max-width:1160px;margin:0 auto;padding:60px 24px 44px}
+.hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,62px);font-weight:300;line-height:1.1;color:var(--text);margin-bottom:16px}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-desc{font-size:15px;color:var(--text2);max-width:500px;line-height:1.7;margin-bottom:36px}
+.hero-stats{display:flex;align-items:center}
+.hero-stat{padding:0 28px 0 0;cursor:default}
+.hero-stat:first-child{padding-left:0}
+.stat-num{display:block;font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:400;color:var(--text);line-height:1}
+.stat-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-top:3px;display:block}
+.stat-div{width:1px;height:32px;background:var(--borde);margin:0 28px 0 0;align-self:center;flex-shrink:0}
+
+/* ════════════════════════════════════
+   SEARCH
+════════════════════════════════════ */
+.search-wrap{max-width:1160px;margin:0 auto;padding:0 24px 18px}
+.search-inner{position:relative;max-width:460px}
+.search-ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;display:flex}
+.search-inner input{padding-left:40px;padding-right:34px;height:40px;border-radius:100px;background:var(--surface);font-size:13.5px}
+.search-inner input:focus{border-color:var(--accent)}
+.search-clear{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:15px;padding:4px;display:none;line-height:1;cursor:pointer;background:none;border:none}
+.search-clear.visible{display:block}
+
+/* ════════════════════════════════════
+   FILTERS
+════════════════════════════════════ */
+.filtros-wrap{max-width:1160px;margin:0 auto;padding:0 24px 24px}
+.filtros-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+#filtros-container{display:flex;gap:6px;flex-wrap:wrap}
+#filtros-select{display:none;height:36px;border-radius:100px;font-size:13px;max-width:180px}
+.tipo-pill,.pill-filtro{height:33px;padding:0 15px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background:transparent;cursor:pointer;transition:all var(--tr);white-space:nowrap}
+.tipo-pill:hover,.pill-filtro:hover{border-color:var(--text);color:var(--text)}
+.tipo-pill.activo,.pill-filtro.activo{background:var(--text);color:var(--bg);border-color:var(--text)}
+html.dark .tipo-pill.activo,html.dark .pill-filtro.activo{background:var(--accent);color:#1A1714;border-color:var(--accent)}
+.filtros-spacer{flex:1}
+.sort-btn{height:33px;padding:0 13px;border-radius:100px;font-size:12.5px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background:transparent;cursor:pointer;transition:all var(--tr);white-space:nowrap}
+.sort-btn:hover{border-color:var(--text);color:var(--text)}
+.btn-filtrar{height:33px;padding:0 13px;border-radius:100px;font-size:12.5px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background:transparent;cursor:pointer;transition:all var(--tr);white-space:nowrap}
+.btn-filtrar:hover{border-color:var(--text);color:var(--text)}
+.btn-filtrar.activo{border-color:var(--accent);color:var(--accent)}
+.filtros-secundarios{display:none;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px;padding:13px 15px;background:var(--surface);border:1px solid var(--borde);border-radius:var(--r)}
+.filtros-secundarios.open{display:flex}
+.filtro-sec-sel{height:33px;padding:0 30px 0 12px;border-radius:100px;font-size:12.5px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background-color:transparent;min-width:110px;transition:all var(--tr)}
+.filtro-sec-sel:focus{border-color:var(--accent);color:var(--text)}
+.btn-limpiar-sec{height:33px;padding:0 13px;border-radius:100px;font-size:12.5px;font-weight:500;color:var(--danger);border:1.5px solid var(--danger);background:transparent;cursor:pointer;transition:all var(--tr)}
+.btn-limpiar-sec:hover{background:var(--danger);color:#fff}
+
+/* ════════════════════════════════════
+   LECTURA TOGGLE
+════════════════════════════════════ */
+.lectura-row{max-width:1160px;margin:0 auto;padding:0 24px 16px;display:flex;align-items:center;gap:14px}
+.btn-toggle-lectura{height:36px;padding:0 16px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background:var(--surface);cursor:pointer;transition:all var(--tr)}
+.btn-toggle-lectura:hover,.btn-toggle-lectura.abierto{border-color:var(--accent);color:var(--accent);background:rgba(196,169,125,.08)}
+.btn-lista-ext{font-size:12.5px;color:var(--muted);transition:color var(--tr)}
+.btn-lista-ext:hover{color:var(--accent)}
+
+/* ════════════════════════════════════
+   CARDS GRID
+════════════════════════════════════ */
+.grid-wrap{max-width:1160px;margin:0 auto;padding:0 24px 56px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(308px,1fr));gap:18px}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r);overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:box-shadow var(--tr),transform var(--tr),border-color var(--tr)}
+.card:hover{box-shadow:var(--sh-md);transform:translateY(-2px);border-color:rgba(196,169,125,.3)}
+.card-header{padding:16px 18px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.card-type{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card-badges{display:flex;gap:5px;align-items:center;flex-shrink:0}
+.card-body{padding:0 18px;flex:1}
+.card-autor{font-size:11.5px;font-weight:500;color:var(--muted);margin-bottom:5px;letter-spacing:.02em}
+.card-titulo{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;line-height:1.25;color:var(--text);margin-bottom:3px}
+.card-libro{font-size:12.5px;color:var(--text2);margin-bottom:9px}
+.card-meta{font-size:11.5px;color:var(--muted);margin-bottom:9px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--surface2);border-radius:100px;padding:2px 9px}
+.card-extracto{font-size:13px;color:var(--text2);line-height:1.65;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:14px}
+.card-bar{height:2px;background:var(--borde);margin:0 18px}
+.card-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
+.card-footer{padding:11px 18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--borde);margin-top:14px}
+.card-fecha{font-size:11px;color:var(--muted)}
+.card-arrow{font-size:15px;color:var(--muted);transition:transform var(--tr),color var(--tr)}
+.card:hover .card-arrow{transform:translateX(4px);color:var(--accent)}
+
+/* Lectura cards */
+.card-pendiente,.card-proximo{border-style:dashed;opacity:.72}
+.card-pendiente:hover,.card-proximo:hover{opacity:1}
+.proximo-hint{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:4px}
+
+/* Sep lectura */
+.lectura-sep{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.sep-line{flex:1;height:1px;background:var(--borde)}
+.sep-text{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+/* Empty */
+.empty-state{grid-column:1/-1;text-align:center;padding:72px 24px;color:var(--muted)}
+.empty-ico{font-size:36px;margin-bottom:14px;opacity:.55}
+
+/* ════════════════════════════════════
+   BADGES
+════════════════════════════════════ */
+.badge{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:100px;white-space:nowrap}
+.badge-leyendo {background:rgba(123,158,135,.14);color:#4A7A5C}
+.badge-terminado{background:rgba(196,169,125,.14);color:#8A6A30}
+.badge-proximo {background:rgba(122,128,160,.14);color:#5A6090}
+.badge-pendiente{background:rgba(160,100,100,.14);color:#8A4040}
+html.dark .badge-leyendo {background:rgba(123,158,135,.2);color:#82BF96}
+html.dark .badge-terminado{background:rgba(196,169,125,.2);color:#C4A97D}
+html.dark .badge-proximo {background:rgba(122,128,160,.2);color:#8A90C0}
+html.dark .badge-pendiente{background:rgba(200,110,110,.2);color:#C08080}
+.finalidad-badge{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:100px;white-space:nowrap}
+.finalidad-badge.formacion   {background:rgba(122,128,160,.14);color:#5A6090}
+.finalidad-badge.autoconocimiento{background:rgba(123,158,135,.14);color:#4A7A5C}
+.finalidad-badge.ocio        {background:rgba(196,169,125,.14);color:#8A6A30}
+html.dark .finalidad-badge.formacion   {background:rgba(122,128,160,.2);color:#8A90C0}
+html.dark .finalidad-badge.autoconocimiento{background:rgba(123,158,135,.2);color:#82BF96}
+html.dark .finalidad-badge.ocio        {background:rgba(196,169,125,.2);color:#C4A97D}
+.tipo-badge{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:var(--surface2);color:var(--text2)}
+
+/* ════════════════════════════════════
+   TAREAS
+════════════════════════════════════ */
+.tareas-page{display:none;max-width:1160px;margin:0 auto;padding:40px 24px 64px}
+.tareas-top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:28px}
+.tareas-eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.tareas-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:400;color:var(--text)}
+.btn-nueva-tarea{height:36px;padding:0 17px;border-radius:100px;font-size:13px;font-weight:500;background:var(--text);color:var(--bg);border:none;cursor:pointer;white-space:nowrap;transition:opacity var(--tr)}
+.btn-nueva-tarea:hover{opacity:.8}
+html.dark .btn-nueva-tarea{background:var(--accent);color:#1A1714}
+.tareas-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+.tstat-card{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r-sm);padding:14px;cursor:pointer;text-align:center;transition:all var(--tr)}
+.tstat-card:hover,.tstat-card.activa{border-color:var(--accent);background:rgba(196,169,125,.07)}
+.tstat-num{display:block;font-size:26px;font-weight:400;font-family:'Cormorant Garamond',serif;color:var(--text)}
+.tstat-label{font-size:11px;font-weight:500;color:var(--muted);display:block;margin-top:2px}
+.tareas-filtros-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+.tareas-filtros{display:flex;gap:6px;flex-wrap:wrap}
+.pill-t{height:31px;padding:0 13px;border-radius:100px;font-size:12.5px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background:transparent;cursor:pointer;transition:all var(--tr);white-space:nowrap}
+.pill-t:hover{border-color:var(--text);color:var(--text)}
+.pill-t.activa{background:var(--text);color:var(--bg);border-color:var(--text)}
+html.dark .pill-t.activa{background:var(--accent);color:#1A1714;border-color:var(--accent)}
+.pill-t[data-f="pendiente"].activa{background:#C05A4A;border-color:#C05A4A;color:#fff}
+.pill-t[data-f="en-progreso"].activa{background:#7B9E87;border-color:#7B9E87;color:#fff}
+.pill-t[data-f="completado"].activa{background:var(--accent);border-color:var(--accent);color:#1A1714}
+.tareas-sort-sel{height:31px;padding:0 28px 0 11px;border-radius:100px;font-size:12.5px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background-color:transparent;cursor:pointer;min-width:120px}
+.kanban-board{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;align-items:start}
+.kanban-board.filtrado{grid-template-columns:minmax(0,500px);justify-content:center}
+.kanban-col{background:var(--surface2);border-radius:var(--r);overflow:hidden}
+.kanban-col-header{padding:12px 14px;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--borde)}
+.kanban-count{background:var(--surface);border:1px solid var(--borde);border-radius:100px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:var(--text2)}
+.kanban-col-body{padding:10px;display:flex;flex-direction:column;gap:7px;min-height:60px}
+.kanban-empty{font-size:12px;color:var(--muted);text-align:center;padding:14px 0}
+.tarea-card{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r-sm);padding:12px;transition:box-shadow var(--tr)}
+.tarea-card:hover{box-shadow:var(--sh-sm)}
+.tarea-estado-done{opacity:.6}
+.tarea-titulo{font-size:13px;font-weight:500;color:var(--text);margin-bottom:5px;line-height:1.4}
+.tarea-detalles{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:9px;white-space:pre-wrap}
+.tarea-footer{display:flex;align-items:center;justify-content:space-between}
+.tarea-fecha{font-size:11px;color:var(--muted)}
+.tarea-actions{display:flex;gap:4px}
+.tarea-btn{width:26px;height:26px;border-radius:6px;font-size:12px;color:var(--text2);border:1px solid var(--borde);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--tr)}
+.tarea-btn:hover{background:var(--surface2);color:var(--text);border-color:var(--text)}
+.tarea-btn.move{color:var(--accent);border-color:var(--accent)}
+.tarea-btn.move:hover{background:rgba(196,169,125,.12)}
+
+/* ════════════════════════════════════
+   MODALS
+════════════════════════════════════ */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(14,14,16,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--borde);border-radius:18px;box-shadow:var(--sh-lg);position:relative;width:100%;max-width:640px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;animation:mIn .2s ease}
+@keyframes mIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;top:14px;right:14px;z-index:10;width:30px;height:30px;border-radius:50%;background:var(--surface2);border:none;font-size:13px;color:var(--text2);display:flex;align-items:center;justify-content:center;transition:all var(--tr);cursor:pointer}
+.modal-close:hover{background:var(--borde);color:var(--text)}
+.modal-bar{height:4px;flex-shrink:0}
+
+/* Form modal */
+.form-modal{max-width:700px}
+.form-header{padding:24px 26px 0}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--text);margin-bottom:3px}
+.form-subtitle{font-size:12.5px;color:var(--muted);padding-bottom:14px}
+.form-body{padding:0 26px;overflow-y:auto;flex:1}
+.form-sec{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:18px 0 10px;border-top:1px solid var(--borde);margin-top:4px}
+.form-sec:first-child{margin-top:0;padding-top:14px;border-top:none}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
+.form-g{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.form-g label{font-size:11.5px;font-weight:600;color:var(--text2);letter-spacing:.02em}
+.err-msg{font-size:11px;color:var(--danger);display:none;margin-top:3px}
+.err-msg.visible{display:block}
+input[type="range"]{-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;background:var(--borde);border:none;padding:0;cursor:pointer;width:100%}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);border:2.5px solid var(--surface);box-shadow:0 0 0 1.5px var(--accent);cursor:pointer}
+/* Private notes block */
+.private-notes{background:rgba(196,169,125,.07);border:1.5px dashed rgba(196,169,125,.35);border-radius:var(--r-sm);padding:13px 14px;margin-bottom:12px}
+.private-notes-lbl{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:9px;display:flex;align-items:center;gap:5px}
+.private-notes textarea{background:transparent;border-color:rgba(196,169,125,.22)}
+.private-notes textarea:focus{border-color:var(--accent);background:var(--surface)}
+.form-footer{padding:14px 26px 22px;border-top:1px solid var(--borde);display:flex;gap:9px;justify-content:flex-end;flex-shrink:0}
+.btn-cancel{height:38px;padding:0 18px;border-radius:100px;font-size:13px;font-weight:500;color:var(--text2);border:1.5px solid var(--borde);background:transparent;cursor:pointer;transition:all var(--tr)}
+.btn-cancel:hover{border-color:var(--text);color:var(--text)}
+.btn-save{height:38px;padding:0 22px;border-radius:100px;font-size:13px;font-weight:600;color:var(--bg);background:var(--text);border:none;cursor:pointer;transition:opacity var(--tr)}
+.btn-save:hover{opacity:.85}
+html.dark .btn-save{background:var(--accent);color:#1A1714}
+
+/* Detail modal */
+.detail-modal{max-width:760px}
+.detail-header{padding:22px 26px 0}
+.detail-eyebrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+#d-autor{font-size:12px;color:var(--muted);font-weight:500}
+.detail-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;line-height:1.25;color:var(--text);margin-bottom:5px}
+.detail-sub{font-size:13px;color:var(--text2);margin-bottom:14px}
+.detail-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.detail-tabs{display:flex;border-bottom:1px solid var(--borde);padding:0 26px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.detail-tabs::-webkit-scrollbar{display:none}
+.tab-btn{font-size:12.5px;font-weight:500;color:var(--muted);padding:11px 14px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all var(--tr);white-space:nowrap;margin-bottom:-1px}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.activo{color:var(--text);border-bottom-color:var(--accent)}
+.tab-panel{display:none;padding:22px 26px;overflow-y:auto;flex:1}
+.tab-panel.activo{display:block}
+.tab-lbl{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.d-fecha-art{font-size:12px;color:var(--muted);margin-bottom:12px;display:none}
+.rich{font-size:14px;color:var(--text2);line-height:1.78}
+.rich p{margin-bottom:13px}
+.rich p:last-child{margin-bottom:0}
+.cita-blk{margin-top:22px;border-left:3px solid var(--accent);padding:14px 18px;background:rgba(196,169,125,.07);border-radius:0 var(--r-sm) var(--r-sm) 0}
+.cita-deco{font-family:'Cormorant Garamond',serif;font-size:30px;color:var(--accent);line-height:1;display:block;margin-bottom:5px}
+.cita-txt{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;line-height:1.6;color:var(--text)}
+.notas-txt{font-size:14px;color:var(--text2);line-height:1.75;white-space:pre-wrap}
+.ficha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:10px}
+.ficha-item{background:var(--surface2);border-radius:var(--r-sm);padding:11px 13px}
+.ficha-k{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.ficha-v{font-size:13.5px;font-weight:500;color:var(--text)}
+.ficha-bar{height:3px;background:var(--borde);border-radius:2px;margin-top:7px}
+.ficha-bar-f{height:100%;background:var(--accent);border-radius:2px}
+.ficha-rating{display:flex;gap:4px;margin-top:7px}
+.r-dot{width:7px;height:7px;border-radius:50%;background:var(--borde)}
+.r-dot.on{background:var(--accent)}
+.detail-footer{padding:13px 26px 18px;border-top:1px solid var(--borde);display:flex;gap:9px;justify-content:flex-end;flex-shrink:0}
+.btn-edit-a{height:36px;padding:0 18px;border-radius:100px;font-size:13px;font-weight:500;background:var(--text);color:var(--bg);border:none;cursor:pointer;transition:opacity var(--tr)}
+.btn-edit-a:hover{opacity:.8}
+html.dark .btn-edit-a{background:var(--accent);color:#1A1714}
+.btn-del{height:36px;padding:0 18px;border-radius:100px;font-size:13px;font-weight:500;background:transparent;color:var(--danger);border:1.5px solid var(--danger);cursor:pointer;transition:all var(--tr)}
+.btn-del:hover{background:var(--danger);color:#fff}
+
+/* Login modal */
+.login-modal{max-width:400px}
+.login-eyebrow{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.login-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--text);margin-bottom:5px}
+.login-sub{font-size:13px;color:var(--muted);padding-bottom:18px}
+.logout-ico{font-size:34px;text-align:center;margin:24px 0 10px}
+.logout-title{font-size:16px;font-weight:600;color:var(--text);text-align:center;margin-bottom:6px}
+.logout-sub{font-size:13px;color:var(--muted);text-align:center;line-height:1.6;padding:0 8px 20px}
+
+/* Toast */
+.toast{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--text);color:var(--bg);font-size:13px;font-weight:500;padding:11px 20px;border-radius:100px;white-space:nowrap;opacity:0;transition:opacity .22s ease,transform .22s ease;z-index:2000;pointer-events:none;box-shadow:var(--sh-md)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+html.dark .toast{background:var(--accent);color:#1A1714}
+
+/* ════════════════════════════════════
+   MOBILE
+════════════════════════════════════ */
+@media(max-width:767px){
+  .hero{padding:36px 16px 28px}
+  .hero-desc{display:none}
+  .hero-stat{padding:0 18px 0 0}
+  .stat-num{font-size:30px}
+  .stat-div{margin:0 18px 0 0}
+  .search-wrap{padding:0 16px 14px}
+  .search-inner{max-width:100%}
+  .filtros-wrap{padding:0 16px 18px}
+  #filtros-container{display:none}
+  #filtros-select{display:block}
+  .filtros-row{gap:6px}
+  .grid-wrap{padding:0 16px 40px}
+  .cards-grid{grid-template-columns:1fr;gap:13px}
+  .lectura-row{padding:0 16px 14px}
+  .tareas-page{padding:24px 16px 40px}
+  .tareas-stats{grid-template-columns:repeat(2,1fr)}
+  .kanban-board,.kanban-board.filtrado{grid-template-columns:1fr}
+  .modal-overlay{align-items:flex-end;padding:0}
+  .modal{max-height:94vh;border-radius:18px 18px 0 0;margin:auto 0 0}
+  .form-header{padding:18px 18px 0}
+  .form-body{padding:0 18px}
+  .form-footer{padding:12px 18px 20px}
+  .form-row{grid-template-columns:1fr}
+  .detail-header{padding:18px 18px 0}
+  .detail-tabs{padding:0 18px}
+  .tab-panel{padding:18px}
+  .detail-footer{padding:11px 18px 14px}
+  .ficha-grid{grid-template-columns:1fr 1fr}
+  .toast{bottom:68px}
+}
+@media(max-width:399px){
+  .tareas-stats{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 
-<!-- ━━━━━━━━━━ NAV ━━━━━━━━━━ -->
+<!-- NAV -->
 <nav id="main-nav">
   <div class="nav-inner">
-    <a href="#" class="nav-brand" onclick="irAHome(); return false;">
-      <img src="img/logo.png" alt="EnSu Logo" class="nav-logo">
+    <a href="#" class="nav-brand" onclick="irAHome();return false">
+      <img src="img/logo.png" alt="EnSu" class="nav-logo">
+      <span class="nav-name">EnSu</span>
     </a>
     <div class="nav-actions">
-      <a href="lista.html" class="btn-tareas" style="text-decoration:none">Lista de lectura</a>
-      <button class="btn-tareas admin-only" id="btn-tareas-nav" onclick="irATareas()">Tareas</button>
-      <button class="btn-nuevo admin-only" onclick="abrirFormModal()" aria-label="Nueva entrada">
-        <span>+</span> Nueva entrada
-      </button>
-      <button class="btn-dark-toggle" id="btn-dark" onclick="toggleDarkMode()" aria-label="Cambiar modo">
-        <span id="dark-icon">🌙</span>
-      </button>
-      <button class="btn-dark-toggle btn-lock" id="btn-lock" onclick="abrirLoginModal()" aria-label="Admin">
-        <span id="lock-icon">🔒</span>
-      </button>
+      <a href="lista.html" class="btn-nav" style="text-decoration:none">Biblioteca</a>
+      <button class="btn-nav admin-only" id="btn-tareas-nav" onclick="irATareas()">Tareas</button>
+      <button class="btn-nuevo admin-only" onclick="abrirFormModal()"><span>+</span> Nueva entrada</button>
+      <button class="btn-icon" id="btn-dark" onclick="toggleDarkMode()" aria-label="Modo oscuro"><span id="dark-icon">🌙</span></button>
+      <button class="btn-icon" id="btn-lock" onclick="abrirLoginModal()" aria-label="Admin"><span id="lock-icon">🔒</span></button>
     </div>
   </div>
 </nav>
-<div class="admin-bar" id="admin-bar">✏ Modo edición — solo tú ves esto</div>
+<div class="admin-bar" id="admin-bar">✏ Modo edición activo</div>
 
-<!-- ━━━━━━━━━━ HERO ━━━━━━━━━━ -->
-<section class="hero" id="home-hero">
-  <div class="hero-left">
-    <p class="hero-eyebrow">Diario de lectura</p>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bnav-grid">
+    <button class="bnav-btn activo" id="bnav-home" data-page="home" onclick="irAHome()">
+      <span class="bnav-ico">🏠</span><span>Inicio</span>
+    </button>
+    <a href="lista.html" class="bnav-btn" data-page="biblioteca">
+      <span class="bnav-ico">📚</span><span>Biblioteca</span>
+    </a>
+    <!-- Non-admin: dark + lock -->
+    <button class="bnav-btn non-admin-only" onclick="toggleDarkMode()">
+      <span class="bnav-ico">🌙</span><span>Tema</span>
+    </button>
+    <button class="bnav-btn non-admin-only" onclick="abrirLoginModal()">
+      <span class="bnav-ico">🔒</span><span>Acceso</span>
+    </button>
+    <!-- Admin: + nueva + tareas -->
+    <button class="bnav-btn-plus admin-only" onclick="abrirFormModal()" aria-label="Nueva entrada">
+      <div class="bnav-plus-circle">＋</div>
+    </button>
+    <button class="bnav-btn admin-only" id="bnav-tareas" data-page="tareas" onclick="irATareas()">
+      <span class="bnav-ico">✅</span><span>Tareas</span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-offset">
+
+<!-- HOME PAGE -->
+<div id="home-hero">
+  <section class="hero">
+    <p class="hero-eyebrow">Biblioteca personal</p>
     <h1 class="hero-title">Lo que leo me <em>forma.</em></h1>
-    <p class="hero-desc">
-      Un espacio para anotar lo que los libros despiertan en mí — reflexiones honestas, citas que resuenan y la forma en que cada lectura aterriza en mi vida real.
-    </p>
+    <p class="hero-desc">Un espacio para registrar lo que los libros despiertan en mí — reflexiones honestas, citas que resuenan y cómo cada lectura aterrizó en mi vida real.</p>
     <div class="hero-stats">
-      <div class="hero-stat">
-        <span class="stat-num" id="stat-libros">0</span>
-        <span class="stat-label">Libros</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="hero-stat">
-        <span class="stat-num" id="stat-reflexiones">0</span>
-        <span class="stat-label">Reflexiones</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="hero-stat">
-        <span class="stat-num" id="stat-articulos">0</span>
-        <span class="stat-label">Artículos</span>
-      </div>
+      <div class="hero-stat"><span class="stat-num" id="stat-libros">0</span><span class="stat-label">Libros</span></div>
+      <div class="stat-div"></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-reflexiones">0</span><span class="stat-label">Reflexiones</span></div>
+      <div class="stat-div"></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-articulos">0</span><span class="stat-label">Artículos</span></div>
     </div>
-  </div>
-</section>
-
-<!-- ━━━━━━━━━━ SEPARADOR ━━━━━━━━━━ -->
-<div class="separador">
-  <div class="sep-line"></div>
-  <span class="sep-text">Reflexiones</span>
-  <div class="sep-line"></div>
+  </section>
 </div>
 
-<!-- ━━━━━━━━━━ BÚSQUEDA ━━━━━━━━━━ -->
-<div class="busqueda-wrap">
-  <div class="busqueda-inner">
-    <span class="busqueda-icono">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <span class="search-ico">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </span>
-    <input type="text" id="busqueda-input" placeholder="Buscar por título, autor, reflexión o etiqueta…" oninput="setBusqueda(this.value)" autocomplete="off">
-    <button class="busqueda-clear" id="busqueda-clear" onclick="limpiarBusqueda()" aria-label="Limpiar búsqueda">&#x2715;</button>
+    <input type="text" id="busqueda-input" placeholder="Buscar por título, autor, reflexión…" oninput="setBusqueda(this.value)" autocomplete="off">
+    <button class="search-clear" id="busqueda-clear" onclick="limpiarBusqueda()">✕</button>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━ FILTROS ━━━━━━━━━━ -->
+<!-- FILTERS -->
 <div class="filtros-wrap" id="home-filtros">
   <div class="filtros-row">
-    <div class="filtros" id="filtros-container"></div>
+    <div id="filtros-container"></div>
     <select id="filtros-select" onchange="setFiltro(this.value)"></select>
-    <button class="sort-btn desc" id="sort-btn" onclick="toggleSort()" title="Ordenar por fecha">Reciente</button>
+    <div class="filtros-spacer"></div>
+    <button class="sort-btn" id="sort-btn" onclick="toggleSort()">Reciente</button>
     <button class="btn-filtrar" id="btn-filtrar" onclick="toggleFiltrosSecPanel()">Filtrar ▼</button>
   </div>
   <div class="filtros-secundarios" id="filtros-secundarios">
@@ -1851,30 +527,28 @@
     <select class="filtro-sec-sel" id="filtro-dificultad" onchange="setFiltroSec('dificultad',this.value)">
       <option value="">Dificultad</option>
       <option value="Fácil">Fácil</option>
-      <option value="Intermedia">Intermedia</option>
-      <option value="Avanzada">Avanzada</option>
       <option value="Accesible">Accesible</option>
       <option value="Moderada">Moderada</option>
+      <option value="Intermedia">Intermedia</option>
       <option value="Densa">Densa</option>
+      <option value="Muy densa">Muy densa</option>
     </select>
-    <button class="btn-limpiar-sec" id="btn-limpiar-sec" onclick="limpiarFiltrosSec()" style="display:none">Limpiar filtros</button>
+    <button class="btn-limpiar-sec" id="btn-limpiar-sec" onclick="limpiarFiltrosSec()" style="display:none">Limpiar</button>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━ TOGGLE LISTA LECTURA ━━━━━━━━━━ -->
-<div class="toggle-lectura-row" id="toggle-lectura-row">
-  <button class="btn-toggle-lectura" id="btn-toggle-lectura" onclick="toggleLectura()">
-    📚 Lista de lectura ▼
-  </button>
+<!-- LECTURA TOGGLE -->
+<div class="lectura-row" id="toggle-lectura-row">
+  <button class="btn-toggle-lectura" id="btn-toggle-lectura" onclick="toggleLectura()">📚 Lista de lectura ▼</button>
   <a href="lista.html" class="btn-lista-ext">Ver lista completa →</a>
 </div>
 
-<!-- ━━━━━━━━━━ GRID ━━━━━━━━━━ -->
+<!-- GRID -->
 <div class="grid-wrap" id="home-grid">
   <div class="cards-grid" id="cards-grid"></div>
 </div>
 
-<!-- ━━━━━━━━━━ TAREAS ━━━━━━━━━━ -->
+<!-- TAREAS PAGE -->
 <div class="tareas-page" id="tareas-page">
   <div class="tareas-top">
     <div>
@@ -1883,34 +557,18 @@
     </div>
     <button class="btn-nueva-tarea" onclick="abrirFormTarea()">+ Nueva tarea</button>
   </div>
-
-  <!-- Stats -->
   <div class="tareas-stats">
-    <div class="tstat-card activa" data-estado="todas" onclick="setFiltroT('todas')">
-      <span class="tstat-num" id="stat-total">0</span>
-      <span class="tstat-label">Total</span>
-    </div>
-    <div class="tstat-card" data-estado="pendiente" onclick="setFiltroT('pendiente')">
-      <span class="tstat-num" id="stat-pendiente">0</span>
-      <span class="tstat-label">Pendiente</span>
-    </div>
-    <div class="tstat-card" data-estado="en-progreso" onclick="setFiltroT('en-progreso')">
-      <span class="tstat-num" id="stat-en-progreso">0</span>
-      <span class="tstat-label">En progreso</span>
-    </div>
-    <div class="tstat-card" data-estado="completado" onclick="setFiltroT('completado')">
-      <span class="tstat-num" id="stat-completado">0</span>
-      <span class="tstat-label">Completado</span>
-    </div>
+    <div class="tstat-card activa" data-estado="todas" onclick="setFiltroT('todas')"><span class="tstat-num" id="stat-total">0</span><span class="tstat-label">Total</span></div>
+    <div class="tstat-card" data-estado="pendiente" onclick="setFiltroT('pendiente')"><span class="tstat-num" id="stat-pendiente">0</span><span class="tstat-label">Pendiente</span></div>
+    <div class="tstat-card" data-estado="en-progreso" onclick="setFiltroT('en-progreso')"><span class="tstat-num" id="stat-en-progreso">0</span><span class="tstat-label">En progreso</span></div>
+    <div class="tstat-card" data-estado="completado" onclick="setFiltroT('completado')"><span class="tstat-num" id="stat-completado">0</span><span class="tstat-label">Completado</span></div>
   </div>
-
-  <!-- Filtros + ordenación -->
   <div class="tareas-filtros-row">
     <div class="tareas-filtros">
-      <button class="pill-t activa" data-f="todas"       onclick="setFiltroT('todas')">Todas</button>
-      <button class="pill-t"        data-f="pendiente"   onclick="setFiltroT('pendiente')">Pendiente</button>
-      <button class="pill-t"        data-f="en-progreso" onclick="setFiltroT('en-progreso')">En progreso</button>
-      <button class="pill-t"        data-f="completado"  onclick="setFiltroT('completado')">Completado</button>
+      <button class="pill-t activa" data-f="todas" onclick="setFiltroT('todas')">Todas</button>
+      <button class="pill-t" data-f="pendiente" onclick="setFiltroT('pendiente')">Pendiente</button>
+      <button class="pill-t" data-f="en-progreso" onclick="setFiltroT('en-progreso')">En progreso</button>
+      <button class="pill-t" data-f="completado" onclick="setFiltroT('completado')">Completado</button>
     </div>
     <select class="tareas-sort-sel" id="tareas-sort" onchange="setSortT(this.value)">
       <option value="fecha-asc">Fecha ↑</option>
@@ -1919,58 +577,35 @@
       <option value="titulo-za">Título Z–A</option>
     </select>
   </div>
-
   <div class="kanban-board">
     <div class="kanban-col" data-estado="pendiente">
-      <div class="kanban-col-header">
-        Pendiente <span class="kanban-count" id="count-pendiente">0</span>
-      </div>
+      <div class="kanban-col-header">Pendiente <span class="kanban-count" id="count-pendiente">0</span></div>
       <div class="kanban-col-body" id="col-pendiente"></div>
     </div>
     <div class="kanban-col" data-estado="en-progreso">
-      <div class="kanban-col-header">
-        En progreso <span class="kanban-count" id="count-en-progreso">0</span>
-      </div>
+      <div class="kanban-col-header">En progreso <span class="kanban-count" id="count-en-progreso">0</span></div>
       <div class="kanban-col-body" id="col-en-progreso"></div>
     </div>
     <div class="kanban-col" data-estado="completado">
-      <div class="kanban-col-header">
-        Completado <span class="kanban-count" id="count-completado">0</span>
-      </div>
+      <div class="kanban-col-header">Completado <span class="kanban-count" id="count-completado">0</span></div>
       <div class="kanban-col-body" id="col-completado"></div>
     </div>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━ MODAL TAREA ━━━━━━━━━━ -->
+</div><!-- /page-offset -->
+
+<!-- MODAL TAREA -->
 <div class="modal-overlay" id="tarea-form-overlay" onclick="overlayClick(event,'tarea-form-overlay')">
   <div class="modal" role="dialog" aria-modal="true">
-    <button class="modal-close" onclick="cerrarModal('tarea-form-overlay')" aria-label="Cerrar">&#x2715;</button>
-    <div class="form-header">
-      <span id="tarea-form-title-text" class="form-title-text">Nueva tarea</span>
-    </div>
-    <div class="form-body">
-      <div class="form-group">
-        <label for="t-titulo">Título</label>
-        <input type="text" id="t-titulo" placeholder="¿Qué hay que hacer?">
-      </div>
-      <div class="form-group">
-        <label for="t-detalles">Detalles</label>
-        <textarea id="t-detalles" rows="4" placeholder="Descripción, notas o pasos..."></textarea>
-      </div>
+    <button class="modal-close" onclick="cerrarModal('tarea-form-overlay')">✕</button>
+    <div class="form-header"><h2 class="form-title" id="tarea-form-title-text">Nueva tarea</h2></div>
+    <div class="form-body" style="padding-top:14px">
+      <div class="form-g"><label for="t-titulo">Título</label><input type="text" id="t-titulo" placeholder="¿Qué hay que hacer?"></div>
+      <div class="form-g"><label for="t-detalles">Detalles</label><textarea id="t-detalles" rows="4" placeholder="Descripción o pasos…"></textarea></div>
       <div class="form-row">
-        <div class="form-group">
-          <label for="t-estado">Estado</label>
-          <select id="t-estado">
-            <option value="pendiente">Pendiente</option>
-            <option value="en-progreso">En progreso</option>
-            <option value="completado">Completado</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="t-fecha">Fecha</label>
-          <input type="date" id="t-fecha">
-        </div>
+        <div class="form-g"><label for="t-estado">Estado</label><select id="t-estado"><option value="pendiente">Pendiente</option><option value="en-progreso">En progreso</option><option value="completado">Completado</option></select></div>
+        <div class="form-g"><label for="t-fecha">Fecha</label><input type="date" id="t-fecha"></div>
       </div>
     </div>
     <div class="form-footer">
@@ -1980,234 +615,137 @@
   </div>
 </div>
 
-<!-- ━━━━━━━━━━ MODAL DETALLE ━━━━━━━━━━ -->
+<!-- MODAL DETALLE -->
 <div class="modal-overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
-  <div class="modal" role="dialog" aria-modal="true">
-    <button class="modal-close" onclick="cerrarModal('detail-overlay')" aria-label="Cerrar">&#x2715;</button>
-    <div class="detail-bar"></div>
+  <div class="modal detail-modal" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="cerrarModal('detail-overlay')">✕</button>
+    <div class="modal-bar" id="detail-bar"></div>
     <div class="detail-header">
-      <div class="detail-eyebrow">
-        <span id="d-autor"></span>
-        <span id="d-badge" class="badge"></span>
-      </div>
+      <div class="detail-eyebrow"><span id="d-autor"></span><span id="d-badge" class="badge"></span></div>
       <h2 class="detail-title" id="d-titulo"></h2>
-      <p class="detail-autor" id="d-libro-autor"></p>
+      <p class="detail-sub" id="d-libro-autor"></p>
       <div class="detail-tags" id="d-tags"></div>
     </div>
     <div class="detail-tabs" id="detail-tabs-bar">
       <button class="tab-btn activo" onclick="cambiarTab(this,'tab-resumen')">Resumen</button>
-      <button class="tab-btn" id="tab-btn-mis-ref" onclick="cambiarTab(this,'tab-mis-reflexiones')">Mis reflexiones</button>
+      <button class="tab-btn" id="tab-btn-mis-ref" onclick="cambiarTab(this,'tab-mis-ref')">Mis reflexiones</button>
       <button class="tab-btn" id="tab-btn-vida" onclick="cambiarTab(this,'tab-vida')">Mi vida</button>
       <button class="tab-btn" id="tab-btn-ficha" onclick="cambiarTab(this,'tab-ficha')">Ficha</button>
+      <button class="tab-btn admin-only" id="tab-btn-notas" onclick="cambiarTab(this,'tab-notas')" style="display:none">🔒 Notas</button>
     </div>
     <div class="tab-panel activo" id="tab-resumen">
-      <p class="tab-section-intro" id="d-resumen-label">Sobre el libro</p>
-      <p class="fecha-articulo" id="d-fecha-articulo"></p>
-      <div class="rich-text" id="d-reflexion"></div>
-      <div class="cita-bloque" id="d-cita-wrap">
-        <span class="cita-deco">&#x201C;</span>
-        <p class="cita-texto" id="d-cita"></p>
+      <p class="tab-lbl" id="d-resumen-label">Sobre el libro</p>
+      <p class="d-fecha-art" id="d-fecha-articulo"></p>
+      <div class="rich" id="d-reflexion"></div>
+      <div class="cita-blk" id="d-cita-wrap" style="display:none">
+        <span class="cita-deco">"</span>
+        <p class="cita-txt" id="d-cita"></p>
       </div>
     </div>
-    <div class="tab-panel" id="tab-mis-reflexiones">
-      <p class="tab-section-intro">Mi análisis</p>
-      <div class="mis-ref-bloque" id="d-mis-reflexiones"></div>
+    <div class="tab-panel" id="tab-mis-ref">
+      <p class="tab-lbl">Mi análisis</p>
+      <div class="rich" id="d-mis-reflexiones"></div>
     </div>
     <div class="tab-panel" id="tab-vida">
-      <p class="tab-section-intro">Cómo lo aplico</p>
-      <div class="vida-rich" id="d-vida"></div>
+      <p class="tab-lbl">Cómo lo aplico</p>
+      <div class="rich" id="d-vida"></div>
     </div>
     <div class="tab-panel" id="tab-ficha">
       <div class="ficha-grid" id="d-ficha-grid"></div>
     </div>
+    <div class="tab-panel" id="tab-notas">
+      <p class="tab-lbl">🔒 Notas privadas</p>
+      <div class="notas-txt" id="d-notas"></div>
+    </div>
     <div class="detail-footer admin-only">
-      <button class="btn-editar" id="btn-editar-detail">Editar</button>
-      <button class="btn-eliminar" id="btn-eliminar-detail">Eliminar</button>
+      <button class="btn-edit-a" id="btn-editar-detail">Editar</button>
+      <button class="btn-del" id="btn-eliminar-detail">Eliminar</button>
     </div>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━ MODAL LOGIN ━━━━━━━━━━ -->
+<!-- MODAL LOGIN -->
 <div class="modal-overlay" id="login-overlay" onclick="overlayClick(event,'login-overlay')">
   <div class="modal login-modal" role="dialog" aria-modal="true">
-    <button class="modal-close" onclick="cerrarModal('login-overlay')" aria-label="Cerrar">&#x2715;</button>
-    <div class="login-bar"></div>
-    <!-- Formulario de acceso -->
+    <button class="modal-close" onclick="cerrarModal('login-overlay')">✕</button>
+    <div class="modal-bar" style="background:var(--accent)"></div>
     <div id="login-section">
-      <div class="login-header">
+      <div class="form-header">
         <p class="login-eyebrow">Acceso privado</p>
         <h2 class="login-title">Modo edición</h2>
-        <p class="login-sub">Solo el autor puede editar este blog.</p>
+        <p class="login-sub">Solo el autor puede editar este diario.</p>
       </div>
-      <div class="login-body">
-        <div class="form-group">
-          <label for="login-user">Usuario</label>
-          <input type="text" id="login-user" placeholder="Usuario" autocomplete="username"
-            onkeydown="if(event.key==='Enter')$('login-pwd').focus()">
-        </div>
-        <div class="form-group" style="margin-top:14px">
-          <label for="login-pwd">Contraseña</label>
-          <input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password"
-            onkeydown="if(event.key==='Enter')handleLogin()">
-          <span class="error-msg" id="login-error">Credenciales incorrectas. Inténtalo de nuevo.</span>
-        </div>
+      <div class="form-body" style="padding-top:4px">
+        <div class="form-g"><label for="login-user">Usuario</label><input type="text" id="login-user" placeholder="Usuario" autocomplete="username" onkeydown="if(event.key==='Enter')$('login-pwd').focus()"></div>
+        <div class="form-g" style="margin-top:10px"><label for="login-pwd">Contraseña</label><input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')handleLogin()"><span class="err-msg" id="login-error">Credenciales incorrectas.</span></div>
       </div>
-      <div class="login-footer">
+      <div class="form-footer">
         <button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cancelar</button>
-        <button class="btn-save" onclick="handleLogin()" id="login-btn">Entrar</button>
+        <button class="btn-save" onclick="handleLogin()">Entrar</button>
       </div>
     </div>
-    <!-- Panel de sesión activa -->
     <div id="logout-section" style="display:none">
-      <div class="logout-bloque">
-        <div class="logout-icon">🔓</div>
-        <p class="logout-title">Modo edición activo</p>
-        <p class="logout-sub">Estás editando el blog como autor. Cierra sesión para volver al modo lectura.</p>
-      </div>
-      <div class="logout-footer">
+      <div class="logout-ico">🔓</div>
+      <p class="logout-title">Modo edición activo</p>
+      <p class="logout-sub">Estás editando como autor. Cierra sesión para volver al modo lectura.</p>
+      <div class="form-footer">
         <button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cerrar</button>
-        <button class="btn-eliminar" style="padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500" onclick="handleLogout()">Cerrar sesión</button>
+        <button class="btn-del" style="padding:0 18px;height:38px;border-radius:100px;font-size:13px;font-weight:500" onclick="handleLogout()">Cerrar sesión</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━ MODAL FORMULARIO ━━━━━━━━━━ -->
+<!-- MODAL FORMULARIO -->
 <div class="modal-overlay admin-only" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
   <div class="modal form-modal" role="dialog" aria-modal="true">
-    <button class="modal-close" onclick="cerrarModal('form-overlay')" aria-label="Cerrar">&#x2715;</button>
+    <button class="modal-close" onclick="cerrarModal('form-overlay')">✕</button>
     <div class="form-header">
       <h2 class="form-title" id="form-title-text">Nueva entrada</h2>
       <p class="form-subtitle">Registra lo que esta lectura despertó en ti.</p>
     </div>
     <form id="libro-form" onsubmit="guardarLibro(event)" novalidate>
       <div class="form-body">
-
-        <p class="form-section-label">Datos</p>
+        <p class="form-sec">Datos</p>
         <div class="form-row">
-          <div class="form-group">
-            <label for="f-tipo">Tipo</label>
-            <select id="f-tipo">
-              <option value="libro">Libro</option>
-              <option value="articulo">Artículo</option>
-              <option value="reflexion">Reflexión</option>
-              <option value="privado">🔒 Privado</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-estado">Estado</label>
-            <select id="f-estado">
-              <option value="leyendo">Leyendo</option>
-              <option value="terminado">Terminado</option>
-              <option value="proximo">Próximo (siguiente)</option>
-              <option value="pendiente">Pendiente (en lista)</option>
-            </select>
-          </div>
+          <div class="form-g"><label for="f-tipo">Tipo</label><select id="f-tipo"><option value="libro">Libro</option><option value="articulo">Artículo</option><option value="reflexion">Reflexión</option><option value="privado">🔒 Privado</option></select></div>
+          <div class="form-g"><label for="f-estado">Estado</label><select id="f-estado"><option value="leyendo">Leyendo</option><option value="terminado">Terminado</option><option value="proximo">Próximo (siguiente)</option><option value="pendiente">Pendiente (en lista)</option></select></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label for="f-libro">Libro / Fuente</label>
-            <input type="text" id="f-libro" placeholder="Título del libro o artículo">
-          </div>
-          <div class="form-group">
-            <label for="f-autor">Autor</label>
-            <input type="text" id="f-autor" placeholder="Nombre del autor">
-          </div>
+          <div class="form-g"><label for="f-libro">Libro / Fuente</label><input type="text" id="f-libro" placeholder="Título del libro o artículo"></div>
+          <div class="form-g"><label for="f-autor">Autor</label><input type="text" id="f-autor" placeholder="Nombre del autor"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label for="f-fecha">Fecha</label>
-            <input type="date" id="f-fecha">
-          </div>
-          <div class="form-group">
-            <label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label>
-            <div class="range-wrap" style="margin-top:4px">
-              <input type="range" id="f-progreso" min="0" max="100" value="50"
-                oninput="$('progreso-val').textContent=this.value+'%'">
-            </div>
-          </div>
+          <div class="form-g"><label for="f-fecha">Fecha</label><input type="date" id="f-fecha"></div>
+          <div class="form-g"><label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label><input type="range" id="f-progreso" min="0" max="100" value="50" oninput="$('progreso-val').textContent=this.value+'%'" style="margin-top:8px"></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label for="f-finalidad">Finalidad</label>
-            <select id="f-finalidad">
-              <option value="">—</option>
-              <option value="Formación">Formación</option>
-              <option value="Autoconocimiento">Autoconocimiento</option>
-              <option value="Ocio">Ocio</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-categoria">Categoría</label>
-            <select id="f-categoria">
-              <option value="">—</option>
-              <option value="Psicología">Psicología</option>
-              <option value="Relaciones">Relaciones</option>
-              <option value="Desarrollo personal">Desarrollo personal</option>
-              <option value="Filosofía">Filosofía</option>
-              <option value="Productividad">Productividad</option>
-              <option value="Pensamiento y decisiones">Pensamiento y decisiones</option>
-              <option value="Finanzas">Finanzas</option>
-              <option value="Ciencia">Ciencia</option>
-              <option value="Geopolítica">Geopolítica</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Novela">Novela</option>
-            </select>
-          </div>
+          <div class="form-g"><label for="f-finalidad">Finalidad</label><select id="f-finalidad"><option value="">—</option><option value="Formación">Formación</option><option value="Autoconocimiento">Autoconocimiento</option><option value="Ocio">Ocio</option></select></div>
+          <div class="form-g"><label for="f-categoria">Categoría</label><select id="f-categoria"><option value="">—</option><option value="Psicología">Psicología</option><option value="Relaciones">Relaciones</option><option value="Desarrollo personal">Desarrollo personal</option><option value="Filosofía">Filosofía</option><option value="Productividad">Productividad</option><option value="Pensamiento y decisiones">Pensamiento y decisiones</option><option value="Finanzas">Finanzas</option><option value="Ciencia">Ciencia</option><option value="Geopolítica">Geopolítica</option><option value="Marketing">Marketing</option><option value="Novela">Novela</option></select></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label for="f-orden">Orden en lista de lectura</label>
-            <input type="number" id="f-orden" min="1" placeholder="1, 2, 3…">
-          </div>
-          <div class="form-group"></div>
+          <div class="form-g"><label for="f-orden">Orden en lista de lectura</label><input type="number" id="f-orden" min="1" placeholder="1, 2, 3…"></div>
+          <div class="form-g"><label for="f-dificultad">Dificultad</label><select id="f-dificultad"><option value="Accesible">Accesible</option><option value="Moderada">Moderada</option><option value="Densa">Densa</option><option value="Muy densa">Muy densa</option></select></div>
         </div>
-        <div class="form-group">
-          <label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(separadas por comas)</small></label>
-          <input type="text" id="f-tags" placeholder="Ej: Gratitud, Fe, Control">
+        <div class="form-row">
+          <div class="form-g"><label for="f-puntuacion">Puntuación (1–10)</label><input type="number" id="f-puntuacion" min="1" max="10" placeholder="8"></div>
+          <div class="form-g"><label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(comas)</small></label><input type="text" id="f-tags" placeholder="Gratitud, Control…"></div>
         </div>
 
-        <p class="form-section-label">Reflexión</p>
-        <div class="form-group full">
-          <label for="f-titulo-reflexion">Título de la reflexión</label>
-          <input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase...">
-        </div>
-        <div class="form-group full">
-          <label for="f-reflexion">Resumen / Teoría</label>
-          <textarea id="f-reflexion" placeholder="Lo que esta lectura despertó en ti..." rows="5"></textarea>
-        </div>
-        <div class="form-group full">
-          <label for="f-cita">Cita destacada</label>
-          <textarea id="f-cita" placeholder='"La frase que no puedes olvidar..."' rows="3"></textarea>
-        </div>
+        <p class="form-sec">Reflexión</p>
+        <div class="form-g"><label for="f-titulo-reflexion">Título de la reflexión</label><input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase…"></div>
+        <div class="form-g"><label for="f-reflexion">Resumen / Teoría</label><textarea id="f-reflexion" rows="5" placeholder="Lo que esta lectura despertó en ti…"></textarea></div>
+        <div class="form-g"><label for="f-cita">Cita destacada</label><textarea id="f-cita" rows="3" placeholder='"La frase que no puedes olvidar…"'></textarea></div>
 
-        <p class="form-section-label">Mi vida</p>
-        <div class="form-group full">
-          <label for="f-vida">Aplicación a mi vida</label>
-          <textarea id="f-vida" placeholder="¿Cómo aterrizas esto en tu día a día?" rows="4"></textarea>
-        </div>
-        <div class="form-group full">
-          <label for="f-tension">Tensión / Pregunta abierta</label>
-          <textarea id="f-tension" placeholder="Una pregunta que esta lectura no resolvió del todo..." rows="3"></textarea>
-        </div>
+        <p class="form-sec">Mi vida</p>
+        <div class="form-g"><label for="f-vida">Aplicación a mi vida</label><textarea id="f-vida" rows="4" placeholder="¿Cómo aterrizas esto en tu día a día?"></textarea></div>
+        <div class="form-g"><label for="f-tension">Tensión / Pregunta abierta</label><textarea id="f-tension" rows="3" placeholder="Una pregunta que esta lectura no resolvió del todo…"></textarea></div>
 
-        <p class="form-section-label">Valoración</p>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="f-dificultad">Dificultad</label>
-            <select id="f-dificultad">
-              <option value="Accesible">Accesible</option>
-              <option value="Moderada">Moderada</option>
-              <option value="Densa">Densa</option>
-              <option value="Muy densa">Muy densa</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="f-puntuacion">Puntuación (1–10)</label>
-            <input type="number" id="f-puntuacion" min="1" max="10" placeholder="8">
-          </div>
+        <p class="form-sec">Notas privadas</p>
+        <div class="private-notes">
+          <p class="private-notes-lbl">🔒 Solo visible para ti</p>
+          <textarea id="f-notas" rows="4" placeholder="Apuntes rápidos, ideas, recordatorios sobre este libro…"></textarea>
         </div>
-
       </div>
       <div class="form-footer">
         <button type="button" class="btn-cancel" onclick="cerrarModal('form-overlay')">Cancelar</button>
@@ -2217,23 +755,12 @@
   </div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="toast" id="toast"></div>
 
-<!-- Firebase SDK (compat) -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     JAVASCRIPT
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <script>
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ADMIN — hash SHA-256 de la contraseña
-   Para cambiarla: abre consola del navegador y ejecuta:
-   async function h(p){const e=new TextEncoder(),d=await crypto.subtle.digest('SHA-256',e.encode(p));return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('')} h("TuNuevaContraseña").then(console.log)
-   Luego reemplaza ADMIN_HASH con el resultado.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 /* ── FIREBASE ── */
 firebase.initializeApp({
   apiKey:            "AIzaSyCzqDu7SLE_Gj8OoSWABn4RMyt5i3z1Y-Q",
@@ -2246,948 +773,595 @@ firebase.initializeApp({
 });
 const db = firebase.database();
 
-const ADMIN_USER    = "Alin";
-const ADMIN_HASH    = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714"; // CosminEnciu*14
-const DATA_VERSION  = "3";
+const ADMIN_USER   = "Alin";
+const ADMIN_HASH   = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714";
+const DATA_VERSION = "3";
 
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   DATOS — edita este array para añadir entradas
-   tipo: "libro" | "reflexion"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* ── DATOS INICIALES ── */
 const DATOS_INICIALES = [
   {
-    id: 1,
-    tipo:       "libro",
-    libro:      "Encontrar un hogar",
-    autor:      "René Ponte (@renezz)",
-    fecha:      "2025-06-01",
-    estado:     "leyendo",
-    progreso:   90,
-    dificultad: "Accesible",
-    puntuacion: 9,
-
-    tags: [
-      "Identidad", "Amor propio", "Nostalgia",
-      "Control", "Gratitud", "Presente",
-      "Fe", "Introspección", "Disciplina"
-    ],
-
-    tituloRef: "El hogar que buscas fuera ya existe dentro de ti — solo tienes que construirlo",
-
-    reflexion: "René Ponte construye el libro desde sus propias experiencias y lo organiza en torno a cuatro ejes que se entrelazan: el amor, la nostalgia, la muerte y Dios. No ofrece respuestas fáciles — acompaña al lector en un proceso de cuestionamiento íntimo.\n\nEl libro propone que como nos amamos a nosotros mismos determinamos cómo permitimos que los demás nos amen y nos traten. No es autoayuda superficial: es la idea de que el amor real, sin apegos ni inseguridades, solo es posible cuando uno ya no necesita al otro para completarse. Somos lo que damos — y solo podemos dar lo que primero nos hemos dado a nosotros mismos.\n\nSobre la nostalgia, René señala algo incómodo: vivimos atrapados en lo que fue, ya sea añorando momentos buenos o reviviendo heridas. En el caso del amor, ese anclaje al pasado bloquea el presente e impide que nuevas personas entren de verdad. La nostalgia no es solo melancolía — es una forma de evitar vivir ahora.\n\nEl hogar del título no es físico. Es el proceso —incómodo y necesario— de reconciliarse con uno mismo. René sostiene que buscamos fuera lo que solo puede encontrarse dentro, y que esa búsqueda externa viene de inseguridades y sesgos adquiridos en la infancia. La salida es la incomodidad: estar con uno mismo, observar los pensamientos sin huir, hacer introspección real hasta cultivar un jardín interior desde el que relacionarse con el mundo.",
-
-    cita: "El hogar que todos anhelamos se encuentra al otro lado del sacrificio cuando uno renuncia a la fantasía de la autosuficiencia absoluta y cultiva la virtud, la paciencia y el coraje para mirar de frente aquello que le incomoda.",
-
-    vida: "El patrón que tengo de invertir demasiado en personas que dan señales mixtas tiene una raíz directa en lo que describe el libro: cuando no tienes el hogar construido dentro, lo buscas en el otro. La dependencia emocional no es amor — es búsqueda de completitud disfrazada de entrega.\n\nLa nostalgia me toca de cerca. El libro me hace preguntarme cuánto de lo que siento en relaciones es presente real y cuánto es apego a cómo fueron las cosas o a cómo quería que fueran. Vivir en esa película paralela impide ver lo que realmente hay.\n\nLa disciplina como amor propio — el gym, el BJJ, la rutina — ya la practicaba sin este marco. El libro le da nombre: no es obligación ni vanidad, es la forma más concreta de decirte a ti mismo que te importas.\n\nComo emprendedor me he acostumbrado a cargar con todo solo. René dice que el hogar aparece cuando renuncias a la fantasía de la autosuficiencia. Pedir ayuda, soltar el control, confiar — no es debilidad. Es madurez.",
-
-    tension: "La pregunta que el libro deja abierta es: ¿cuándo el deseo viene del amor propio y cuándo viene del vacío?\n\nMi respuesta: el deseo desde el vacío es un deseo de necesidad — urgente, desesperado, que no disfruta el proceso porque la incertidumbre supone una amenaza. Dependemos del resultado para sentirnos bien.\n\nEl deseo desde el amor propio es diferente: se disfruta el camino, y si no se cumple, no nos rompe — porque era un complemento, no una necesidad. La incertidumbre no amenaza porque no dependemos del resultado.\n\nEl detector más fiable: ¿cómo te sienta la incertidumbre de no tenerlo? Si genera ansiedad y urgencia, el deseo viene del vacío. Si puedes estar con ella y seguir disfrutando, viene del amor propio."
+    id:1,tipo:"libro",libro:"Encontrar un hogar",autor:"René Ponte (@renezz)",
+    fecha:"2025-06-01",estado:"leyendo",progreso:90,dificultad:"Accesible",puntuacion:9,
+    tags:["Identidad","Amor propio","Nostalgia","Control","Gratitud","Presente","Fe","Introspección","Disciplina"],
+    tituloRef:"El hogar que buscas fuera ya existe dentro de ti — solo tienes que construirlo",
+    reflexion:"René Ponte construye el libro desde sus propias experiencias y lo organiza en torno a cuatro ejes que se entrelazan: el amor, la nostalgia, la muerte y Dios. No ofrece respuestas fáciles — acompaña al lector en un proceso de cuestionamiento íntimo.\n\nEl libro propone que como nos amamos a nosotros mismos determinamos cómo permitimos que los demás nos amen y nos traten. No es autoayuda superficial: es la idea de que el amor real, sin apegos ni inseguridades, solo es posible cuando uno ya no necesita al otro para completarse.\n\nSobre la nostalgia, René señala algo incómodo: vivimos atrapados en lo que fue, ya sea añorando momentos buenos o reviviendo heridas. En el caso del amor, ese anclaje al pasado bloquea el presente e impide que nuevas personas entren de verdad.\n\nEl hogar del título no es físico. Es el proceso —incómodo y necesario— de reconciliarse con uno mismo.",
+    cita:"El hogar que todos anhelamos se encuentra al otro lado del sacrificio cuando uno renuncia a la fantasía de la autosuficiencia absoluta y cultiva la virtud, la paciencia y el coraje para mirar de frente aquello que le incomoda.",
+    vida:"El patrón que tengo de invertir demasiado en personas que dan señales mixtas tiene una raíz directa en lo que describe el libro: cuando no tienes el hogar construido dentro, lo buscas en el otro.\n\nLa nostalgia me toca de cerca. El libro me hace preguntarme cuánto de lo que siento en relaciones es presente real y cuánto es apego a cómo fueron las cosas.\n\nLa disciplina como amor propio — el gym, el BJJ, la rutina — ya la practicaba sin este marco. El libro le da nombre.",
+    tension:"La pregunta que el libro deja abierta es: ¿cuándo el deseo viene del amor propio y cuándo viene del vacío?\n\nEl deseo desde el vacío es urgente, desesperado, que no disfruta el proceso. El deseo desde el amor propio se disfruta el camino, y si no se cumple, no nos rompe — porque era un complemento, no una necesidad.",
+    finalidad:"Autoconocimiento",categoria:"Psicología",orden:null,notas:""
   },
   {
-    id: 2,
-    tipo:       "articulo",
-    libro:      "Psicoanálisis / Freud",
-    autor:      "",
-    fecha:      "2026-06-25",
-    estado:     "terminado",
-    progreso:   100,
-    dificultad: "Medio",
-    puntuacion: null,
-
-    tags: ["Psicología", "Freud", "Mecanismos de defensa", "Proyección", "Represión", "Negación"],
-
-    tituloRef: "La proyección, represión y de Freud",
-
-    reflexion: "Los mecanismos de defensa son estrategias inconscientes mediante las cuales el yo gestiona la angustia generada por conflictos entre los impulsos del ello, las exigencias del superyó y las restricciones de la realidad. Freud los desarrolló desde los años 1890; Anna Freud los sistematizó en «El yo y los mecanismos de defensa» (1936).\n\nPROYECCIÓN (Projektion). El yo atribuye a otras personas impulsos, deseos o emociones propios que no puede aceptar como suyos. El mecanismo reduce la angustia al externalizar el conflicto: «no soy yo quien siente esto, es el otro». Freud lo observó con claridad en la paranoia —la hostilidad interna se proyecta y se experimenta como persecución exterior—. La proyección no opera solo con lo negativo: también proyectamos cualidades positivas no reconocidas en nosotros mismos. En el enamoramiento, el mecanismo se intensifica: idealizamos al otro atribuyéndole virtudes que pertenecen a nuestra imagen proyectada. Tarde o temprano la persona real rompe esa proyección, provocando decepción.\n\nREPRESIÓN (Verdrängung). Es el mecanismo nuclear de la teoría freudiana y la base de la neurosis. A diferencia de la supresión —consciente y voluntaria—, la represión opera de forma completamente inconsciente: el yo excluye de la conciencia representaciones vinculadas a impulsos inaceptables (deseos, recuerdos traumáticos, afectos perturbadores). Lo reprimido no se destruye: permanece activo en el inconsciente y ejerce presión constante. Su retorno se produce de forma disfrazada a través de síntomas psicológicos, sueños, lapsus linguae, actos fallidos o conductas compulsivas repetitivas. Freud denominó esto «el retorno de lo reprimido». El mantenimiento de la represión exige una inversión continua de energía psíquica que agota al sujeto.\n\nNEGACIÓN (Verleugnung). Mecanismo más primitivo que la represión. Mientras que la represión actúa sobre el mundo interno —empuja un contenido fuera de la conciencia aceptando la realidad exterior—, la negación actúa sobre la percepción de la realidad externa: el sujeto rechaza que un hecho doloroso exista. «No puede ser así». Freud lo describió inicialmente en la psicosis, pero aparece también en situaciones ordinarias de duelo, diagnóstico grave o ruptura. La negación protege al yo a corto plazo, pero impide el procesamiento del problema: la situación permanece sin resolución mientras la energía psíquica se invierte en sostener el rechazo de lo evidente.",
-
-    cita:    "",
-    vida:    "",
-    tension: "La proyección me parece el más cotidiano de los tres. Lo veo claramente en cómo a veces atribuyo a los demás intenciones que en realidad dicen más de mis propios miedos que de ellos. También en el enamoramiento: esa imagen perfecta que construimos del otro es más nuestra que suya — proyectamos lo que queremos ver, no lo que hay.\n\nLo que admiras intensamente en alguien también puede ser una proyección de algo que tú tienes o podrías desarrollar. Eso me parece útil como herramienta de autoconocimiento: si algo en otra persona te genera una admiración muy intensa, probablemente te está diciendo algo de ti.\n\nLa represión explica muchos patrones repetitivos que no entiendo desde la lógica consciente. No es falta de voluntad — es que el contenido reprimido sigue activo por debajo y se expresa de otras formas. La ansiedad sin causa aparente, las reacciones desproporcionadas, las conductas que no puedo parar aunque quiera.\n\nLa negación es la más difícil de detectar en uno mismo, precisamente porque opera negando. «Yo no estoy en negación» puede ser la forma más perfecta de estarlo. La señal de alerta es cuando algo que resulta evidente para todos los demás no lo es para ti."
+    id:2,tipo:"articulo",libro:"Psicoanálisis / Freud",autor:"",
+    fecha:"2026-06-25",estado:"terminado",progreso:100,dificultad:"Moderada",puntuacion:null,
+    tags:["Psicología","Freud","Mecanismos de defensa","Proyección","Represión","Negación"],
+    tituloRef:"La proyección, represión y negación de Freud",
+    reflexion:"Los mecanismos de defensa son estrategias inconscientes mediante las cuales el yo gestiona la angustia generada por conflictos entre los impulsos del ello, las exigencias del superyó y las restricciones de la realidad.\n\nPROYECCIÓN: El yo atribuye a otras personas impulsos, deseos o emociones propios que no puede aceptar como suyos. En el enamoramiento, idealizamos al otro atribuyéndole virtudes que pertenecen a nuestra imagen proyectada.\n\nREPRESIÓN: El mecanismo nuclear de la teoría freudiana. El yo excluye de la conciencia representaciones vinculadas a impulsos inaceptables. Lo reprimido no se destruye: permanece activo en el inconsciente y regresa de forma disfrazada.\n\nNEGACIÓN: Mecanismo más primitivo. El sujeto rechaza que un hecho doloroso exista. Protege al yo a corto plazo, pero impide el procesamiento del problema.",
+    cita:"",vida:"",
+    tension:"La proyección me parece el más cotidiano de los tres. Lo veo claramente en cómo a veces atribuyo a los demás intenciones que en realidad dicen más de mis propios miedos.\n\nLa represión explica muchos patrones repetitivos que no entiendo desde la lógica consciente.\n\nLa negación es la más difícil de detectar en uno mismo, precisamente porque opera negando.",
+    finalidad:"Formación",categoria:"Psicología",orden:null,notas:""
   },
   {
-    id: 3,
-    tipo:       "articulo",
-    libro:      "El principio del placer — Freud",
-    autor:      "",
-    fecha:      "2026-04-19",
-    estado:     "terminado",
-    progreso:   100,
-    dificultad: "Moderada",
-    puntuacion: null,
-
-    tags: ["Psicología", "Freud", "Trauma", "Autosabotaje", "Relaciones", "Principio del placer", "Inconsciente"],
-
-    tituloRef: "No siempre buscas ser feliz — tu mente repite lo conocido aunque te haga daño",
-
-    reflexion: "La base es que las personas no siempre buscan estar bien. El cerebro y la mente buscan respuestas y entenderlo todo, por lo que tienden a repetir cosas malas o patrones negativos hasta comprenderlos. A esto Freud lo llama un bucle mental.\n\nFreud propone que dentro de la mente conviven dos modos en constante tensión: el modo vida —querer estar bien, amar, disfrutar, crear— y el modo destrucción —rabia, autosabotaje, hacerse daño sin darse cuenta, volver a lo que te hace mal—.\n\nEsta teoría rompe la lógica de «si algo duele, lo evito». Freud afirma que muchas veces ocurre exactamente lo contrario, y que es más normal de lo que parece. A esto se le llama trauma: la mente actúa de la siguiente forma: «esto no está resuelto, pues lo repito».\n\nNo siempre buscamos ser felices. A veces la mente busca repetir lo conocido, aunque duela. Trasladado a un lenguaje más humano: prefiero repetir lo que ya conozco, aunque me haga daño, que enfrentarme a algo nuevo e incierto.",
-
-    cita: "Prefiero repetir lo que ya conozco, aunque me haga daño, que enfrentarme a algo nuevo e incierto.",
-
-    vida: "Este principio se da sobre todo en las relaciones. Cuando alguien te gusta pero te genera ansiedad o incertidumbre, pasan tres cosas a la vez: te enganchas más de lo normal, te obsesionas, y sabes que te hace daño pero te quedas.\n\nAquí se confunde intensidad con conexión. Lo familiar engancha — no necesariamente lo bueno.",
-
-    tension: "No siempre elegimos lo que nos hace bien, sino lo que más nos hace sentir. Sentir más no significa estar mejor.\n\nNo nos enganchamos a la persona como tal, sino a lo que podría ser, a los momentos buenos del pasado, a la ilusión y la expectativa — todo eso en lugar de basarnos en los hechos reales guiados por la razón."
+    id:3,tipo:"articulo",libro:"El principio del placer — Freud",autor:"",
+    fecha:"2026-04-19",estado:"terminado",progreso:100,dificultad:"Moderada",puntuacion:null,
+    tags:["Psicología","Freud","Trauma","Autosabotaje","Relaciones","Inconsciente"],
+    tituloRef:"No siempre buscas ser feliz — tu mente repite lo conocido aunque te haga daño",
+    reflexion:"La base es que las personas no siempre buscan estar bien. El cerebro y la mente buscan respuestas y entenderlo todo, por lo que tienden a repetir cosas malas o patrones negativos hasta comprenderlos.\n\nFreud propone que dentro de la mente conviven dos modos: el modo vida —querer estar bien, amar, disfrutar, crear— y el modo destrucción —rabia, autosabotaje, volver a lo que te hace mal.\n\nEsta teoría rompe la lógica de «si algo duele, lo evito». Freud afirma que muchas veces ocurre exactamente lo contrario.",
+    cita:"Prefiero repetir lo que ya conozco, aunque me haga daño, que enfrentarme a algo nuevo e incierto.",
+    vida:"Este principio se da sobre todo en las relaciones. Cuando alguien te gusta pero te genera ansiedad o incertidumbre, pasan tres cosas a la vez: te enganchas más de lo normal, te obsesionas, y sabes que te hace daño pero te quedas.\n\nAquí se confunde intensidad con conexión. Lo familiar engancha — no necesariamente lo bueno.",
+    tension:"No siempre elegimos lo que nos hace bien, sino lo que más nos hace sentir. Sentir más no significa estar mejor.\n\nNo nos enganchamos a la persona como tal, sino a lo que podría ser, a los momentos buenos del pasado, a la ilusión y la expectativa.",
+    finalidad:"Autoconocimiento",categoria:"Psicología",orden:null,notas:""
   },
   {
-    id: 4,
-    tipo:       "articulo",
-    libro:      "Isomorfismo — Jean Piaget",
-    autor:      "",
-    fecha:      "2026-04-20",
-    estado:     "terminado",
-    progreso:   100,
-    dificultad: "Moderada",
-    puntuacion: null,
-
-    tags: ["Psicología", "Piaget", "Isomorfismo", "Lógica", "Relaciones", "Toma de decisiones", "Realidad"],
-
-    tituloRef: "Deja de pensar cómo te gustaría que fueran las cosas y empieza a pensar cómo realmente funcionan",
-
-    reflexion: "El isomorfismo de Jean Piaget dice que tu cabeza aprende a pensar con la misma lógica con la que se mueve el mundo real.\n\nUn niño le pega una patada a una pelota y esta se mueve; si tocas el fuego te quemas. Cada acción tiene una consecuencia — o más aplicado a la realidad: cada causa tiene un efecto.\n\nTu forma de pensar = misma estructura que lo que pasa fuera. Eso es isomorfismo. Es tan simple como:\nHacer las cosas bien → buen resultado.\nHacer las cosas mal → mal resultado.\n\nAprendemos cuando nuestra forma de pensar sigue la misma estructura que la realidad. Y sufrimos cuando no lo hace.",
-
-    cita: "No importa lo que siento, importa cómo funcionan las cosas.",
-
-    vida: "Bajando esta teoría al día a día, en relaciones de amistad o pareja:\n\nSin aplicar el isomorfismo:\n«Si la quiero → debería quedarse.»\n«Si hay dudas → ya se resolverán solas.»\n\nAplicando el isomorfismo:\n«Si duda ahora → probablemente no está al 100%.»\n«Si no decide → ya está decidiendo (no elegirte del todo).»\n«Si no hay reciprocidad → esto no va a funcionar bien.»\n\nEl resultado de no aplicarlo es que sufrimos porque nuestra forma de pensar no encaja con cómo funciona la realidad. Si lo aplicáramos, tomaríamos decisiones más frías, calculadas y acertadas.",
-
-    tension: "El límite del isomorfismo es que la mente solo puede crear una versión simplificada e incompleta de la realidad: capta patrones y los organiza con lógica, pero siempre deja fuera variables, excepciones y detalles que no percibe. Aunque tu forma de pensar parezca coherente y «encajar» con el mundo, nunca es una copia exacta — es una aproximación que puede fallar si la tomas como verdad absoluta.\n\nDentro de estos límites entran las emociones. Los impulsos emocionales pueden parecernos ilógicos, pero no lo son: siguen una lógica más compleja y difícil de percibir. Muchos comportamientos que parecen romper los patrones racionales responden a variables internas que el modelo mental no alcanza a representar.\n\nDebatiendo con GPT llegué a esta pregunta: ¿si las emociones son lógicas, por qué limitan esta teoría? La respuesta es más sencilla de lo que parece. No es que las emociones sean ilógicas — es que son demasiado complejas para este modelo. Piaget dice: causa A → resultado B. En el caso de las emociones, aunque la causa sea A, el resultado no siempre es B, sino que puede ser B, C o D, porque se interponen factores que rompen esa simplicidad.\n\nEl isomorfismo falla no cuando no hay lógica, sino cuando la lógica es demasiado compleja para simplificarla. Como intentar explicar una película entera viendo solo un par de escenas: no es que la historia no tenga coherencia, es que te faltan partes del contexto para entenderla bien."
+    id:4,tipo:"articulo",libro:"Isomorfismo — Jean Piaget",autor:"",
+    fecha:"2026-04-20",estado:"terminado",progreso:100,dificultad:"Moderada",puntuacion:null,
+    tags:["Psicología","Piaget","Isomorfismo","Lógica","Relaciones","Realidad"],
+    tituloRef:"Deja de pensar cómo te gustaría que fueran las cosas y empieza a pensar cómo realmente funcionan",
+    reflexion:"El isomorfismo de Jean Piaget dice que tu cabeza aprende a pensar con la misma lógica con la que se mueve el mundo real.\n\nTu forma de pensar = misma estructura que lo que pasa fuera. Aprendemos cuando nuestra forma de pensar sigue la misma estructura que la realidad. Y sufrimos cuando no lo hace.",
+    cita:"No importa lo que siento, importa cómo funcionan las cosas.",
+    vida:"Sin aplicar el isomorfismo: «Si la quiero → debería quedarse.» «Si hay dudas → ya se resolverán solas.»\n\nAplicando el isomorfismo: «Si duda ahora → probablemente no está al 100%.» «Si no decide → ya está decidiendo.»",
+    tension:"El límite del isomorfismo es que la mente solo puede crear una versión simplificada e incompleta de la realidad. Aunque tu forma de pensar parezca coherente y «encajar» con el mundo, nunca es una copia exacta.",
+    finalidad:"Formación",categoria:"Pensamiento y decisiones",orden:null,notas:""
   },
   {
-    id: 5,
-    tipo:       "reflexion",
-    libro:      "Reflexión personal",
-    autor:      "",
-    fecha:      "2026-06-25",
-    estado:     "terminado",
-    progreso:   100,
-    dificultad: "Accesible",
-    puntuacion: null,
-
-    tags: ["Cambio", "Miedo", "Crecimiento personal", "Identidad", "Relaciones", "Introspección", "Soledad"],
-
-    tituloRef: "Abraza el cambio",
-
-    reflexion: "Reflexionando en el gimnasio sobre mi vida en general, me he dado cuenta de que el ser humano promedio teme el cambio por miedo a ese sentimiento inexplorado. ¿Será miedo a los problemas o retos nuevos? ¿Incomodidad por romper la rutina? ¿Duda por no ser capaz de aguantar lo que viene?\n\nConsidero que deberíamos abrazar el cambio. Si algo en nuestra vida va a cambiar, es por algo — ya sea a bien o a mal, todo cambio conlleva una experiencia y un aprendizaje. Aunque dudemos de si estamos preparados, lo estamos: la duda surge solo cuando te preocupas por hacerlo bien.",
-
-    cita: "La duda surge solo cuando te preocupas por hacerlo bien.",
-
-    vida: "Últimamente mi vida giraba en torno a mi relación con Kimmie y mi estado de ánimo iba vinculado con eso. Recientemente me he vuelto más pensativo y filosófico — no por mera preocupación, sino por entenderme mejor y conocer el origen de ciertos sentimientos que han ido surgiendo en este periodo.\n\nMe he dado cuenta de que, independientemente de los sentimientos que me surgían, el miedo y la constante ansiedad que tenía dentro eran por miedo al cambio, por miedo a la ruptura de la rutina. Me había encerrado en la relación y, mientras esta se iba apagando, lo hacía yo también. Aún hoy la relación sigue aunque no sé cómo está, pero independientemente de ello, estoy recuperándome a mí mismo y descubriendo patrones nuevos en mí.",
-
-    tension: "Al abrazar el cambio nos exponemos a nuevas sensaciones y retos. Conocemos un nuevo YO que antes no conocíamos — un YO más o menos capaz de enfrentar lo nuevo. Ese YO te hace evolucionar: si lo analizas y te cuestionas de dónde viene cada sentimiento y su detonante, aprendes mucho de ti mismo, ganando valor como persona y entendiéndote mejor.\n\nAl fin y al cabo, si estamos bien con nosotros mismos y trabajamos en ello, aprendemos a respetarnos y valorarnos más, sin depender de nadie. Y no solo eso — estaremos mejor con las personas que nos rodean, aprenderemos a apreciarlas más y a contentarnos con lo simple, porque la soledad da miedo, pero aprendes mucho de ella."
+    id:5,tipo:"reflexion",libro:"Reflexión personal",autor:"",
+    fecha:"2026-06-25",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    tags:["Cambio","Miedo","Crecimiento personal","Identidad","Introspección","Soledad"],
+    tituloRef:"Abraza el cambio",
+    reflexion:"Reflexionando en el gimnasio sobre mi vida en general, me he dado cuenta de que el ser humano promedio teme el cambio por miedo a ese sentimiento inexplorado.\n\nConsidero que deberíamos abrazar el cambio. Si algo en nuestra vida va a cambiar, es por algo — ya sea a bien o a mal, todo cambio conlleva una experiencia y un aprendizaje.",
+    cita:"La duda surge solo cuando te preocupas por hacerlo bien.",
+    vida:"Últimamente mi vida giraba en torno a mi relación con Kimmie y mi estado de ánimo iba vinculado con eso. Me he dado cuenta de que, independientemente de los sentimientos que me surgían, el miedo y la constante ansiedad que tenía dentro eran por miedo al cambio.",
+    tension:"Al abrazar el cambio nos exponemos a nuevas sensaciones y retos. Conocemos un nuevo YO que antes no conocíamos — un YO más o menos capaz de enfrentar lo nuevo.",
+    finalidad:"Autoconocimiento",categoria:"Desarrollo personal",orden:null,notas:""
   }
 ];
 
-let libros          = [];
-let filtroActivo    = "Todos";
-let filtroFinalidad = "";
-let filtroCategoria = "";
-let filtroEstadoLib = "";
-let filtroDificultad= "";
-let mostrarLectura  = false;
-let busqueda        = "";
-let isAdmin         = false;
-let sortDesc        = true;
-let editandoId      = null;
+let libros=[], filtroActivo="Todos", filtroFinalidad="", filtroCategoria="", filtroEstadoLib="", filtroDificultad="";
+let mostrarLectura=false, busqueda="", isAdmin=false, sortDesc=true, editandoId=null;
 
 /* ── FIREBASE STORAGE ── */
 function guardarEnStorage() {
-  const obj = {};
-  libros.forEach(l => { obj[l.id] = l; });
+  const obj={};
+  libros.forEach(l=>{obj[l.id]=l;});
   db.ref("libros").set(obj);
 }
 
 function cargarDesdeStorage() {
-  db.ref("libros").once("value").then(snapshot => {
-    if (!snapshot.val()) {
-      // Primera vez: migrar localStorage o usar datos iniciales
-      let seed = null;
-      try {
-        const raw = localStorage.getItem("ensu-libros");
-        const ver = localStorage.getItem("ensu-version");
-        if (raw && ver === DATA_VERSION) seed = JSON.parse(raw);
-      } catch {}
-      if (!seed || !seed.length) seed = JSON.parse(JSON.stringify(DATOS_INICIALES));
-      const obj = {};
-      seed.forEach(l => { obj[l.id] = l; });
+  db.ref("libros").once("value").then(snapshot=>{
+    if(!snapshot.val()){
+      let seed=null;
+      try{const raw=localStorage.getItem("ensu-libros"),ver=localStorage.getItem("ensu-version");if(raw&&ver===DATA_VERSION)seed=JSON.parse(raw);}catch{}
+      if(!seed||!seed.length)seed=JSON.parse(JSON.stringify(DATOS_INICIALES));
+      const obj={};seed.forEach(l=>{obj[l.id]=l;});
       db.ref("libros").set(obj);
     }
-    // Listener en tiempo real para sync entre dispositivos
-    db.ref("libros").on("value", snap => {
-      const data = snap.val();
-      libros = data ? Object.values(data) : [];
-      actualizarStats();
-      renderFiltros();
-      renderCards();
+    db.ref("libros").on("value",snap=>{
+      const data=snap.val();
+      libros=data?Object.values(data):[];
+      actualizarStats();renderFiltros();renderCards();
     });
   });
 }
 
 /* ── UTILIDADES ── */
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
+function txP(str){if(!str)return"";return str.split("\n\n").map(p=>`<p>${p.replace(/\n/g,"<br>")}</p>`).join("");}
+function fmtFecha(str){if(!str)return"";const[y,m,d]=str.split("-");const ms=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];return`${+d} ${ms[+m-1]} ${y}`;}
+function badgeClass(e){return{leyendo:"badge-leyendo",terminado:"badge-terminado",proximo:"badge-proximo",pendiente:"badge-pendiente"}[e]||"badge-proximo";}
+function badgeLabel(e){return{leyendo:"Leyendo",terminado:"Terminado",proximo:"Próximo",pendiente:"Pendiente"}[e]||e;}
+function tipoLabel(t){return{libro:"Libro",reflexion:"Reflexión",articulo:"Artículo",privado:"Privado"}[t]||t;}
 
-function txP(str) {
-  if (!str) return "";
-  return str.split("\n\n").map(p => `<p>${p.replace(/\n/g,"<br>")}</p>`).join("");
+/* ── STATS ── */
+function actualizarStats(){
+  const act=l=>l.estado!=="proximo"&&l.estado!=="pendiente";
+  $("stat-libros").textContent=libros.filter(l=>l.tipo==="libro"&&act(l)).length;
+  $("stat-reflexiones").textContent=libros.filter(l=>l.tipo==="reflexion"&&act(l)).length;
+  $("stat-articulos").textContent=libros.filter(l=>l.tipo==="articulo"&&act(l)).length;
 }
 
-function fmtFecha(str) {
-  if (!str) return "";
-  const [y, m, d] = str.split("-");
-  const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
-  return `${+d} ${meses[+m-1]} ${y}`;
+/* ── FILTROS TIPO ── */
+function renderFiltros(){
+  const FIJOS=["libro","reflexion","articulo"];
+  const enDatos=new Set(libros.map(l=>l.tipo));
+  const tipos=["Todos",...FIJOS.filter(t=>enDatos.has(t))];
+  if(isAdmin&&enDatos.has("privado"))tipos.push("privado");
+  const lbl={Todos:"Todos",libro:"Libros",reflexion:"Reflexiones",articulo:"Artículos",privado:"🔒 Privado"};
+  $("filtros-container").innerHTML=tipos.map(t=>`<button class="tipo-pill${t===filtroActivo?" activo":""}" onclick="setFiltro('${t}')">${lbl[t]||t}</button>`).join("");
+  $("filtros-select").innerHTML=tipos.map(t=>`<option value="${t}"${t===filtroActivo?" selected":""}>${lbl[t]||t}</option>`).join("");
 }
 
-function badgeClass(estado) {
-  return { leyendo:"badge-leyendo", terminado:"badge-terminado", proximo:"badge-proximo", pendiente:"badge-pendiente" }[estado] || "badge-proximo";
-}
+function setFiltro(tipo){filtroActivo=tipo;renderFiltros();renderCards();}
 
-function badgeLabel(estado) {
-  return { leyendo:"Leyendo", terminado:"Terminado", proximo:"Próximo", pendiente:"Pendiente" }[estado] || estado;
-}
-
-function tipoLabel(tipo) {
-  return { libro:"Libro", reflexion:"Reflexión", articulo:"Artículo", privado:"Privado" }[tipo] || tipo;
-}
-
-function accentClass(l) {
-  if (l.estado === "proximo") return "proximo";
-  return { libro:"terracota", reflexion:"salvia", articulo:"pizarra", privado:"privado" }[l.tipo] || "terracota";
-}
-
-function allAreas() {
-  const areas = new Set();
-  libros.forEach(l => l.tags.forEach(t => areas.add(t)));
-  return areas.size;
-}
-
-/* ── ESTADÍSTICAS ── */
-function actualizarStats() {
-  const activos = l => l.estado !== "proximo" && l.estado !== "pendiente";
-  $("stat-libros").textContent      = libros.filter(l => l.tipo === "libro"     && activos(l)).length;
-  $("stat-reflexiones").textContent = libros.filter(l => l.tipo === "reflexion" && activos(l)).length;
-  $("stat-articulos").textContent   = libros.filter(l => l.tipo === "articulo"  && activos(l)).length;
-}
-
-/* ── FILTROS por tipo ── */
-function renderFiltros() {
-  const TIPOS_FIJOS = ["libro", "reflexion", "articulo"];
-  const tiposEnDatos = new Set(libros.map(l => l.tipo));
-  const tipos = ["Todos", ...TIPOS_FIJOS.filter(t => tiposEnDatos.has(t))];
-  if (isAdmin && tiposEnDatos.has("privado")) tipos.push("privado");
-  const labels = { Todos:"Todos", libro:"Libros", reflexion:"Reflexiones", articulo:"Artículos", privado:"🔒 Privado" };
-  $("filtros-container").innerHTML = tipos.map(t => `
-    <button class="pill-filtro${t === filtroActivo ? " activo" : ""}"
-      data-tipo="${t}" onclick="setFiltro('${t}')">
-      ${labels[t] || t}
-    </button>
-  `).join("");
-  $("filtros-select").innerHTML = tipos.map(t =>
-    `<option value="${t}"${t === filtroActivo ? " selected" : ""}>${labels[t] || t}</option>`
-  ).join("");
-}
-
-function setFiltro(tipo) {
-  filtroActivo = tipo;
-  renderFiltros();
+function toggleSort(){
+  sortDesc=!sortDesc;
+  $("sort-btn").textContent=sortDesc?"Reciente":"Antiguo";
   renderCards();
 }
 
-function toggleSort() {
-  sortDesc = !sortDesc;
-  const btn = $("sort-btn");
-  btn.className = `sort-btn ${sortDesc ? "desc" : "asc"}`;
-  btn.textContent = sortDesc ? "Reciente" : "Antiguo";
-  renderCards();
-}
+function setBusqueda(val){busqueda=val.trim().toLowerCase();$("busqueda-clear").classList.toggle("visible",busqueda.length>0);renderCards();}
+function limpiarBusqueda(){$("busqueda-input").value="";busqueda="";$("busqueda-clear").classList.remove("visible");renderCards();}
 
-/* ── BÚSQUEDA ── */
-function setBusqueda(val) {
-  busqueda = val.trim().toLowerCase();
-  $("busqueda-clear").classList.toggle("visible", busqueda.length > 0);
-  renderCards();
-}
+/* ── RENDER CARDS ── */
+function renderCards(){
+  const grid=$("cards-grid");
+  const FC={"Formación":"formacion","Autoconocimiento":"autoconocimiento","Ocio":"ocio"};
 
-function limpiarBusqueda() {
-  $("busqueda-input").value = "";
-  setBusqueda("");
-}
+  const lecturaCount=libros.filter(l=>l.estado==="proximo"||l.estado==="pendiente").length;
+  const togBtn=$("btn-toggle-lectura");
+  if(togBtn)togBtn.textContent=`📚 Lista de lectura (${lecturaCount}) ${mostrarLectura?"▲":"▼"}`;
 
-/* ── TARJETAS ── */
-function renderCards() {
-  const grid = $("cards-grid");
-  const FC   = { "Formación":"formacion", "Autoconocimiento":"autoconocimiento", "Ocio":"ocio" };
+  const lecturaCards=(mostrarLectura&&(filtroActivo==="Todos"||filtroActivo==="libro"))
+    ?libros.filter(l=>l.estado==="proximo"||l.estado==="pendiente").sort((a,b)=>(a.orden||99)-(b.orden||99))
+    :[];
 
-  // Update toggle button text
-  const lecturaCount = libros.filter(l => l.estado === "proximo" || l.estado === "pendiente").length;
-  const toggleBtn = $("btn-toggle-lectura");
-  if (toggleBtn) {
-    toggleBtn.className = `btn-toggle-lectura${mostrarLectura ? " abierto" : ""}`;
-    toggleBtn.innerHTML = `📚 Lista de lectura (${lecturaCount}) ${mostrarLectura ? "▲" : "▼"}`;
-  }
-
-  // Reading list cards (only when toggled on and tipo filter allows libros)
-  const lecturaCards = (mostrarLectura && (filtroActivo === "Todos" || filtroActivo === "libro"))
-    ? libros.filter(l => l.estado === "proximo" || l.estado === "pendiente")
-        .sort((a, b) => (a.orden||99) - (b.orden||99))
-    : [];
-
-  // Main cards — exclude proximo/pendiente
-  let lista = libros.filter(l => {
-    if (l.estado === "proximo" || l.estado === "pendiente") return false;
-    if (filtroActivo !== "Todos" && l.tipo !== filtroActivo) return false;
-    if (!isAdmin && l.tipo === "privado") return false;
-    if (filtroFinalidad  && l.finalidad  !== filtroFinalidad)  return false;
-    if (filtroCategoria  && l.categoria  !== filtroCategoria)  return false;
-    if (filtroEstadoLib  && l.estado     !== filtroEstadoLib)  return false;
-    if (filtroDificultad && l.dificultad !== filtroDificultad) return false;
+  let lista=libros.filter(l=>{
+    if(l.estado==="proximo"||l.estado==="pendiente")return false;
+    if(filtroActivo!=="Todos"&&l.tipo!==filtroActivo)return false;
+    if(!isAdmin&&l.tipo==="privado")return false;
+    if(filtroFinalidad&&l.finalidad!==filtroFinalidad)return false;
+    if(filtroCategoria&&l.categoria!==filtroCategoria)return false;
+    if(filtroEstadoLib&&l.estado!==filtroEstadoLib)return false;
+    if(filtroDificultad&&l.dificultad!==filtroDificultad)return false;
     return true;
-  }).slice().sort((a, b) => {
-    const da = new Date(a.fecha || "1970-01-01");
-    const db2 = new Date(b.fecha || "1970-01-01");
-    return sortDesc ? db2 - da : da - db2;
+  }).slice().sort((a,b)=>{
+    const da=new Date(a.fecha||"1970-01-01"),db2=new Date(b.fecha||"1970-01-01");
+    return sortDesc?db2-da:da-db2;
   });
 
-  if (busqueda) {
-    lista = lista.filter(l => {
-      const hay = [l.tituloRef, l.autor, l.libro, l.reflexion, l.categoria, ...(l.tags||[])]
-        .join(" ").toLowerCase();
-      return hay.includes(busqueda);
-    });
-  }
+  if(busqueda){lista=lista.filter(l=>{const h=[l.tituloRef,l.autor,l.libro,l.reflexion,l.categoria,...(l.tags||[])].join(" ").toLowerCase();return h.includes(busqueda);});}
 
-  if (lista.length === 0 && !lecturaCards.length) {
-    const msg = busqueda
-      ? `No hay resultados para "<strong>${busqueda}</strong>".`
-      : "Todavía no hay entradas en esta categoría.";
-    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">📖</div><p>${msg}</p></div>`;
+  if(!lista.length&&!lecturaCards.length){
+    const msg=busqueda?`No hay resultados para "<strong>${busqueda}</strong>".`:"Todavía no hay entradas en esta categoría.";
+    grid.innerHTML=`<div class="empty-state"><div class="empty-ico">📖</div><p>${msg}</p></div>`;
     return;
   }
 
-  const regularHtml = lista.map(l => {
-    const ac   = accentClass(l);
-    const tags = (l.tags || []).map(t => `<span class="tag">${t}</span>`).join("");
-    const badge1 = l.finalidad
-      ? `<span class="finalidad-badge ${FC[l.finalidad]||''}">${l.finalidad}</span>`
-      : `<span class="tipo-badge ${l.tipo}">${tipoLabel(l.tipo)}</span>`;
-    const meta = (l.categoria || l.dificultad)
-      ? `<p class="card-cat">${[l.categoria, l.dificultad].filter(Boolean).join(' · ')}</p>`
-      : '';
-    return `
-    <article class="card" onclick="abrirDetalle('${l.id}')">
-      <div class="card-accent ${ac}"></div>
-      <div class="card-body">
-        <div class="card-eyebrow">
-          <span class="card-autor">${l.autor}</span>
-          <div style="display:flex;gap:6px;align-items:center;">
-            ${badge1}
-            <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
-          </div>
-        </div>
-        <h3 class="card-titulo">${l.tipo !== 'reflexion' ? l.libro : l.tituloRef}</h3>
-        <p class="card-libro">${l.tipo !== 'reflexion' ? l.tituloRef : l.libro}</p>
-        ${meta}
-        <div class="card-tags">${tags}</div>
-        <p class="card-extracto">${l.reflexion}</p>
-      </div>
-      <div class="card-progress-wrap">
-        <div class="card-progress-bar">
-          <div class="card-progress-fill ${ac}" style="width:${l.progreso}%"></div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <span class="card-fecha">${fmtFecha(l.fecha)}</span>
-        <span class="card-arrow">&#x2192;</span>
-      </div>
-    </article>`;
+  const cardHtml=lista.map(l=>{
+    const titulo=l.tipo!=="reflexion"?l.tituloRef:l.tituloRef;
+    const fuente=l.tipo!=="reflexion"?l.libro:l.libro;
+    const tags=(l.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
+    const badge1=l.finalidad?`<span class="finalidad-badge ${FC[l.finalidad]||""}">${l.finalidad}</span>`:`<span class="tipo-badge">${tipoLabel(l.tipo)}</span>`;
+    const meta=[l.categoria,l.dificultad].filter(Boolean).join(" · ");
+    return`<article class="card" onclick="abrirDetalle('${l.id}')">
+  <div class="card-header">
+    <span class="card-type">${tipoLabel(l.tipo)}</span>
+    <div class="card-badges">${badge1}<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span></div>
+  </div>
+  <div class="card-body">
+    <p class="card-autor">${l.autor||"—"}</p>
+    <h3 class="card-titulo">${l.tipo!=="reflexion"?l.libro:l.tituloRef}</h3>
+    <p class="card-libro">${l.tipo!=="reflexion"?l.tituloRef:l.libro}</p>
+    ${meta?`<p class="card-meta">${meta}</p>`:""}
+    <div class="card-tags">${tags}</div>
+    <p class="card-extracto">${l.reflexion}</p>
+  </div>
+  <div class="card-bar"><div class="card-bar-fill" style="width:${l.progreso||0}%"></div></div>
+  <div class="card-footer">
+    <span class="card-fecha">${fmtFecha(l.fecha)}</span>
+    <span class="card-arrow">→</span>
+  </div>
+</article>`;
   }).join("");
 
-  const lecturaHtml = lecturaCards.length ? `
-    <div class="lectura-sep">
-      <div class="sep-line"></div>
-      <span class="sep-text">Lista de lectura</span>
-      <div class="sep-line"></div>
-    </div>
-    ${lecturaCards.map(l => {
-      const isPendiente = l.estado === "pendiente";
-      const cardCls    = isPendiente ? "card-pendiente" : "card-proximo";
-      const accentCls  = isPendiente ? "pendiente-accent" : "proximo";
-      return `
-      <article class="card ${cardCls}" onclick="abrirDetalle('${l.id}')">
-        <div class="card-accent ${accentCls}"></div>
-        <div class="card-body">
-          <div class="card-eyebrow">
-            <span class="card-autor">${l.autor}</span>
-            <span class="tipo-badge libro">Libro</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:4px">
-            <h3 class="card-titulo" style="margin-bottom:0">${l.libro}</h3>
-            <div class="proximo-num">${l.orden||'?'}</div>
-          </div>
-          ${l.categoria ? `<p class="card-cat" style="margin-top:8px">${l.categoria}${l.dificultad ? ' · '+l.dificultad : ''}</p>` : ''}
-          <p class="proximo-hint">${isPendiente ? 'En lista de lectura' : 'Próximo en la lista'}</p>
-        </div>
-        <div class="card-footer">
-          <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
-        </div>
-      </article>`;
-    }).join("")}
-  ` : "";
+  const lecturaHtml=lecturaCards.length?`
+  <div class="lectura-sep"><div class="sep-line"></div><span class="sep-text">Lista de lectura</span><div class="sep-line"></div></div>
+  ${lecturaCards.map(l=>{
+    const isPend=l.estado==="pendiente";
+    return`<article class="card ${isPend?"card-pendiente":"card-proximo"}" onclick="abrirDetalle('${l.id}')">
+  <div class="card-header">
+    <span class="card-type">${tipoLabel(l.tipo)}</span>
+    <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
+  </div>
+  <div class="card-body">
+    <p class="card-autor">${l.autor||"—"}</p>
+    <h3 class="card-titulo">${l.libro}</h3>
+    <p class="card-libro proximo-hint">${isPend?"En lista de lectura":"Próximo en la lista"}</p>
+  </div>
+  <div class="card-footer"><span class="card-fecha">${l.orden?`#${l.orden} en lista`:""}</span><span class="card-arrow">→</span></div>
+</article>`;
+  }).join("")}`:"";
 
-  grid.innerHTML = regularHtml + lecturaHtml;
+  grid.innerHTML=cardHtml+lecturaHtml;
 }
 
-function setFiltroSec(campo, valor) {
-  if (campo === "finalidad")  filtroFinalidad  = valor;
-  if (campo === "categoria")  filtroCategoria  = valor;
-  if (campo === "estadolib")  filtroEstadoLib  = valor;
-  if (campo === "dificultad") filtroDificultad = valor;
-  const hayActivos = filtroFinalidad || filtroCategoria || filtroEstadoLib || filtroDificultad;
-  const btnLimpiar = $("btn-limpiar-sec");
-  if (btnLimpiar) btnLimpiar.style.display = hayActivos ? "" : "none";
-  ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id => {
-    const s = $(id); if (s) s.classList.toggle("activo", !!s.value);
-  });
-  const btnF = $("btn-filtrar");
-  if (btnF) btnF.classList.toggle("activo", !!hayActivos || $("filtros-secundarios").classList.contains("open"));
+/* ── FILTROS SECUNDARIOS ── */
+function setFiltroSec(campo,valor){
+  if(campo==="finalidad")filtroFinalidad=valor;
+  if(campo==="categoria")filtroCategoria=valor;
+  if(campo==="estadolib")filtroEstadoLib=valor;
+  if(campo==="dificultad")filtroDificultad=valor;
+  const hay=filtroFinalidad||filtroCategoria||filtroEstadoLib||filtroDificultad;
+  const btnL=$("btn-limpiar-sec");if(btnL)btnL.style.display=hay?"":"none";
+  const btnF=$("btn-filtrar");if(btnF)btnF.classList.toggle("activo",!!hay||$("filtros-secundarios").classList.contains("open"));
   renderCards();
 }
 
-function limpiarFiltrosSec() {
-  filtroFinalidad = filtroCategoria = filtroEstadoLib = filtroDificultad = "";
-  ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id => {
-    const s = $(id); if (s) { s.value = ""; s.classList.remove("activo"); }
-  });
-  const btnLimpiar = $("btn-limpiar-sec"); if (btnLimpiar) btnLimpiar.style.display = "none";
-  const btnF = $("btn-filtrar");
-  if (btnF) btnF.classList.toggle("activo", $("filtros-secundarios").classList.contains("open"));
+function limpiarFiltrosSec(){
+  filtroFinalidad=filtroCategoria=filtroEstadoLib=filtroDificultad="";
+  ["filtro-finalidad","filtro-categoria","filtro-estadolib","filtro-dificultad"].forEach(id=>{const s=$(id);if(s){s.value="";s.classList.remove("activo");}});
+  const btnL=$("btn-limpiar-sec");if(btnL)btnL.style.display="none";
+  const btnF=$("btn-filtrar");if(btnF)btnF.classList.toggle("activo",$("filtros-secundarios").classList.contains("open"));
   renderCards();
 }
 
-function toggleLectura() {
-  mostrarLectura = !mostrarLectura;
-  renderCards();
+function toggleFiltrosSecPanel(){
+  const panel=$("filtros-secundarios"),btn=$("btn-filtrar");
+  const open=panel.classList.toggle("open");
+  const hay=filtroFinalidad||filtroCategoria||filtroEstadoLib||filtroDificultad;
+  btn.textContent=open?"Filtrar ▲":"Filtrar ▼";
+  btn.classList.toggle("activo",open||!!hay);
 }
 
-function toggleFiltrosSecPanel() {
-  const panel = $("filtros-secundarios");
-  const btn   = $("btn-filtrar");
-  const open  = panel.classList.toggle("open");
-  const hayActivos = filtroFinalidad || filtroCategoria || filtroEstadoLib || filtroDificultad;
-  btn.textContent = open ? "Filtrar ▲" : "Filtrar ▼";
-  btn.classList.toggle("activo", open || !!hayActivos);
-}
+function toggleLectura(){mostrarLectura=!mostrarLectura;renderCards();}
 
 /* ── MODAL DETALLE ── */
-function abrirDetalle(id) {
-  const l = libros.find(x => x.id == id);
-  if (!l) return;
+function abrirDetalle(id){
+  const l=libros.find(x=>x.id==id);
+  if(!l)return;
+  const TC={libro:"var(--accent)",reflexion:"#7B9E87",articulo:"#7a80a0",privado:"#9b7fa6"};
+  $("detail-bar").style.background=TC[l.tipo]||"var(--accent)";
+  $("d-autor").textContent=l.autor||"";
+  const bdg=$("d-badge");bdg.textContent=badgeLabel(l.estado);bdg.className=`badge ${badgeClass(l.estado)}`;
+  $("d-titulo").textContent=l.tituloRef||l.libro||"";
+  $("d-libro-autor").textContent=l.tipo!=="reflexion"?l.libro:"";
+  $("d-tags").innerHTML=(l.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
 
-  const tipoAccent = { libro: "var(--terracota)", reflexion: "#6b8c66", articulo: "#7a80a0", privado: "#9b7fa6" };
-  document.querySelector(".detail-bar").style.background = tipoAccent[l.tipo] || "var(--terracota)";
+  const rlbl={libro:"Sobre el libro",reflexion:"Sobre la reflexión",articulo:"Teoría",privado:"Nota privada"};
+  $("d-resumen-label").textContent=rlbl[l.tipo]||"Resumen";
+  $("d-reflexion").innerHTML=txP(l.reflexion);
 
-  $("d-autor").textContent       = l.autor;
-  const badge = $("d-badge");
-  badge.textContent              = badgeLabel(l.estado);
-  badge.className                = `badge ${badgeClass(l.estado)}`;
-  $("d-titulo").textContent      = l.tituloRef;
-  $("d-libro-autor").textContent = l.libro;
-  $("d-tags").innerHTML          = (l.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
+  const fart=$("d-fecha-articulo");
+  if(l.tipo==="articulo"){fart.textContent=fmtFecha(l.fecha);fart.style.display="";}
+  else fart.style.display="none";
 
-  const resumenLabels = { libro: "Sobre el libro", reflexion: "Sobre la reflexión", articulo: "Teoría", privado: "Nota privada" };
-  $("d-resumen-label").textContent = resumenLabels[l.tipo] || "Resumen";
-  $("d-reflexion").innerHTML = txP(l.reflexion);
+  const citaW=$("d-cita-wrap");
+  if(l.cita){$("d-cita").textContent=l.cita;citaW.style.display="";}
+  else citaW.style.display="none";
 
-  const fechaArticuloEl = $("d-fecha-articulo");
-  if (l.tipo === "articulo") {
-    fechaArticuloEl.textContent = fmtFecha(l.fecha);
-    fechaArticuloEl.style.display = "";
-  } else { fechaArticuloEl.style.display = "none"; }
+  const misRefBtn=$("tab-btn-mis-ref");
+  if(l.tension){$("d-mis-reflexiones").innerHTML=txP(l.tension);misRefBtn.style.display="";}
+  else{$("d-mis-reflexiones").innerHTML="";misRefBtn.style.display="none";}
 
-  const citaWrap = $("d-cita-wrap");
-  if (l.cita) {
-    $("d-cita").textContent = l.cita;
-    citaWrap.style.display = "";
-  } else { citaWrap.style.display = "none"; }
+  const vidaBtn=$("tab-btn-vida");
+  if(l.vida){$("d-vida").innerHTML=txP(l.vida);vidaBtn.style.display="";}
+  else{$("d-vida").innerHTML="";vidaBtn.style.display="none";}
 
-  const misRefBtn = $("tab-btn-mis-ref");
-  if (l.tension) {
-    $("d-mis-reflexiones").innerHTML = txP(l.tension);
-    misRefBtn.style.display = "";
+  $("tab-btn-ficha").style.display=l.tipo==="libro"?"":"none";
+
+  const notasBtn=$("tab-btn-notas");
+  if(isAdmin){
+    notasBtn.style.display="";
+    $("d-notas").textContent=l.notas||"Sin notas privadas.";
   } else {
-    $("d-mis-reflexiones").innerHTML = "";
-    misRefBtn.style.display = "none";
+    notasBtn.style.display="none";
   }
 
-  const vidaBtn = $("tab-btn-vida");
-  if (l.vida) {
-    $("d-vida").innerHTML = txP(l.vida);
-    vidaBtn.style.display = "";
-  } else {
-    $("d-vida").innerHTML = "";
-    vidaBtn.style.display = "none";
-  }
+  const hasOther=!!l.tension||!!l.vida||l.tipo==="libro"||(isAdmin&&!!l.notas);
+  $("detail-tabs-bar").style.display=hasOther?"":"none";
 
-  const fichaBtn = $("tab-btn-ficha");
-  fichaBtn.style.display = l.tipo === "libro" ? "" : "none";
-
-  const hasOtherTabs = !!l.tension || !!l.vida || l.tipo === "libro";
-  $("detail-tabs-bar").style.display = hasOtherTabs ? "" : "none";
-
-  const ratingDots = l.puntuacion
-    ? `<div class="ficha-rating">${Array.from({length:10},(_,i)=>`<span class="r-dot${i<l.puntuacion?" on":""}"></span>`).join("")}</div>`
-    : "";
-
-  $("d-ficha-grid").innerHTML = `
-    <div class="ficha-item">
-      <p class="ficha-key">Tipo</p>
-      <p class="ficha-val">${tipoLabel(l.tipo)}</p>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">${l.tipo === "libro" ? "Libro" : "Fuente"}</p>
-      <p class="ficha-val">${l.libro}</p>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">Autor</p>
-      <p class="ficha-val">${l.autor || "—"}</p>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">Fecha</p>
-      <p class="ficha-val">${fmtFecha(l.fecha) || "—"}</p>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">Estado</p>
-      <p class="ficha-val">${badgeLabel(l.estado)}</p>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">Progreso</p>
-      <p class="ficha-val">${l.progreso}%</p>
-      <div class="ficha-bar"><div class="ficha-bar-fill" style="width:${l.progreso}%"></div></div>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">Dificultad</p>
-      <p class="ficha-val">${l.dificultad || "—"}</p>
-    </div>
-    <div class="ficha-item">
-      <p class="ficha-key">Puntuación</p>
-      <p class="ficha-val">${l.puntuacion ? l.puntuacion + " / 10" : "—"}</p>
-      ${ratingDots}
-    </div>
-    ${l.finalidad ? `<div class="ficha-item"><p class="ficha-key">Finalidad</p><p class="ficha-val">${l.finalidad}</p></div>` : ""}
-    ${l.categoria ? `<div class="ficha-item"><p class="ficha-key">Categoría</p><p class="ficha-val">${l.categoria}</p></div>` : ""}
-    ${l.orden ? `<div class="ficha-item"><p class="ficha-key">Orden lectura</p><p class="ficha-val">#${l.orden}</p></div>` : ""}
+  $("d-ficha-grid").innerHTML=`
+    <div class="ficha-item"><p class="ficha-k">Tipo</p><p class="ficha-v">${tipoLabel(l.tipo)}</p></div>
+    <div class="ficha-item"><p class="ficha-k">${l.tipo==="libro"?"Libro":"Fuente"}</p><p class="ficha-v">${l.libro||"—"}</p></div>
+    <div class="ficha-item"><p class="ficha-k">Autor</p><p class="ficha-v">${l.autor||"—"}</p></div>
+    <div class="ficha-item"><p class="ficha-k">Fecha</p><p class="ficha-v">${fmtFecha(l.fecha)||"—"}</p></div>
+    <div class="ficha-item"><p class="ficha-k">Estado</p><p class="ficha-v">${badgeLabel(l.estado)}</p></div>
+    <div class="ficha-item"><p class="ficha-k">Progreso</p><p class="ficha-v">${l.progreso||0}%</p><div class="ficha-bar"><div class="ficha-bar-f" style="width:${l.progreso||0}%"></div></div></div>
+    <div class="ficha-item"><p class="ficha-k">Dificultad</p><p class="ficha-v">${l.dificultad||"—"}</p></div>
+    <div class="ficha-item"><p class="ficha-k">Puntuación</p><p class="ficha-v">${l.puntuacion?l.puntuacion+" / 10":"—"}</p>${l.puntuacion?`<div class="ficha-rating">${Array.from({length:10},(_,i)=>`<span class="r-dot${i<l.puntuacion?" on":""}"></span>`).join("")}</div>`:""}</div>
+    ${l.finalidad?`<div class="ficha-item"><p class="ficha-k">Finalidad</p><p class="ficha-v">${l.finalidad}</p></div>`:""}
+    ${l.categoria?`<div class="ficha-item"><p class="ficha-k">Categoría</p><p class="ficha-v">${l.categoria}</p></div>`:""}
+    ${l.orden?`<div class="ficha-item"><p class="ficha-k">Orden lectura</p><p class="ficha-v">#${l.orden}</p></div>`:""}
   `;
 
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
-  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("activo"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("activo"));
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("activo"));
   document.querySelectorAll(".tab-btn")[0].classList.add("activo");
   $("tab-resumen").classList.add("activo");
 
-  if (isAdmin) {
-    $("btn-editar-detail").onclick   = () => { cerrarModal("detail-overlay"); abrirFormModal(id); };
-    $("btn-eliminar-detail").onclick = () => eliminarLibro(id);
+  if(isAdmin){
+    $("btn-editar-detail").onclick=()=>{cerrarModal("detail-overlay");abrirFormModal(id);};
+    $("btn-eliminar-detail").onclick=()=>eliminarLibro(id);
   }
 
   abrirModal("detail-overlay");
 }
 
-function cambiarTab(btn, panelId) {
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("activo"));
-  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("activo"));
+function cambiarTab(btn,panelId){
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("activo"));
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("activo"));
   btn.classList.add("activo");
   $(panelId).classList.add("activo");
 }
 
-/* ── CRUD (solo admin) ── */
-function eliminarLibro(id) {
-  if (!confirm("¿Eliminar esta entrada? Esta acción no se puede deshacer.")) return;
-  db.ref("libros/" + id).remove();
+/* ── CRUD ── */
+function eliminarLibro(id){
+  if(!confirm("¿Eliminar esta entrada?"))return;
+  db.ref("libros/"+id).remove();
   cerrarModal("detail-overlay");
-  // El listener de Firebase actualiza libros y llama a render automáticamente
   mostrarToast("Entrada eliminada.");
 }
 
-function abrirFormModal(editId) {
+function abrirFormModal(editId){
   limpiarForm();
-  if (editId) {
-    const l = libros.find(x => x.id == editId);
-    if (!l) return;
-    editandoId = editId;
-    $("form-title-text").textContent = "Editar entrada";
-    $("f-tipo").value              = l.tipo || "libro";
-    $("f-libro").value             = l.libro;
-    $("f-autor").value             = l.autor;
-    $("f-fecha").value             = l.fecha;
-    $("f-estado").value            = l.estado;
-    $("f-progreso").value          = l.progreso;
-    $("progreso-val").textContent  = l.progreso + "%";
-    $("f-tags").value              = (l.tags||[]).join(", ");
-    $("f-titulo-reflexion").value  = l.tituloRef;
-    $("f-reflexion").value         = l.reflexion;
-    $("f-cita").value              = l.cita    || "";
-    $("f-vida").value              = l.vida    || "";
-    $("f-tension").value           = l.tension || "";
-    $("f-dificultad").value        = l.dificultad || "Accesible";
-    $("f-puntuacion").value        = l.puntuacion || "";
-    $("f-finalidad").value         = l.finalidad  || "";
-    $("f-categoria").value         = l.categoria  || "";
-    $("f-orden").value             = l.orden      || "";
+  if(editId){
+    const l=libros.find(x=>x.id==editId);
+    if(!l)return;
+    editandoId=editId;
+    $("form-title-text").textContent="Editar entrada";
+    $("f-tipo").value       =l.tipo||"libro";
+    $("f-libro").value      =l.libro||"";
+    $("f-autor").value      =l.autor||"";
+    $("f-fecha").value      =l.fecha||"";
+    $("f-progreso").value   =l.progreso!=null?l.progreso:50;
+    $("progreso-val").textContent=(l.progreso!=null?l.progreso:50)+"%";
+    $("f-estado").value     =l.estado||"leyendo";
+    $("f-tags").value       =(l.tags||[]).join(", ");
+    $("f-titulo-reflexion").value=l.tituloRef||"";
+    $("f-reflexion").value  =l.reflexion||"";
+    $("f-cita").value       =l.cita||"";
+    $("f-vida").value       =l.vida||"";
+    $("f-tension").value    =l.tension||"";
+    $("f-dificultad").value =l.dificultad||"Accesible";
+    $("f-puntuacion").value =l.puntuacion||"";
+    $("f-finalidad").value  =l.finalidad||"";
+    $("f-categoria").value  =l.categoria||"";
+    $("f-orden").value      =l.orden||"";
+    $("f-notas").value      =l.notas||"";
   } else {
-    editandoId = null;
-    $("form-title-text").textContent = "Nueva entrada";
-    $("f-fecha").value = new Date().toISOString().split("T")[0];
+    editandoId=null;
+    $("form-title-text").textContent="Nueva entrada";
+    $("f-fecha").value=new Date().toISOString().split("T")[0];
   }
   abrirModal("form-overlay");
 }
 
-function limpiarForm() {
+function limpiarForm(){
   $("libro-form").reset();
-  $("progreso-val").textContent = "50%";
-  ["f-libro","f-titulo-reflexion","f-reflexion","f-vida"].forEach(id => $(id).classList.remove("error"));
+  $("progreso-val").textContent="50%";
+  $("f-notas").value="";
 }
 
-function guardarLibro(e) {
+function guardarLibro(e){
   e.preventDefault();
-
-  const tagsRaw = $("f-tags").value.trim();
-  const puntRaw = $("f-puntuacion").value.trim();
-  const datos = {
-    tipo:       $("f-tipo").value,
-    libro:      $("f-libro").value.trim(),
-    autor:      $("f-autor").value.trim(),
-    fecha:      $("f-fecha").value,
-    estado:     $("f-estado").value,
-    progreso:   parseInt($("f-progreso").value),
-    tags:       tagsRaw ? tagsRaw.split(",").map(t=>t.trim()).filter(Boolean) : [],
-    tituloRef:  $("f-titulo-reflexion").value.trim(),
-    reflexion:  $("f-reflexion").value.trim(),
-    cita:       $("f-cita").value.trim(),
-    vida:       $("f-vida").value.trim(),
-    tension:    $("f-tension").value.trim(),
-    dificultad: $("f-dificultad").value,
-    puntuacion: puntRaw ? Math.min(10, Math.max(1, parseInt(puntRaw))) : null,
-    finalidad:  $("f-finalidad").value,
-    categoria:  $("f-categoria").value,
-    orden:      $("f-orden").value ? parseInt($("f-orden").value) : null
+  const tagsRaw=$("f-tags").value.trim();
+  const puntRaw=$("f-puntuacion").value.trim();
+  const datos={
+    tipo:      $("f-tipo").value,
+    libro:     $("f-libro").value.trim(),
+    autor:     $("f-autor").value.trim(),
+    fecha:     $("f-fecha").value,
+    estado:    $("f-estado").value,
+    progreso:  parseInt($("f-progreso").value),
+    tags:      tagsRaw?tagsRaw.split(",").map(t=>t.trim()).filter(Boolean):[],
+    tituloRef: $("f-titulo-reflexion").value.trim(),
+    reflexion: $("f-reflexion").value.trim(),
+    cita:      $("f-cita").value.trim(),
+    vida:      $("f-vida").value.trim(),
+    tension:   $("f-tension").value.trim(),
+    dificultad:$("f-dificultad").value,
+    puntuacion:puntRaw?Math.min(10,Math.max(1,parseInt(puntRaw))):null,
+    finalidad: $("f-finalidad").value,
+    categoria: $("f-categoria").value,
+    orden:     $("f-orden").value?parseInt($("f-orden").value):null,
+    notas:     $("f-notas").value.trim()
   };
 
-  if (editandoId !== null) {
-    const idx = libros.findIndex(x => x.id == editandoId);
-    if (idx !== -1) {
-      libros[idx] = { ...libros[idx], ...datos };
-      mostrarToast("Entrada actualizada.");
-    }
+  let ok=true;
+  if(!datos.libro&&datos.tipo!=="reflexion"){$("f-libro").classList.add("error");ok=false;}
+  if(!datos.tituloRef){$("f-titulo-reflexion").classList.add("error");ok=false;}
+  if(!datos.reflexion){$("f-reflexion").classList.add("error");ok=false;}
+  if(!ok)return;
+
+  if(editandoId!==null){
+    const idx=libros.findIndex(x=>x.id==editandoId);
+    if(idx!==-1){libros[idx]={...libros[idx],...datos};mostrarToast("Entrada actualizada.");}
   } else {
-    libros.push({ id: libros.reduce((m, l) => Math.max(m, l.id), 0) + 1, ...datos });
+    libros.push({id:libros.reduce((m,l)=>Math.max(m,+l.id||0),0)+1,...datos});
     mostrarToast("Entrada guardada.");
   }
   guardarEnStorage();
   cerrarModal("form-overlay");
-  renderFiltros();
-  renderCards();
-  actualizarStats();
+  renderFiltros();renderCards();actualizarStats();
 }
 
-/* ── ADMIN AUTH ── */
-async function sha256(text) {
-  const buf  = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+/* ── AUTH ── */
+async function sha256(text){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(text));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
+
+function setAdminMode(on){
+  isAdmin=on;
+  document.body.classList.toggle("admin",on);
+  $("lock-icon").textContent=on?"🔓":"🔒";
+  if(on)sessionStorage.setItem("ensu-admin","1");
+  else sessionStorage.removeItem("ensu-admin");
+  renderFiltros();renderCards();
 }
 
-function setAdminMode(on) {
-  isAdmin = on;
-  document.body.classList.toggle("admin", on);
-  $("lock-icon").textContent = on ? "🔓" : "🔒";
-  if (on) sessionStorage.setItem("ensu-admin","1");
-  else    sessionStorage.removeItem("ensu-admin");
-}
+function initAdminMode(){if(sessionStorage.getItem("ensu-admin")==="1")setAdminMode(true);}
 
-function initAdminMode() {
-  if (sessionStorage.getItem("ensu-admin") === "1") setAdminMode(true);
-}
-
-function abrirLoginModal() {
-  if (isAdmin) {
-    $("login-section").style.display  = "none";
-    $("logout-section").style.display = "";
-  } else {
-    $("login-section").style.display  = "";
-    $("logout-section").style.display = "none";
-    $("login-user").value = "";
-    $("login-pwd").value = "";
-    $("login-error").classList.remove("visible");
-  }
+function abrirLoginModal(){
+  if(isAdmin){$("login-section").style.display="none";$("logout-section").style.display="";}
+  else{$("login-section").style.display="";$("logout-section").style.display="none";$("login-user").value="";$("login-pwd").value="";$("login-error").classList.remove("visible");}
   abrirModal("login-overlay");
 }
 
-async function handleLogin() {
-  const user = $("login-user").value.trim();
-  const pwd  = $("login-pwd").value;
-  const hash = await sha256(pwd);
-  if (user === ADMIN_USER && hash === ADMIN_HASH) {
-    setAdminMode(true);
-    cerrarModal("login-overlay");
-    mostrarToast("Modo edición activado.", "✓");
-  } else {
-    $("login-error").classList.add("visible");
-    $("login-pwd").focus();
-  }
+async function handleLogin(){
+  const user=$("login-user").value.trim(),pwd=$("login-pwd").value;
+  const hash=await sha256(pwd);
+  if(user===ADMIN_USER&&hash===ADMIN_HASH){setAdminMode(true);cerrarModal("login-overlay");mostrarToast("Modo edición activado.");}
+  else{$("login-error").classList.add("visible");}
 }
 
-function handleLogout() {
-  irAHome();
-  setAdminMode(false);
-  cerrarModal("login-overlay");
-  renderFiltros();
-  mostrarToast("Sesión cerrada.");
-}
+function handleLogout(){setAdminMode(false);cerrarModal("login-overlay");mostrarToast("Sesión cerrada.");}
 
 /* ── TOAST ── */
 let toastTimer;
-function mostrarToast(msg, icono="✓") {
-  const t = $("toast");
-  t.innerHTML = `<span>${icono}</span> ${msg}`;
-  t.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 3000);
-}
+function mostrarToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),3000);}
 
 /* ── MODALES ── */
-let _scrollY = 0;
-
-function abrirModal(overlayId) {
-  const overlay = $(overlayId);
-  overlay.classList.add("open");
-  const modal = overlay.querySelector(".modal");
-  if (modal) modal.scrollTop = 0;
-  _scrollY = window.scrollY;
-  document.body.style.overflow  = "hidden";
-  document.body.style.position  = "fixed";
-  document.body.style.top       = `-${_scrollY}px`;
-  document.body.style.width     = "100%";
-}
-
-function cerrarModal(overlayId) {
-  $(overlayId).classList.remove("open");
-  document.body.style.overflow  = "";
-  document.body.style.position  = "";
-  document.body.style.top       = "";
-  document.body.style.width     = "";
-  window.scrollTo(0, _scrollY);
-}
-
-function overlayClick(e, overlayId) {
-  if (e.target.id === overlayId) cerrarModal(overlayId);
-}
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    cerrarModal("detail-overlay");
-    cerrarModal("form-overlay");
-    cerrarModal("login-overlay");
-  }
-});
+let _sy=0;
+function abrirModal(id){const o=$(id);o.classList.add("open");const m=o.querySelector(".modal");if(m)m.scrollTop=0;_sy=window.scrollY;document.body.style.overflow="hidden";document.body.style.position="fixed";document.body.style.top=`-${_sy}px`;document.body.style.width="100%";}
+function cerrarModal(id){$(id).classList.remove("open");document.body.style.overflow="";document.body.style.position="";document.body.style.top="";document.body.style.width="";window.scrollTo(0,_sy);}
+function overlayClick(e,id){if(e.target.id===id)cerrarModal(id);}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){["form-overlay","detail-overlay","login-overlay","tarea-form-overlay"].forEach(id=>{if($(id)&&$(id).classList.contains("open"))cerrarModal(id);});}});
 
 /* ── MODO OSCURO ── */
-function toggleDarkMode() {
-  const isDark = document.documentElement.classList.toggle("dark");
-  $("dark-icon").textContent = isDark ? "☀" : "🌙";
-  localStorage.setItem("ensu-dark", isDark ? "1" : "0");
-}
-
-function initDarkMode() {
-  if (localStorage.getItem("ensu-dark") === "1") {
-    document.documentElement.classList.add("dark");
-    $("dark-icon").textContent = "☀";
-  }
-}
+function toggleDarkMode(){const d=document.documentElement.classList.toggle("dark");$("dark-icon").textContent=d?"☀":"🌙";localStorage.setItem("ensu-dark",d?"1":"0");}
+function initDarkMode(){if(localStorage.getItem("ensu-dark")==="1"){document.documentElement.classList.add("dark");$("dark-icon").textContent="☀";}}
 
 /* ── NAV SCROLL ── */
-window.addEventListener("scroll", () => {
-  const nav = $("main-nav");
-  if (window.scrollY > 20) nav.classList.add("scrolled");
-  else nav.classList.remove("scrolled");
-}, { passive: true });
+window.addEventListener("scroll",()=>{const nav=$("main-nav");if(window.scrollY>20)nav.classList.add("scrolled");else nav.classList.remove("scrolled");},{passive:true});
+
+/* ── BOTTOM NAV ACTIVO ── */
+function updateBNav(page){document.querySelectorAll(".bnav-btn").forEach(b=>b.classList.toggle("activo",b.dataset.page===page));}
 
 /* ── TAREAS ── */
-let tareas = [];
-let editandoTareaId = null;
-let paginaActiva = "home";
-let filtroTareas = "todas";
-let sortTareas   = "fecha-asc";
+let tareas=[],editandoTareaId=null,paginaActiva="home",filtroTareas="todas",sortTareas="fecha-asc";
 
-function cargarTareas() {
-  db.ref("tareas").once("value").then(snapshot => {
-    if (!snapshot.val()) {
-      // Migrar tareas del localStorage si existen
-      try {
-        const local = JSON.parse(localStorage.getItem("ensu-tareas") || "[]");
-        if (local.length > 0) {
-          const obj = {};
-          local.forEach(t => { obj[t.id] = t; });
-          db.ref("tareas").set(obj);
-        }
-      } catch {}
-    }
-    // Listener en tiempo real para sync entre dispositivos
-    db.ref("tareas").on("value", snap => {
-      const data = snap.val();
-      tareas = data ? Object.values(data) : [];
-      if (paginaActiva === "tareas") renderTareas();
-    });
+function cargarTareas(){
+  db.ref("tareas").once("value").then(snapshot=>{
+    if(!snapshot.val()){try{const local=JSON.parse(localStorage.getItem("ensu-tareas")||"[]");if(local.length>0){const obj={};local.forEach(t=>{obj[t.id]=t;});db.ref("tareas").set(obj);}}catch{}}
+    db.ref("tareas").on("value",snap=>{const data=snap.val();tareas=data?Object.values(data):[];if(paginaActiva==="tareas")renderTareas();});
   });
 }
 
-function irATareas() {
-  if (!isAdmin) return;
-  paginaActiva = "tareas";
-  $("home-hero").style.display    = "none";
-  $("home-filtros").style.display = "none";
-  $("home-grid").style.display    = "none";
-  $("tareas-page").style.display  = "block";
+function irATareas(){
+  if(!isAdmin)return;
+  paginaActiva="tareas";
+  $("home-hero").style.display="none";
+  $("home-filtros").style.display="none";
+  $("toggle-lectura-row").style.display="none";
+  $("home-grid").style.display="none";
+  $("tareas-page").style.display="block";
   $("btn-tareas-nav").classList.add("activa");
-  filtroTareas = "todas";
-  sortTareas   = "fecha-asc";
-  if ($("tareas-sort")) $("tareas-sort").value = "fecha-asc";
-  setFiltroT("todas");
-  renderTareas();
-}
-function irAHome() {
-  paginaActiva = "home";
-  $("tareas-page").style.display  = "none";
-  $("home-hero").style.display    = "";
-  $("home-filtros").style.display = "";
-  $("home-grid").style.display    = "";
-  $("btn-tareas-nav").classList.remove("activa");
+  filtroTareas="todas";sortTareas="fecha-asc";
+  if($("tareas-sort"))$("tareas-sort").value="fecha-asc";
+  setFiltroT("todas");renderTareas();
+  updateBNav("tareas");
 }
 
-function sortLista(lista) {
-  return lista.slice().sort((a, b) => {
-    if (sortTareas === "fecha-asc")  return (a.fecha || "") < (b.fecha || "") ? -1 : 1;
-    if (sortTareas === "fecha-desc") return (a.fecha || "") > (b.fecha || "") ? -1 : 1;
-    if (sortTareas === "titulo-az")  return a.titulo.localeCompare(b.titulo, "es");
-    if (sortTareas === "titulo-za")  return b.titulo.localeCompare(a.titulo, "es");
+function irAHome(){
+  paginaActiva="home";
+  $("tareas-page").style.display="none";
+  $("home-hero").style.display="";
+  $("home-filtros").style.display="";
+  $("toggle-lectura-row").style.display="";
+  $("home-grid").style.display="";
+  $("btn-tareas-nav").classList.remove("activa");
+  updateBNav("home");
+}
+
+function sortLista(lista){
+  return lista.slice().sort((a,b)=>{
+    if(sortTareas==="fecha-asc")return(a.fecha||"")<(b.fecha||"")?-1:1;
+    if(sortTareas==="fecha-desc")return(a.fecha||"")>(b.fecha||"")?-1:1;
+    if(sortTareas==="titulo-az")return a.titulo.localeCompare(b.titulo,"es");
+    if(sortTareas==="titulo-za")return b.titulo.localeCompare(a.titulo,"es");
     return 0;
   });
 }
 
-function setFiltroT(f) {
-  filtroTareas = f;
-  document.querySelectorAll(".pill-t").forEach(b =>
-    b.classList.toggle("activa", b.dataset.f === f)
-  );
-  document.querySelectorAll(".tstat-card").forEach(c =>
-    c.classList.toggle("activa", c.dataset.estado === f)
-  );
-  const board = document.querySelector(".kanban-board");
-  if (board) board.classList.toggle("filtrado", f !== "todas");
-  document.querySelectorAll(".kanban-col").forEach(col => {
-    col.style.display = (f === "todas" || col.dataset.estado === f) ? "" : "none";
-  });
+function setFiltroT(f){
+  filtroTareas=f;
+  document.querySelectorAll(".pill-t").forEach(b=>b.classList.toggle("activa",b.dataset.f===f));
+  document.querySelectorAll(".tstat-card").forEach(c=>c.classList.toggle("activa",c.dataset.estado===f));
+  const board=document.querySelector(".kanban-board");
+  if(board)board.classList.toggle("filtrado",f!=="todas");
+  document.querySelectorAll(".kanban-col").forEach(col=>{col.style.display=(f==="todas"||col.dataset.estado===f)?"":"none";});
 }
 
-function setSortT(val) {
-  sortTareas = val;
-  renderTareas();
-}
+function setSortT(val){sortTareas=val;renderTareas();}
 
-function renderTareas() {
-  // stats
-  const total = tareas.length;
-  const cPend = tareas.filter(t => t.estado === "pendiente").length;
-  const cProg = tareas.filter(t => t.estado === "en-progreso").length;
-  const cDone = tareas.filter(t => t.estado === "completado").length;
-  if ($("stat-total"))      $("stat-total").textContent      = total;
-  if ($("stat-pendiente"))  $("stat-pendiente").textContent  = cPend;
-  if ($("stat-en-progreso"))$("stat-en-progreso").textContent = cProg;
-  if ($("stat-completado")) $("stat-completado").textContent = cDone;
-
-  const ESTADOS = ["pendiente", "en-progreso", "completado"];
-  const PREV = { "en-progreso":"pendiente", "completado":"en-progreso" };
-  const NEXT = { "pendiente":"en-progreso", "en-progreso":"completado" };
-  ESTADOS.forEach(estado => {
-    const col   = $("col-" + estado);
-    const count = $("count-" + estado);
-    const lista = sortLista(tareas.filter(t => t.estado === estado));
-    count.textContent = lista.length;
-    if (!lista.length) {
-      col.innerHTML = `<p class="kanban-empty">Sin tareas</p>`;
-      return;
-    }
-    col.innerHTML = lista.map(t => `
-      <div class="tarea-card${estado === "completado" ? " tarea-estado-done" : ""}">
+function renderTareas(){
+  const total=tareas.length,cPend=tareas.filter(t=>t.estado==="pendiente").length,cProg=tareas.filter(t=>t.estado==="en-progreso").length,cDone=tareas.filter(t=>t.estado==="completado").length;
+  if($("stat-total"))$("stat-total").textContent=total;
+  if($("stat-pendiente"))$("stat-pendiente").textContent=cPend;
+  if($("stat-en-progreso"))$("stat-en-progreso").textContent=cProg;
+  if($("stat-completado"))$("stat-completado").textContent=cDone;
+  const ESTADOS=["pendiente","en-progreso","completado"];
+  const PREV={"en-progreso":"pendiente","completado":"en-progreso"};
+  const NEXT={"pendiente":"en-progreso","en-progreso":"completado"};
+  ESTADOS.forEach(estado=>{
+    const col=$("col-"+estado),count=$("count-"+estado);
+    const lista=sortLista(tareas.filter(t=>t.estado===estado));
+    count.textContent=lista.length;
+    if(!lista.length){col.innerHTML=`<p class="kanban-empty">Sin tareas</p>`;return;}
+    col.innerHTML=lista.map(t=>`
+      <div class="tarea-card${estado==="completado"?" tarea-estado-done":""}">
         <div class="tarea-titulo">${t.titulo}</div>
-        ${t.detalles ? `<div class="tarea-detalles">${t.detalles.replace(/</g,"&lt;")}</div>` : ""}
+        ${t.detalles?`<div class="tarea-detalles">${t.detalles.replace(/</g,"&lt;")}</div>`:""}
         <div class="tarea-footer">
-          <span class="tarea-fecha">${t.fecha ? formatFechaCorta(t.fecha) : ""}</span>
+          <span class="tarea-fecha">${t.fecha?formatFechaCorta(t.fecha):""}</span>
           <div class="tarea-actions">
-            ${PREV[estado] ? `<button class="tarea-btn move" onclick="moverTarea(${t.id},'${PREV[estado]}')" title="Retroceder">&#8592;</button>` : ""}
-            ${NEXT[estado] ? `<button class="tarea-btn move" onclick="moverTarea(${t.id},'${NEXT[estado]}')" title="Avanzar">&#8594;</button>` : ""}
-            <button class="tarea-btn" onclick="abrirFormTarea(${t.id})" title="Editar">&#9998;</button>
-            <button class="tarea-btn" onclick="eliminarTarea(${t.id})" title="Eliminar">&#128465;</button>
+            ${PREV[estado]?`<button class="tarea-btn move" onclick="moverTarea(${t.id},'${PREV[estado]}')" title="Retroceder">←</button>`:""}
+            ${NEXT[estado]?`<button class="tarea-btn move" onclick="moverTarea(${t.id},'${NEXT[estado]}')" title="Avanzar">→</button>`:""}
+            <button class="tarea-btn" onclick="abrirFormTarea(${t.id})" title="Editar">✏</button>
+            <button class="tarea-btn" onclick="eliminarTarea(${t.id})" title="Eliminar">🗑</button>
           </div>
         </div>
-      </div>
-    `).join("");
+      </div>`).join("");
   });
-  // re-apply current filter visibility
   setFiltroT(filtroTareas);
 }
 
-function formatFechaCorta(iso) {
-  if (!iso) return "";
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`;
-}
+function formatFechaCorta(iso){if(!iso)return"";const[y,m,d]=iso.split("-");return`${d}/${m}/${y}`;}
 
-function abrirFormTarea(id) {
-  editandoTareaId = id || null;
-  const t = id ? tareas.find(x => x.id === id) : null;
-  $("tarea-form-title-text").textContent = t ? "Editar tarea" : "Nueva tarea";
-  $("t-titulo").value   = t ? t.titulo   : "";
-  $("t-detalles").value = t ? t.detalles : "";
-  $("t-estado").value   = t ? t.estado   : "pendiente";
-  $("t-fecha").value    = t ? t.fecha    : "";
+function abrirFormTarea(id){
+  editandoTareaId=id||null;
+  const t=id?tareas.find(x=>x.id===id):null;
+  $("tarea-form-title-text").textContent=t?"Editar tarea":"Nueva tarea";
+  $("t-titulo").value=t?t.titulo:"";
+  $("t-detalles").value=t?t.detalles:"";
+  $("t-estado").value=t?t.estado:"pendiente";
+  $("t-fecha").value=t?t.fecha:"";
   abrirModal("tarea-form-overlay");
 }
 
-function guardarTarea() {
-  const titulo = $("t-titulo").value.trim();
-  if (!titulo) { alert("El título es obligatorio."); $("t-titulo").focus(); return; }
-  const datos = {
-    titulo,
-    detalles: $("t-detalles").value.trim(),
-    estado:   $("t-estado").value,
-    fecha:    $("t-fecha").value,
-  };
-  if (editandoTareaId) {
-    db.ref("tareas/" + editandoTareaId).update(datos);
-  } else {
-    const maxId = tareas.reduce((m, t) => Math.max(m, t.id), 0) + 1;
-    db.ref("tareas/" + maxId).set({ id: maxId, ...datos });
-  }
+function guardarTarea(){
+  const titulo=$("t-titulo").value.trim();
+  if(!titulo){alert("El título es obligatorio.");$("t-titulo").focus();return;}
+  const datos={titulo,detalles:$("t-detalles").value.trim(),estado:$("t-estado").value,fecha:$("t-fecha").value};
+  if(editandoTareaId){db.ref("tareas/"+editandoTareaId).update(datos);}
+  else{const maxId=tareas.reduce((m,t)=>Math.max(m,t.id),0)+1;db.ref("tareas/"+maxId).set({id:maxId,...datos});}
   cerrarModal("tarea-form-overlay");
 }
 
-function eliminarTarea(id) {
-  if (!confirm("¿Eliminar esta tarea?")) return;
-  db.ref("tareas/" + id).remove();
-}
-
-function moverTarea(id, nuevoEstado) {
-  db.ref("tareas/" + id + "/estado").set(nuevoEstado);
-}
+function eliminarTarea(id){if(!confirm("¿Eliminar esta tarea?"))return;db.ref("tareas/"+id).remove();}
+function moverTarea(id,nuevoEstado){db.ref("tareas/"+id+"/estado").set(nuevoEstado);}
 
 /* ── DEVTOOLS PREVENTION ── */
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("keydown", function(e) {
-  if (e.key === "F12") { e.preventDefault(); return false; }
-  if (e.ctrlKey && e.shiftKey && ["I","J","C","K"].includes(e.key.toUpperCase())) { e.preventDefault(); return false; }
-  if (e.ctrlKey && e.key.toUpperCase() === "U") { e.preventDefault(); return false; }
-  if (e.metaKey && e.altKey && e.key.toUpperCase() === "I") { e.preventDefault(); return false; }
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("keydown",function(e){
+  if(e.key==="F12"){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.shiftKey&&["I","J","C","K"].includes(e.key.toUpperCase())){e.preventDefault();return false;}
+  if(e.ctrlKey&&e.key.toUpperCase()==="U"){e.preventDefault();return false;}
+  if(e.metaKey&&e.altKey&&e.key.toUpperCase()==="I"){e.preventDefault();return false;}
 });
 
 /* ── INIT ── */
 initDarkMode();
 initAdminMode();
-cargarDesdeStorage(); // arranca listener Firebase → llama actualizarStats/renderFiltros/renderCards
-cargarTareas();       // arranca listener Firebase → llama renderTareas cuando en página de tareas
+cargarDesdeStorage();
+cargarTareas();
+updateBNav("home");
 </script>
 </body>
 </html>
