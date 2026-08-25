@@ -512,7 +512,39 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
   .tag-page{padding:24px 16px 40px}
   .wiz-labels{padding:6px 50px 0 18px}
   .wiz-progress{padding:16px 50px 0 18px}
+  .stats-two-col{grid-template-columns:1fr!important}
 }
+
+/* ══ CITA ALEATORIA ══ */
+#quote-section{max-width:760px;margin:0 auto;padding:24px 24px 0;display:none}
+.quote-card{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r);padding:22px 28px;position:relative;overflow:hidden}
+.quote-card::before{content:'\201C';position:absolute;top:-12px;left:18px;font-family:'Cormorant Garamond',serif;font-size:88px;color:var(--accent);opacity:.18;line-height:1;pointer-events:none}
+.quote-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--text);line-height:1.65;margin-bottom:12px;padding-left:8px}
+.quote-meta{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.quote-source{font-size:12px;color:var(--muted);font-weight:500}
+.quote-refresh{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;border:none;background:none;padding:0;font-family:'Inter',sans-serif;transition:opacity var(--tr);flex-shrink:0}
+.quote-refresh:hover{opacity:.65}
+
+/* ══ STATS PAGE ══ */
+.stats-page{display:none;padding:40px 24px 80px;max-width:900px;margin:0 auto}
+.stats-header{margin-bottom:28px}
+.stats-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.stats-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;color:var(--text)}
+.stats-boxes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:24px}
+.stat-box{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r);padding:16px 18px}
+.stat-box-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;color:var(--text);line-height:1}
+.stat-box-lbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.stats-section{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r);padding:18px 22px;margin-bottom:14px}
+.stats-section-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.bar-label{font-size:12px;color:var(--text2);min-width:80px;text-align:right;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.bar-track{flex:1;background:var(--surface2);border-radius:4px;height:7px;overflow:hidden}
+.bar-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .5s ease}
+.bar-count{font-size:12px;color:var(--muted);min-width:18px;text-align:right}
+.tag-pills-stats{display:flex;flex-wrap:wrap;gap:7px}
+.tag-pill-stat{background:var(--surface2);border-radius:100px;padding:5px 12px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.tag-pill-stat span{background:var(--accent);color:#1A1714;border-radius:100px;padding:1px 7px;font-size:10px;font-weight:700}
+.stats-two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 </style>
 </head>
 <body>
@@ -527,6 +559,7 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
     <div class="nav-actions">
       <a href="lista.html" class="btn-nav" style="text-decoration:none">Biblioteca</a>
       <button class="btn-nav" id="btn-timeline-nav" onclick="irATimeline()">Línea de tiempo</button>
+      <button class="btn-nav" id="btn-stats-nav" onclick="irAStats()">Estadísticas</button>
       <button class="btn-nav admin-only" id="btn-tareas-nav" onclick="irATareas()">Tareas</button>
       <button class="btn-nuevo admin-only" onclick="abrirFormModal()"><span>+</span> Nueva entrada</button>
       <button class="btn-icon" id="btn-dark" onclick="toggleDarkMode()" aria-label="Modo oscuro"><span id="dark-icon">🌙</span></button>
@@ -578,6 +611,17 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
       <div class="hero-stat"><span class="stat-num" id="stat-articulos">0</span><span class="stat-label">Artículos</span></div>
     </div>
   </section>
+</div>
+
+<!-- CITA ALEATORIA -->
+<div id="quote-section">
+  <div class="quote-card">
+    <p class="quote-text" id="quote-text"></p>
+    <div class="quote-meta">
+      <span class="quote-source" id="quote-source"></span>
+      <button class="quote-refresh" onclick="mostrarCitaAleatoria()">Otra cita →</button>
+    </div>
+  </div>
 </div>
 
 <!-- SEARCH -->
@@ -713,6 +757,33 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
     <p class="tag-count" id="tag-page-count"></p>
   </div>
   <div class="cards-grid" id="tag-page-grid"></div>
+</div>
+
+<!-- STATS PAGE -->
+<div class="stats-page" id="stats-page">
+  <div class="stats-header">
+    <p class="stats-eyebrow">Métricas</p>
+    <h2 class="stats-title">Mis estadísticas</h2>
+  </div>
+  <div class="stats-boxes" id="stats-boxes"></div>
+  <div class="stats-section">
+    <p class="stats-section-title">Lecturas terminadas por mes (últimos 12 meses)</p>
+    <div id="stats-por-mes"></div>
+  </div>
+  <div class="stats-two-col">
+    <div class="stats-section">
+      <p class="stats-section-title">Por tipo</p>
+      <div id="stats-tipos"></div>
+    </div>
+    <div class="stats-section">
+      <p class="stats-section-title">Autores más leídos</p>
+      <div id="stats-autores"></div>
+    </div>
+  </div>
+  <div class="stats-section" style="margin-top:14px">
+    <p class="stats-section-title">Etiquetas más frecuentes</p>
+    <div class="tag-pills-stats" id="stats-tags"></div>
+  </div>
 </div>
 
 </div><!-- /page-offset -->
@@ -1032,7 +1103,7 @@ function cargarDesdeStorage() {
     db.ref("libros").on("value",snap=>{
       const data=snap.val();
       libros=data?Object.values(data):[];
-      actualizarStats();renderFiltros();renderCards();actualizarAutocomplete();
+      actualizarStats();renderFiltros();renderCards();actualizarAutocomplete();mostrarCitaAleatoria();
     });
   });
 }
@@ -1428,11 +1499,13 @@ function irATareas(){
   paginaActiva="tareas";
   $("home-hero").style.display="none";
   $("search-section").style.display="none";
+  $("quote-section").style.display="none";
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
   $("timeline-page").style.display="none";
   $("tag-page").style.display="none";
+  $("stats-page").style.display="none";
   $("tareas-page").style.display="block";
   $("btn-tareas-nav").classList.add("activa");
   filtroTareas="todas";sortTareas="fecha-asc";
@@ -1446,13 +1519,16 @@ function irAHome(){
   $("tareas-page").style.display="none";
   $("timeline-page").style.display="none";
   $("tag-page").style.display="none";
+  $("stats-page").style.display="none";
   $("home-hero").style.display="";
   $("search-section").style.display="";
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
+  $("quote-section").style.display="";
   $("btn-tareas-nav").classList.remove("activa");
   $("btn-timeline-nav").classList.remove("activa");
+  $("btn-stats-nav").classList.remove("activa");
   updateBNav("home");
 }
 
@@ -1661,6 +1737,7 @@ function irATimeline(){
   irAHome();
   $("home-hero").style.display="none";
   $("search-section").style.display="none";
+  $("quote-section").style.display="none";
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
@@ -1676,6 +1753,7 @@ function abrirTagPage(tag){
   irAHome();
   $("home-hero").style.display="none";
   $("search-section").style.display="none";
+  $("quote-section").style.display="none";
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
@@ -1696,6 +1774,63 @@ function cerrarTagPage(){
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
+  $("quote-section").style.display="";
+  $("search-section").style.display="";
+}
+
+/* ══ CITA ALEATORIA ══ */
+function mostrarCitaAleatoria(){
+  const pool=libros.filter(l=>l.cita&&l.cita.trim()&&(isAdmin||l.tipo!=="privado"));
+  if(!pool.length){$("quote-section").style.display="none";return;}
+  const e=pool[Math.floor(Math.random()*pool.length)];
+  $("quote-text").textContent=e.cita;
+  $("quote-source").textContent=(e.tipo!=="reflexion"?(e.libro||""):(e.tituloRef||""))+(e.autor?" — "+e.autor:"");
+  $("quote-section").style.display="";
+}
+
+/* ══ STATS ══ */
+function irAStats(){
+  irAHome();
+  ["home-hero","search-section","home-filtros","toggle-lectura-row","home-grid","quote-section"].forEach(id=>{const el=$(id);if(el)el.style.display="none";});
+  $("stats-page").style.display="block";
+  $("btn-stats-nav").classList.add("activa");
+  renderStats();
+  updateBNav("stats");
+}
+
+function renderStats(){
+  const datos=libros.filter(l=>isAdmin||l.tipo!=="privado");
+  const terminados=datos.filter(l=>l.estado==="terminado");
+  const leyendo=datos.filter(l=>l.estado==="leyendo");
+  const proximos=datos.filter(l=>l.estado==="proximo"||l.estado==="pendiente");
+  // Cajas resumen
+  $("stats-boxes").innerHTML=[
+    {n:datos.length,l:"Total"},
+    {n:terminados.length,l:"Terminados"},
+    {n:leyendo.length,l:"Leyendo"},
+    {n:proximos.length,l:"Por leer"},
+    {n:datos.filter(l=>l.tipo==="libro").length,l:"Libros"},
+    {n:datos.filter(l=>l.tipo==="articulo").length,l:"Artículos"},
+  ].map(s=>`<div class="stat-box"><div class="stat-box-num">${s.n}</div><div class="stat-box-lbl">${s.l}</div></div>`).join("");
+  // Por mes (últimos 12)
+  const meses=[];
+  for(let i=11;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);meses.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`,label:d.toLocaleDateString("es",{month:"short",year:"2-digit"})});}
+  const cntMes={};terminados.forEach(l=>{if(l.fecha){const k=l.fecha.substring(0,7);cntMes[k]=(cntMes[k]||0)+1;}});
+  const maxMes=Math.max(1,...meses.map(m=>cntMes[m.key]||0));
+  $("stats-por-mes").innerHTML=meses.map(m=>{const n=cntMes[m.key]||0;return`<div class="bar-row"><span class="bar-label">${m.label}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxMes*100)}%"></div></div><span class="bar-count">${n||""}</span></div>`;}).join("");
+  // Por tipo
+  const tipos=[["libro","Libros"],["articulo","Artículos"],["reflexion","Reflexiones"]];
+  const maxTipo=Math.max(1,...tipos.map(([t])=>datos.filter(l=>l.tipo===t).length));
+  $("stats-tipos").innerHTML=tipos.map(([t,lbl])=>{const n=datos.filter(l=>l.tipo===t).length;return`<div class="bar-row"><span class="bar-label">${lbl}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxTipo*100)}%"></div></div><span class="bar-count">${n||""}</span></div>`;}).join("");
+  // Autores
+  const cntAut={};datos.filter(l=>l.autor).forEach(l=>cntAut[l.autor]=(cntAut[l.autor]||0)+1);
+  const topAut=Object.entries(cntAut).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxAut=topAut.length?topAut[0][1]:1;
+  $("stats-autores").innerHTML=topAut.length?topAut.map(([a,n])=>`<div class="bar-row"><span class="bar-label" style="font-size:11px">${a}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/maxAut*100)}%"></div></div><span class="bar-count">${n}</span></div>`).join(""):`<p style="color:var(--muted);font-size:13px">Sin datos aún</p>`;
+  // Tags
+  const cntTag={};datos.forEach(l=>(l.tags||[]).forEach(t=>cntTag[t]=(cntTag[t]||0)+1));
+  const topTags=Object.entries(cntTag).sort((a,b)=>b[1]-a[1]).slice(0,12);
+  $("stats-tags").innerHTML=topTags.map(([t,n])=>`<div class="tag-pill-stat">${t}<span>${n}</span></div>`).join("");
 }
 
 /* ── DEVTOOLS PREVENTION ── */
