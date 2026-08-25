@@ -412,6 +412,107 @@ html.dark .toast{background:var(--accent);color:#1A1714}
 @media(max-width:399px){
   .tareas-stats{grid-template-columns:1fr 1fr}
 }
+
+/* ══ PANEL LECTURA (full-screen) ══ */
+.leer-panel{position:fixed;inset:0;z-index:1100;background:var(--bg);overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);-webkit-overflow-scrolling:touch}
+.leer-panel.open{transform:none}
+.leer-nav{position:sticky;top:0;z-index:10;background:rgba(247,244,239,.9);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--borde);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:54px}
+html.dark .leer-nav{background:rgba(14,14,16,.92)}
+.leer-back{display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;transition:color var(--tr)}
+.leer-back:hover{color:var(--text)}
+.leer-nav-right{display:flex;gap:7px}
+.leer-content{max-width:680px;margin:0 auto;padding:48px 24px 80px}
+.leer-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.leer-tipo{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.leer-titulo{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,5vw,40px);font-weight:400;line-height:1.15;color:var(--text);margin-bottom:10px}
+.leer-autor{font-size:13.5px;color:var(--text2);margin-bottom:8px;font-style:italic}
+.leer-libro{font-size:13px;color:var(--muted);margin-bottom:18px}
+.leer-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:32px}
+.leer-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--surface2);border-radius:100px;padding:3px 10px;cursor:pointer;border:1.5px solid transparent;transition:all var(--tr)}
+.leer-tag:hover{border-color:var(--accent);color:var(--accent);background:rgba(196,169,125,.08)}
+.leer-sep{display:flex;align-items:center;gap:14px;margin:38px 0}
+.leer-sep-line{flex:1;height:1px;background:var(--borde)}
+.leer-sep-ico{font-size:14px;color:var(--muted)}
+.leer-seccion{margin-bottom:36px}
+.leer-sec-lbl{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+.leer-rich{font-size:15px;line-height:1.82;color:var(--text2)}
+.leer-rich p{margin-bottom:16px}
+.leer-rich p:last-child{margin-bottom:0}
+.leer-cita{margin:32px 0;border-left:3px solid var(--accent);padding:18px 22px;background:rgba(196,169,125,.07);border-radius:0 var(--r) var(--r) 0}
+.leer-cita-deco{font-family:'Cormorant Garamond',serif;font-size:40px;color:var(--accent);line-height:1;display:block;margin-bottom:6px}
+.leer-cita-txt{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;line-height:1.65;color:var(--text)}
+.leer-ficha{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin-top:16px}
+.leer-ficha-item{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r-sm);padding:10px 12px}
+.leer-ficha-k{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.leer-ficha-v{font-size:13px;font-weight:500;color:var(--text)}
+.leer-notas{background:rgba(196,169,125,.07);border:1.5px dashed rgba(196,169,125,.3);border-radius:var(--r);padding:18px 20px;font-size:14px;color:var(--text2);line-height:1.75;white-space:pre-wrap}
+/* Relacionadas */
+.relacionadas{max-width:680px;margin:0 auto;padding:0 24px 64px;border-top:1px solid var(--borde)}
+.rel-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:32px 0 18px}
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.rel-card{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r-sm);padding:13px;cursor:pointer;transition:all var(--tr)}
+.rel-card:hover{border-color:rgba(196,169,125,.4);box-shadow:var(--sh-sm)}
+.rel-tipo{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.rel-titulo{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:3px}
+.rel-tags{font-size:11px;color:var(--muted)}
+
+/* ══ WIZARD FORM ══ */
+.wiz-progress{display:flex;gap:0;padding:16px 26px 0;flex-shrink:0}
+.wiz-step-dot{flex:1;height:3px;background:var(--borde);border-radius:2px;transition:background var(--tr)}
+.wiz-step-dot+.wiz-step-dot{margin-left:4px}
+.wiz-step-dot.done{background:var(--accent)}
+.wiz-labels{display:flex;justify-content:space-between;padding:6px 26px 0;flex-shrink:0}
+.wiz-lbl{font-size:10px;font-weight:600;letter-spacing:.05em;color:var(--muted);transition:color var(--tr)}
+.wiz-lbl.activo{color:var(--accent)}
+.wiz-page{display:none}
+.wiz-page.activo{display:block}
+.wiz-nav{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.wiz-hint{font-size:11.5px;color:var(--muted)}
+.draft-banner{background:rgba(196,169,125,.12);border:1px solid rgba(196,169,125,.3);border-radius:var(--r-sm);padding:10px 14px;margin:12px 0 4px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:var(--text2)}
+.draft-actions{display:flex;gap:6px;flex-shrink:0}
+.draft-btn{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;cursor:pointer;border:1.5px solid;transition:all var(--tr);background:transparent}
+.draft-btn-yes{color:var(--accent);border-color:var(--accent)}
+.draft-btn-yes:hover{background:var(--accent);color:#1A1714}
+.draft-btn-no{color:var(--muted);border-color:var(--borde)}
+.draft-btn-no:hover{border-color:var(--text);color:var(--text)}
+
+/* ══ TIMELINE ══ */
+.timeline-page{display:none;max-width:800px;margin:0 auto;padding:40px 24px 80px}
+.timeline-header{margin-bottom:40px}
+.tl-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,44px);font-weight:300;color:var(--text)}
+.tl-group{margin-bottom:36px}
+.tl-mes{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.tl-mes::after{content:'';flex:1;height:1px;background:var(--borde)}
+.tl-items{display:flex;flex-direction:column;gap:0;border-left:2px solid var(--borde);margin-left:6px;padding-left:22px}
+.tl-item{position:relative;padding:14px 16px;background:var(--surface);border:1px solid var(--borde);border-radius:var(--r-sm);cursor:pointer;transition:all var(--tr);margin-bottom:10px}
+.tl-item::before{content:'';position:absolute;left:-29px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2.5px solid var(--bg)}
+.tl-item:hover{border-color:rgba(196,169,125,.4);transform:translateX(3px);box-shadow:var(--sh-sm)}
+.tl-item-tipo{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.tl-item-titulo{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:4px}
+.tl-item-extracto{font-size:12px;color:var(--text2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tl-item-footer{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.tl-item-fecha{font-size:11px;color:var(--muted)}
+
+/* ══ TAG PAGE ══ */
+.tag-page{display:none;max-width:1160px;margin:0 auto;padding:40px 24px 64px}
+.tag-header{margin-bottom:32px}
+.tag-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.tag-title{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,44px);font-weight:300;color:var(--text);margin-bottom:4px}
+.tag-count{font-size:13px;color:var(--muted)}
+.tag-back{font-size:13px;color:var(--muted);cursor:pointer;background:none;border:none;margin-bottom:24px;display:inline-flex;align-items:center;gap:5px;transition:color var(--tr)}
+.tag-back:hover{color:var(--accent)}
+
+@media(max-width:767px){
+  .leer-content{padding:28px 16px 60px}
+  .relacionadas{padding:0 16px 40px}
+  .leer-ficha{grid-template-columns:1fr 1fr}
+  .rel-grid{grid-template-columns:1fr 1fr}
+  .timeline-page{padding:24px 16px 60px}
+  .tag-page{padding:24px 16px 40px}
+  .wiz-labels{padding:6px 18px 0}
+  .wiz-progress{padding:16px 18px 0}
+}
 </style>
 </head>
 <body>
@@ -425,6 +526,7 @@ html.dark .toast{background:var(--accent);color:#1A1714}
     </a>
     <div class="nav-actions">
       <a href="lista.html" class="btn-nav" style="text-decoration:none">Biblioteca</a>
+      <button class="btn-nav" id="btn-timeline-nav" onclick="irATimeline()">Línea de tiempo</button>
       <button class="btn-nav admin-only" id="btn-tareas-nav" onclick="irATareas()">Tareas</button>
       <button class="btn-nuevo admin-only" onclick="abrirFormModal()"><span>+</span> Nueva entrada</button>
       <button class="btn-icon" id="btn-dark" onclick="toggleDarkMode()" aria-label="Modo oscuro"><span id="dark-icon">🌙</span></button>
@@ -593,7 +695,43 @@ html.dark .toast{background:var(--accent);color:#1A1714}
   </div>
 </div>
 
+<!-- TIMELINE PAGE -->
+<div class="timeline-page" id="timeline-page">
+  <div class="timeline-header">
+    <p class="tl-eyebrow">Cronología</p>
+    <h2 class="tl-title">Línea de tiempo</h2>
+  </div>
+  <div id="timeline-body"></div>
+</div>
+
+<!-- TAG PAGE -->
+<div class="tag-page" id="tag-page">
+  <button class="tag-back" onclick="cerrarTagPage()">← Volver</button>
+  <div class="tag-header">
+    <p class="tag-eyebrow">Etiqueta</p>
+    <h2 class="tag-title" id="tag-page-title"></h2>
+    <p class="tag-count" id="tag-page-count"></p>
+  </div>
+  <div class="cards-grid" id="tag-page-grid"></div>
+</div>
+
 </div><!-- /page-offset -->
+
+<!-- PANEL LECTURA -->
+<div class="leer-panel" id="leer-panel">
+  <nav class="leer-nav">
+    <button class="leer-back" onclick="cerrarLeer()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Volver
+    </button>
+    <div class="leer-nav-right">
+      <button class="btn-icon admin-only" id="leer-btn-edit" onclick="leerEditar()">✏</button>
+      <button class="btn-icon admin-only" id="leer-btn-del" onclick="leerEliminar()" style="color:var(--danger);border-color:var(--danger)">🗑</button>
+    </div>
+  </nav>
+  <div class="leer-content" id="leer-content"></div>
+  <div class="relacionadas" id="leer-relacionadas"></div>
+</div>
 
 <!-- MODAL TAREA -->
 <div class="modal-overlay" id="tarea-form-overlay" onclick="overlayClick(event,'tarea-form-overlay')">
@@ -696,60 +834,97 @@ html.dark .toast{background:var(--accent);color:#1A1714}
   </div>
 </div>
 
-<!-- MODAL FORMULARIO -->
+<!-- DATALISTS autocomplete -->
+<datalist id="dl-libros"></datalist>
+<datalist id="dl-autores"></datalist>
+
+<!-- MODAL FORMULARIO (wizard) -->
 <div class="modal-overlay admin-only" id="form-overlay" onclick="overlayClick(event,'form-overlay')">
   <div class="modal form-modal" role="dialog" aria-modal="true">
     <button class="modal-close" onclick="cerrarModal('form-overlay')">✕</button>
+
+    <!-- Barra progreso wizard -->
+    <div class="wiz-progress">
+      <div class="wiz-step-dot done" id="wdot-0"></div>
+      <div class="wiz-step-dot" id="wdot-1"></div>
+      <div class="wiz-step-dot" id="wdot-2"></div>
+    </div>
+    <div class="wiz-labels">
+      <span class="wiz-lbl activo" id="wlbl-0">Datos</span>
+      <span class="wiz-lbl" id="wlbl-1">Reflexión</span>
+      <span class="wiz-lbl" id="wlbl-2">Mi vida</span>
+    </div>
+
     <div class="form-header">
       <h2 class="form-title" id="form-title-text">Nueva entrada</h2>
-      <p class="form-subtitle">Registra lo que esta lectura despertó en ti.</p>
     </div>
+
     <form id="libro-form" onsubmit="guardarLibro(event)" novalidate>
       <div class="form-body">
-        <p class="form-sec">Datos</p>
-        <div class="form-row">
-          <div class="form-g"><label for="f-tipo">Tipo</label><select id="f-tipo"><option value="libro">Libro</option><option value="articulo">Artículo</option><option value="reflexion">Reflexión</option><option value="privado">🔒 Privado</option></select></div>
-          <div class="form-g"><label for="f-estado">Estado</label><select id="f-estado"><option value="leyendo">Leyendo</option><option value="terminado">Terminado</option><option value="proximo">Próximo (siguiente)</option><option value="pendiente">Pendiente (en lista)</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-g"><label for="f-libro">Libro / Fuente</label><input type="text" id="f-libro" placeholder="Título del libro o artículo"></div>
-          <div class="form-g"><label for="f-autor">Autor</label><input type="text" id="f-autor" placeholder="Nombre del autor"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-g"><label for="f-fecha">Fecha</label><input type="date" id="f-fecha"></div>
-          <div class="form-g"><label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label><input type="range" id="f-progreso" min="0" max="100" value="50" oninput="$('progreso-val').textContent=this.value+'%'" style="margin-top:8px"></div>
-        </div>
-        <div class="form-row">
-          <div class="form-g"><label for="f-finalidad">Finalidad</label><select id="f-finalidad"><option value="">—</option><option value="Formación">Formación</option><option value="Autoconocimiento">Autoconocimiento</option><option value="Ocio">Ocio</option></select></div>
-          <div class="form-g"><label for="f-categoria">Categoría</label><select id="f-categoria"><option value="">—</option><option value="Psicología">Psicología</option><option value="Relaciones">Relaciones</option><option value="Desarrollo personal">Desarrollo personal</option><option value="Filosofía">Filosofía</option><option value="Productividad">Productividad</option><option value="Pensamiento y decisiones">Pensamiento y decisiones</option><option value="Finanzas">Finanzas</option><option value="Ciencia">Ciencia</option><option value="Geopolítica">Geopolítica</option><option value="Marketing">Marketing</option><option value="Novela">Novela</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-g"><label for="f-orden">Orden en lista de lectura</label><input type="number" id="f-orden" min="1" placeholder="1, 2, 3…"></div>
-          <div class="form-g"><label for="f-dificultad">Dificultad</label><select id="f-dificultad"><option value="Accesible">Accesible</option><option value="Moderada">Moderada</option><option value="Densa">Densa</option><option value="Muy densa">Muy densa</option></select></div>
-        </div>
-        <div class="form-row">
-          <div class="form-g"><label for="f-puntuacion">Puntuación (1–10)</label><input type="number" id="f-puntuacion" min="1" max="10" placeholder="8"></div>
-          <div class="form-g"><label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(comas)</small></label><input type="text" id="f-tags" placeholder="Gratitud, Control…"></div>
+        <!-- Banner borrador -->
+        <div class="draft-banner" id="draft-banner" style="display:none">
+          <span>📝 Tienes un borrador guardado</span>
+          <div class="draft-actions">
+            <button type="button" class="draft-btn draft-btn-yes" onclick="restaurarBorrador()">Restaurar</button>
+            <button type="button" class="draft-btn draft-btn-no" onclick="descartarBorrador()">Descartar</button>
+          </div>
         </div>
 
-        <p class="form-sec">Reflexión</p>
-        <div class="form-g"><label for="f-titulo-reflexion">Título de la reflexión</label><input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase…"></div>
-        <div class="form-g"><label for="f-reflexion">Resumen / Teoría</label><textarea id="f-reflexion" rows="5" placeholder="Lo que esta lectura despertó en ti…"></textarea></div>
-        <div class="form-g"><label for="f-cita">Cita destacada</label><textarea id="f-cita" rows="3" placeholder='"La frase que no puedes olvidar…"'></textarea></div>
+        <!-- Paso 1: Datos -->
+        <div class="wiz-page activo" id="wiz-0">
+          <div class="form-row" style="margin-top:12px">
+            <div class="form-g"><label for="f-tipo">Tipo</label><select id="f-tipo" onchange="saveDraft()"><option value="libro">Libro</option><option value="articulo">Artículo</option><option value="reflexion">Reflexión</option><option value="privado">🔒 Privado</option></select></div>
+            <div class="form-g"><label for="f-estado">Estado</label><select id="f-estado" onchange="saveDraft()"><option value="leyendo">Leyendo</option><option value="terminado">Terminado</option><option value="proximo">Próximo</option><option value="pendiente">Pendiente</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-g"><label for="f-libro">Libro / Fuente</label><input type="text" id="f-libro" list="dl-libros" placeholder="Título del libro o artículo" oninput="saveDraft()"></div>
+            <div class="form-g"><label for="f-autor">Autor</label><input type="text" id="f-autor" list="dl-autores" placeholder="Nombre del autor" oninput="saveDraft()"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-g"><label for="f-fecha">Fecha</label><input type="date" id="f-fecha" onchange="saveDraft()"></div>
+            <div class="form-g"><label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label><input type="range" id="f-progreso" min="0" max="100" value="50" oninput="$('progreso-val').textContent=this.value+'%';saveDraft()" style="margin-top:8px"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-g"><label for="f-finalidad">Finalidad</label><select id="f-finalidad" onchange="saveDraft()"><option value="">—</option><option value="Formación">Formación</option><option value="Autoconocimiento">Autoconocimiento</option><option value="Ocio">Ocio</option></select></div>
+            <div class="form-g"><label for="f-categoria">Categoría</label><select id="f-categoria" onchange="saveDraft()"><option value="">—</option><option value="Psicología">Psicología</option><option value="Relaciones">Relaciones</option><option value="Desarrollo personal">Desarrollo personal</option><option value="Filosofía">Filosofía</option><option value="Productividad">Productividad</option><option value="Pensamiento y decisiones">Pensamiento y decisiones</option><option value="Finanzas">Finanzas</option><option value="Ciencia">Ciencia</option><option value="Geopolítica">Geopolítica</option><option value="Marketing">Marketing</option><option value="Novela">Novela</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-g"><label for="f-dificultad">Dificultad</label><select id="f-dificultad" onchange="saveDraft()"><option value="Accesible">Accesible</option><option value="Moderada">Moderada</option><option value="Densa">Densa</option><option value="Muy densa">Muy densa</option></select></div>
+            <div class="form-g"><label for="f-puntuacion">Puntuación (1–10)</label><input type="number" id="f-puntuacion" min="1" max="10" placeholder="8" oninput="saveDraft()"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-g"><label for="f-orden">Orden en lista</label><input type="number" id="f-orden" min="1" placeholder="1, 2, 3…" oninput="saveDraft()"></div>
+            <div class="form-g"><label for="f-tags">Etiquetas <small style="font-weight:400;color:var(--muted)">(comas)</small></label><input type="text" id="f-tags" placeholder="Gratitud, Control…" oninput="saveDraft()"></div>
+          </div>
+        </div>
 
-        <p class="form-sec">Mi vida</p>
-        <div class="form-g"><label for="f-vida">Aplicación a mi vida</label><textarea id="f-vida" rows="4" placeholder="¿Cómo aterrizas esto en tu día a día?"></textarea></div>
-        <div class="form-g"><label for="f-tension">Tensión / Pregunta abierta</label><textarea id="f-tension" rows="3" placeholder="Una pregunta que esta lectura no resolvió del todo…"></textarea></div>
+        <!-- Paso 2: Reflexión -->
+        <div class="wiz-page" id="wiz-1">
+          <div class="form-g" style="margin-top:12px"><label for="f-titulo-reflexion">Título de la reflexión</label><input type="text" id="f-titulo-reflexion" placeholder="La idea central en una frase…" oninput="saveDraft()"></div>
+          <div class="form-g"><label for="f-reflexion">Resumen / Teoría</label><textarea id="f-reflexion" rows="6" placeholder="Lo que esta lectura despertó en ti…&#10;&#10;Puedes usar párrafos — cada doble salto se mostrará separado." oninput="saveDraft()"></textarea></div>
+          <div class="form-g"><label for="f-cita">Cita destacada</label><textarea id="f-cita" rows="3" placeholder='"La frase que no puedes olvidar…"' oninput="saveDraft()"></textarea></div>
+        </div>
 
-        <p class="form-sec">Notas privadas</p>
-        <div class="private-notes">
-          <p class="private-notes-lbl">🔒 Solo visible para ti</p>
-          <textarea id="f-notas" rows="4" placeholder="Apuntes rápidos, ideas, recordatorios sobre este libro…"></textarea>
+        <!-- Paso 3: Mi vida + notas -->
+        <div class="wiz-page" id="wiz-2">
+          <div class="form-g" style="margin-top:12px"><label for="f-vida">Cómo lo aplico a mi vida</label><textarea id="f-vida" rows="4" placeholder="¿Cómo aterrizas esto en tu día a día?" oninput="saveDraft()"></textarea></div>
+          <div class="form-g"><label for="f-tension">Tensión / Pregunta abierta</label><textarea id="f-tension" rows="3" placeholder="Una pregunta que esta lectura no resolvió del todo…" oninput="saveDraft()"></textarea></div>
+          <div class="private-notes" style="margin-top:8px">
+            <p class="private-notes-lbl">🔒 Notas privadas</p>
+            <textarea id="f-notas" rows="3" placeholder="Apuntes rápidos, ideas, recordatorios…" oninput="saveDraft()"></textarea>
+          </div>
         </div>
       </div>
+
       <div class="form-footer">
-        <button type="button" class="btn-cancel" onclick="cerrarModal('form-overlay')">Cancelar</button>
-        <button type="submit" class="btn-save">Guardar entrada</button>
+        <div class="wiz-nav" style="width:100%">
+          <span class="wiz-hint" id="wiz-hint">Paso 1 de 3</span>
+          <div style="display:flex;gap:9px">
+            <button type="button" class="btn-cancel" id="wiz-prev" onclick="wizPrev()" style="display:none">← Anterior</button>
+            <button type="button" class="btn-save" id="wiz-next" onclick="wizNext()">Siguiente →</button>
+            <button type="submit" class="btn-save" id="wiz-submit" style="display:none">Guardar entrada</button>
+          </div>
+        </div>
       </div>
     </form>
   </div>
@@ -857,7 +1032,7 @@ function cargarDesdeStorage() {
     db.ref("libros").on("value",snap=>{
       const data=snap.val();
       libros=data?Object.values(data):[];
-      actualizarStats();renderFiltros();renderCards();
+      actualizarStats();renderFiltros();renderCards();actualizarAutocomplete();
     });
   });
 }
@@ -938,10 +1113,10 @@ function renderCards(){
   const cardHtml=lista.map(l=>{
     const titulo=l.tipo!=="reflexion"?l.tituloRef:l.tituloRef;
     const fuente=l.tipo!=="reflexion"?l.libro:l.libro;
-    const tags=(l.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
+    const tags=(l.tags||[]).map(t=>`<span class="tag" onclick="event.stopPropagation();abrirTagPage('${t.replace(/'/g,"\\'")}'">${t}</span>`).join("");
     const badge1=l.finalidad?`<span class="finalidad-badge ${FC[l.finalidad]||""}">${l.finalidad}</span>`:`<span class="tipo-badge">${tipoLabel(l.tipo)}</span>`;
     const meta=[l.categoria,l.dificultad].filter(Boolean).join(" · ");
-    return`<article class="card" onclick="abrirDetalle('${l.id}')">
+    return`<article class="card" onclick="abrirLeer('${l.id}')">
   <div class="card-header">
     <span class="card-type">${tipoLabel(l.tipo)}</span>
     <div class="card-badges">${badge1}<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span></div>
@@ -966,7 +1141,7 @@ function renderCards(){
   <div class="lectura-sep"><div class="sep-line"></div><span class="sep-text">Lista de lectura</span><div class="sep-line"></div></div>
   ${lecturaCards.map(l=>{
     const isPend=l.estado==="pendiente";
-    return`<article class="card ${isPend?"card-pendiente":"card-proximo"}" onclick="abrirDetalle('${l.id}')">
+    return`<article class="card ${isPend?"card-pendiente":"card-proximo"}" onclick="abrirLeer('${l.id}')">
   <div class="card-header">
     <span class="card-type">${tipoLabel(l.tipo)}</span>
     <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
@@ -1101,7 +1276,11 @@ function eliminarLibro(id){
 }
 
 function abrirFormModal(editId){
+  actualizarAutocomplete();
   limpiarForm();
+  wizSetStep(0);
+  const draft=(!editId)&&loadDraft();
+  $("draft-banner").style.display=draft?"":"none";
   if(editId){
     const l=libros.find(x=>x.id==editId);
     if(!l)return;
@@ -1178,9 +1357,10 @@ function guardarLibro(e){
     libros.push({id:libros.reduce((m,l)=>Math.max(m,+l.id||0),0)+1,...datos});
     mostrarToast("Entrada guardada.");
   }
+  clearDraft();
   guardarEnStorage();
   cerrarModal("form-overlay");
-  renderFiltros();renderCards();actualizarStats();
+  renderFiltros();renderCards();actualizarStats();actualizarAutocomplete();
 }
 
 /* ── AUTH ── */
@@ -1221,7 +1401,7 @@ let _sy=0;
 function abrirModal(id){const o=$(id);o.classList.add("open");const m=o.querySelector(".modal");if(m)m.scrollTop=0;_sy=window.scrollY;document.body.style.overflow="hidden";document.body.style.position="fixed";document.body.style.top=`-${_sy}px`;document.body.style.width="100%";}
 function cerrarModal(id){$(id).classList.remove("open");document.body.style.overflow="";document.body.style.position="";document.body.style.top="";document.body.style.width="";window.scrollTo(0,_sy);}
 function overlayClick(e,id){if(e.target.id===id)cerrarModal(id);}
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){["form-overlay","detail-overlay","login-overlay","tarea-form-overlay"].forEach(id=>{if($(id)&&$(id).classList.contains("open"))cerrarModal(id);});}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){["form-overlay","detail-overlay","login-overlay","tarea-form-overlay"].forEach(id=>{if($(id)&&$(id).classList.contains("open"))cerrarModal(id);});if($("leer-panel").classList.contains("open"))cerrarLeer();}});
 
 /* ── MODO OSCURO ── */
 function toggleDarkMode(){const d=document.documentElement.classList.toggle("dark");$("dark-icon").textContent=d?"☀":"🌙";localStorage.setItem("ensu-dark",d?"1":"0");}
@@ -1250,6 +1430,8 @@ function irATareas(){
   $("home-filtros").style.display="none";
   $("toggle-lectura-row").style.display="none";
   $("home-grid").style.display="none";
+  $("timeline-page").style.display="none";
+  $("tag-page").style.display="none";
   $("tareas-page").style.display="block";
   $("btn-tareas-nav").classList.add("activa");
   filtroTareas="todas";sortTareas="fecha-asc";
@@ -1261,11 +1443,14 @@ function irATareas(){
 function irAHome(){
   paginaActiva="home";
   $("tareas-page").style.display="none";
+  $("timeline-page").style.display="none";
+  $("tag-page").style.display="none";
   $("home-hero").style.display="";
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
   $("btn-tareas-nav").classList.remove("activa");
+  $("btn-timeline-nav").classList.remove("activa");
   updateBNav("home");
 }
 
@@ -1346,6 +1531,168 @@ function guardarTarea(){
 
 function eliminarTarea(id){if(!confirm("¿Eliminar esta tarea?"))return;db.ref("tareas/"+id).remove();}
 function moverTarea(id,nuevoEstado){db.ref("tareas/"+id+"/estado").set(nuevoEstado);}
+
+/* ══ PANEL LECTURA ══ */
+let leerActualId=null;
+function abrirLeer(id){
+  const l=libros.find(x=>x.id==id);if(!l)return;
+  leerActualId=id;
+  const FC={"Formación":"formacion","Autoconocimiento":"autoconocimiento","Ocio":"ocio"};
+  const TC={libro:"var(--accent)",reflexion:"#7B9E87",articulo:"#7a80a0",privado:"#9b7fa6"};
+  const tags=(l.tags||[]).map(t=>`<span class="leer-tag" onclick="cerrarLeer();setTimeout(()=>abrirTagPage('${t.replace(/'/g,"\\'")}'),200)">${t}</span>`).join("");
+  const badge1=l.finalidad?`<span class="badge ${l.finalidad==='Formación'?'badge-proximo':l.finalidad==='Autoconocimiento'?'badge-leyendo':'badge-terminado'}">${l.finalidad}</span>`:"";
+  let html=`
+    <div class="leer-eyebrow">
+      <span class="leer-tipo">${tipoLabel(l.tipo)}</span>
+      ${badge1}
+      <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
+    </div>
+    <h1 class="leer-titulo">${l.tituloRef||l.libro}</h1>
+    ${l.autor?`<p class="leer-autor">${l.autor}</p>`:""}
+    ${l.libro&&l.tipo!=="reflexion"?`<p class="leer-libro">📖 ${l.libro}</p>`:""}
+    <div class="leer-tags">${tags}</div>`;
+  if(l.reflexion){html+=`<div class="leer-seccion"><p class="leer-sec-lbl">Resumen</p><div class="leer-rich">${txP(l.reflexion)}</div></div>`;}
+  if(l.cita){html+=`<div class="leer-cita"><span class="leer-cita-deco">"</span><p class="leer-cita-txt">${l.cita}</p></div>`;}
+  if(l.tension){html+=`<div class="leer-sep"><div class="leer-sep-line"></div><span class="leer-sep-ico">✦</span><div class="leer-sep-line"></div></div><div class="leer-seccion"><p class="leer-sec-lbl">Mi análisis</p><div class="leer-rich">${txP(l.tension)}</div></div>`;}
+  if(l.vida){html+=`<div class="leer-sep"><div class="leer-sep-line"></div><span class="leer-sep-ico">✦</span><div class="leer-sep-line"></div></div><div class="leer-seccion"><p class="leer-sec-lbl">Cómo lo aplico</p><div class="leer-rich">${txP(l.vida)}</div></div>`;}
+  if(isAdmin&&l.notas){html+=`<div class="leer-sep"><div class="leer-sep-line"></div><span class="leer-sep-ico">🔒</span><div class="leer-sep-line"></div></div><div class="leer-seccion"><p class="leer-sec-lbl">Notas privadas</p><div class="leer-notas">${l.notas}</div></div>`;}
+  const fichaItems=[
+    l.fecha?{k:"Fecha",v:fmtFecha(l.fecha)}:null,
+    {k:"Estado",v:badgeLabel(l.estado)},
+    l.progreso!=null?{k:"Progreso",v:l.progreso+"%"}:null,
+    l.dificultad?{k:"Dificultad",v:l.dificultad}:null,
+    l.puntuacion?{k:"Puntuación",v:l.puntuacion+"/10"}:null,
+    l.categoria?{k:"Categoría",v:l.categoria}:null,
+  ].filter(Boolean);
+  if(fichaItems.length){html+=`<div class="leer-sep"><div class="leer-sep-line"></div><span class="leer-sep-ico">📋</span><div class="leer-sep-line"></div></div><div class="leer-seccion"><p class="leer-sec-lbl">Ficha</p><div class="leer-ficha">${fichaItems.map(f=>`<div class="leer-ficha-item"><p class="leer-ficha-k">${f.k}</p><p class="leer-ficha-v">${f.v}</p></div>`).join("")}</div></div>`;}
+  $("leer-content").innerHTML=html;
+  const rel=getRelacionadas(l);
+  if(rel.length){$("leer-relacionadas").innerHTML=`<p class="rel-title">También relacionado</p><div class="rel-grid">${rel.map(r=>`<div class="rel-card" onclick="abrirLeer('${r.id}')"><p class="rel-tipo">${tipoLabel(r.tipo)}</p><p class="rel-titulo">${r.tituloRef||r.libro}</p><p class="rel-tags">${(r.tags||[]).slice(0,3).join(", ")}</p></div>`).join("")}</div>`);}
+  else $("leer-relacionadas").innerHTML="";
+  const panel=$("leer-panel");panel.classList.add("open");panel.scrollTop=0;
+  document.body.style.overflow="hidden";
+}
+function cerrarLeer(){$("leer-panel").classList.remove("open");document.body.style.overflow="";}
+function leerEditar(){if(leerActualId){cerrarLeer();setTimeout(()=>abrirFormModal(leerActualId),300);}}
+function leerEliminar(){if(leerActualId&&confirm("¿Eliminar esta entrada?")){db.ref("libros/"+leerActualId).remove();cerrarLeer();mostrarToast("Entrada eliminada.");}}
+
+function getRelacionadas(entry){
+  const tags=new Set(entry.tags||[]);
+  return libros
+    .filter(l=>l.id!=entry.id&&(isAdmin||l.tipo!=="privado")&&l.estado!=="proximo"&&l.estado!=="pendiente")
+    .map(l=>({l,shared:(l.tags||[]).filter(t=>tags.has(t)).length}))
+    .filter(x=>x.shared>=1)
+    .sort((a,b)=>b.shared-a.shared)
+    .slice(0,4).map(x=>x.l);
+}
+
+/* ══ WIZARD ══ */
+let wizStep=0;
+function wizSetStep(n){
+  wizStep=n;
+  [0,1,2].forEach(i=>{
+    $("wiz-"+i).classList.toggle("activo",i===n);
+    $("wdot-"+i).classList.toggle("done",i<=n);
+    $("wlbl-"+i).classList.toggle("activo",i===n);
+  });
+  $("wiz-hint").textContent=`Paso ${n+1} de 3`;
+  $("wiz-prev").style.display=n>0?"":"none";
+  $("wiz-next").style.display=n<2?"":"none";
+  $("wiz-submit").style.display=n===2?"":"none";
+  const body=$("libro-form").querySelector(".form-body");if(body)body.scrollTop=0;
+}
+function wizNext(){wizSetStep(Math.min(2,wizStep+1));}
+function wizPrev(){wizSetStep(Math.max(0,wizStep-1));}
+
+/* ══ BORRADOR ══ */
+function saveDraft(){
+  if(editandoId!==null)return;
+  const campos=["f-tipo","f-estado","f-libro","f-autor","f-fecha","f-progreso","f-finalidad","f-categoria","f-orden","f-dificultad","f-puntuacion","f-tags","f-titulo-reflexion","f-reflexion","f-cita","f-vida","f-tension","f-notas"];
+  const data={};campos.forEach(id=>{const el=$(id);if(el)data[id]=el.value;});
+  localStorage.setItem("ensu-draft",JSON.stringify(data));
+}
+function loadDraft(){
+  try{const raw=localStorage.getItem("ensu-draft");return raw?JSON.parse(raw):null;}catch{return null;}
+}
+function clearDraft(){localStorage.removeItem("ensu-draft");}
+function restaurarBorrador(){
+  const d=loadDraft();if(!d)return;
+  const campos=["f-tipo","f-estado","f-libro","f-autor","f-fecha","f-finalidad","f-categoria","f-orden","f-dificultad","f-puntuacion","f-tags","f-titulo-reflexion","f-reflexion","f-cita","f-vida","f-tension","f-notas"];
+  campos.forEach(id=>{const el=$(id);if(el&&d[id]!==undefined)el.value=d[id];});
+  if(d["f-progreso"]){$("f-progreso").value=d["f-progreso"];$("progreso-val").textContent=d["f-progreso"]+"%";}
+  $("draft-banner").style.display="none";
+}
+function descartarBorrador(){clearDraft();$("draft-banner").style.display="none";}
+
+/* ══ AUTOCOMPLETE ══ */
+function actualizarAutocomplete(){
+  const librosUni=[...new Set(libros.map(l=>l.libro).filter(Boolean))];
+  const autoresUni=[...new Set(libros.map(l=>l.autor).filter(Boolean))];
+  $("dl-libros").innerHTML=librosUni.map(v=>`<option value="${v.replace(/"/g,'&quot;')}">`).join("");
+  $("dl-autores").innerHTML=autoresUni.map(v=>`<option value="${v.replace(/"/g,'&quot;')}">`).join("");
+}
+
+/* ══ TIMELINE ══ */
+function renderTimeline(){
+  const lista=libros
+    .filter(l=>(isAdmin||l.tipo!=="privado")&&l.estado!=="proximo"&&l.estado!=="pendiente"&&l.fecha)
+    .slice().sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  if(!lista.length){$("timeline-body").innerHTML=`<div style="text-align:center;padding:48px;color:var(--muted)">Sin entradas con fecha.</div>`;return;}
+  const meses=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const grupos={};
+  lista.forEach(l=>{const d=new Date(l.fecha);const key=`${d.getFullYear()}-${d.getMonth()}`;if(!grupos[key])grupos[key]={label:`${meses[d.getMonth()].charAt(0).toUpperCase()+meses[d.getMonth()].slice(1)} ${d.getFullYear()}`,items:[]};grupos[key].items.push(l);});
+  $("timeline-body").innerHTML=Object.values(grupos).map(g=>`
+    <div class="tl-group">
+      <div class="tl-mes">${g.label}</div>
+      <div class="tl-items">
+        ${g.items.map(l=>`<div class="tl-item" onclick="abrirLeer('${l.id}')">
+          <p class="tl-item-tipo">${tipoLabel(l.tipo)} · ${badgeLabel(l.estado)}</p>
+          <p class="tl-item-titulo">${l.tituloRef||l.libro}</p>
+          ${l.reflexion?`<p class="tl-item-extracto">${l.reflexion.split('\n')[0]}</p>`:""}
+          <div class="tl-item-footer"><span class="tl-item-fecha">${fmtFecha(l.fecha)}</span><span style="font-size:13px;color:var(--muted)">→</span></div>
+        </div>`).join("")}
+      </div>
+    </div>`).join("");
+}
+
+function irATimeline(){
+  irAHome();
+  $("home-hero").style.display="none";
+  $("home-filtros").style.display="none";
+  $("toggle-lectura-row").style.display="none";
+  $("home-grid").style.display="none";
+  $("timeline-page").style.display="block";
+  $("tag-page").style.display="none";
+  $("btn-timeline-nav").classList.add("activa");
+  renderTimeline();
+  updateBNav("timeline");
+}
+
+/* ══ TAG PAGE ══ */
+function abrirTagPage(tag){
+  irAHome();
+  $("home-hero").style.display="none";
+  $("home-filtros").style.display="none";
+  $("toggle-lectura-row").style.display="none";
+  $("home-grid").style.display="none";
+  $("timeline-page").style.display="none";
+  $("tag-page").style.display="block";
+  $("tag-page-title").textContent="#"+tag;
+  const resultados=libros.filter(l=>(isAdmin||l.tipo!=="privado")&&(l.tags||[]).includes(tag)&&l.estado!=="proximo"&&l.estado!=="pendiente");
+  $("tag-page-count").textContent=`${resultados.length} ${resultados.length===1?"entrada":"entradas"}`;
+  const FC={"Formación":"formacion","Autoconocimiento":"autoconocimiento","Ocio":"ocio"};
+  $("tag-page-grid").innerHTML=resultados.length
+    ?resultados.map(l=>{const badge1=l.finalidad?`<span class="finalidad-badge ${FC[l.finalidad]||""}">${l.finalidad}</span>`:`<span class="tipo-badge">${tipoLabel(l.tipo)}</span>`;const t=(l.tags||[]).map(t2=>`<span class="tag" onclick="event.stopPropagation();abrirTagPage('${t2.replace(/'/g,"\\'")}'">${t2}</span>`).join("");return`<article class="card" onclick="abrirLeer('${l.id}')"><div class="card-header"><span class="card-type">${tipoLabel(l.tipo)}</span><div class="card-badges">${badge1}<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span></div></div><div class="card-body"><p class="card-autor">${l.autor||"—"}</p><h3 class="card-titulo">${l.tipo!=="reflexion"?l.libro:l.tituloRef}</h3><p class="card-libro">${l.tipo!=="reflexion"?l.tituloRef:l.libro}</p><div class="card-tags">${t}</div><p class="card-extracto">${l.reflexion}</p></div><div class="card-bar"><div class="card-bar-fill" style="width:${l.progreso||0}%"></div></div><div class="card-footer"><span class="card-fecha">${fmtFecha(l.fecha)}</span><span class="card-arrow">→</span></div></article>`;}).join("")
+    :`<div style="text-align:center;padding:48px;color:var(--muted)">Sin entradas con esta etiqueta.</div>`;
+}
+
+function cerrarTagPage(){
+  $("tag-page").style.display="none";
+  $("home-hero").style.display="";
+  $("home-filtros").style.display="";
+  $("toggle-lectura-row").style.display="";
+  $("home-grid").style.display="";
+}
 
 /* ── DEVTOOLS PREVENTION ── */
 document.addEventListener("contextmenu",e=>e.preventDefault());
