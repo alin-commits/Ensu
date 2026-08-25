@@ -1567,7 +1567,7 @@ function abrirLeer(id){
   if(fichaItems.length){html+=`<div class="leer-sep"><div class="leer-sep-line"></div><span class="leer-sep-ico">📋</span><div class="leer-sep-line"></div></div><div class="leer-seccion"><p class="leer-sec-lbl">Ficha</p><div class="leer-ficha">${fichaItems.map(f=>`<div class="leer-ficha-item"><p class="leer-ficha-k">${f.k}</p><p class="leer-ficha-v">${f.v}</p></div>`).join("")}</div></div>`;}
   $("leer-content").innerHTML=html;
   const rel=getRelacionadas(l);
-  if(rel.length){$("leer-relacionadas").innerHTML=`<p class="rel-title">También relacionado</p><div class="rel-grid">${rel.map(r=>`<div class="rel-card" onclick="abrirLeer('${r.id}')"><p class="rel-tipo">${tipoLabel(r.tipo)}</p><p class="rel-titulo">${r.tituloRef||r.libro}</p><p class="rel-tags">${(r.tags||[]).slice(0,3).join(", ")}</p></div>`).join("")}</div>`);}
+  if(rel.length){$("leer-relacionadas").innerHTML=`<p class="rel-title">También relacionado</p><div class="rel-grid">${rel.map(r=>`<div class="rel-card" onclick="abrirLeer('${r.id}')"><p class="rel-tipo">${tipoLabel(r.tipo)}</p><p class="rel-titulo">${r.tituloRef||r.libro}</p><p class="rel-tags">${(r.tags||[]).slice(0,3).join(", ")}</p></div>`).join("")}</div>`;}
   else $("leer-relacionadas").innerHTML="";
   const panel=$("leer-panel");panel.classList.add("open");panel.scrollTop=0;
   document.body.style.overflow="hidden";
