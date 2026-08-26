@@ -524,6 +524,7 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
 .quote-source{font-size:12px;color:var(--muted);font-weight:500}
 .quote-refresh{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;border:none;background:none;padding:0;font-family:'Inter',sans-serif;transition:opacity var(--tr);flex-shrink:0}
 .quote-refresh:hover{opacity:.65}
+input[type=range]:disabled{opacity:.45;pointer-events:none}
 
 /* ══ STATS PAGE ══ */
 .stats-page{display:none;padding:40px 24px 80px;max-width:900px;margin:0 auto}
@@ -953,7 +954,11 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
           </div>
           <div class="form-row">
             <div class="form-g"><label for="f-fecha">Fecha</label><input type="date" id="f-fecha" onchange="saveDraft()"></div>
-            <div class="form-g"><label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label><input type="range" id="f-progreso" min="0" max="100" value="50" oninput="$('progreso-val').textContent=this.value+'%';saveDraft()" style="margin-top:8px"></div>
+            <div class="form-g"><label for="f-paginas-total">Páginas totales</label><input type="number" id="f-paginas-total" min="1" placeholder="ej. 320" oninput="calcProgress();saveDraft()"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-g"><label for="f-pagina-actual">Página actual</label><input type="number" id="f-pagina-actual" min="0" placeholder="ej. 150" oninput="calcProgress();saveDraft()"></div>
+            <div class="form-g"><label for="f-progreso">Progreso <span id="progreso-auto-badge" style="display:none;font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.04em;vertical-align:middle">AUTO</span> — <span id="progreso-val">50%</span></label><input type="range" id="f-progreso" min="0" max="100" value="50" oninput="$('progreso-val').textContent=this.value+'%';saveDraft()" style="margin-top:8px"></div>
           </div>
           <div class="form-row">
             <div class="form-g"><label for="f-finalidad">Finalidad</label><select id="f-finalidad" onchange="saveDraft()"><option value="">—</option><option value="Formación">Formación</option><option value="Autoconocimiento">Autoconocimiento</option><option value="Ocio">Ocio</option></select></div>
@@ -1361,8 +1366,11 @@ function abrirFormModal(editId){
     $("f-libro").value      =l.libro||"";
     $("f-autor").value      =l.autor||"";
     $("f-fecha").value      =l.fecha||"";
+    $("f-paginas-total").value=l.paginasTotal||"";
+    $("f-pagina-actual").value=l.paginaActual!=null?l.paginaActual:"";
     $("f-progreso").value   =l.progreso!=null?l.progreso:50;
     $("progreso-val").textContent=(l.progreso!=null?l.progreso:50)+"%";
+    calcProgress();
     $("f-estado").value     =l.estado||"leyendo";
     $("f-tags").value       =(l.tags||[]).join(", ");
     $("f-titulo-reflexion").value=l.tituloRef||"";
@@ -1388,19 +1396,27 @@ function limpiarForm(){
   $("libro-form").reset();
   $("progreso-val").textContent="50%";
   $("f-notas").value="";
+  $("f-paginas-total").value="";
+  $("f-pagina-actual").value="";
+  calcProgress();
 }
 
 function guardarLibro(e){
   e.preventDefault();
   const tagsRaw=$("f-tags").value.trim();
   const puntRaw=$("f-puntuacion").value.trim();
+  const pagTotal=parseInt($("f-paginas-total").value)||null;
+  const pagActual=$("f-pagina-actual").value!==""?parseInt($("f-pagina-actual").value):null;
+  const progresoCalc=pagTotal?Math.min(100,Math.round((pagActual||0)/pagTotal*100)):parseInt($("f-progreso").value);
   const datos={
     tipo:      $("f-tipo").value,
     libro:     $("f-libro").value.trim(),
     autor:     $("f-autor").value.trim(),
     fecha:     $("f-fecha").value,
     estado:    $("f-estado").value,
-    progreso:  parseInt($("f-progreso").value),
+    progreso:  progresoCalc,
+    paginasTotal: pagTotal,
+    paginaActual: pagActual,
     tags:      tagsRaw?tagsRaw.split(",").map(t=>t.trim()).filter(Boolean):[],
     tituloRef: $("f-titulo-reflexion").value.trim(),
     reflexion: $("f-reflexion").value.trim(),
@@ -1637,6 +1653,7 @@ function abrirLeer(id){
   const fichaItems=[
     l.fecha?{k:"Fecha",v:fmtFecha(l.fecha)}:null,
     {k:"Estado",v:badgeLabel(l.estado)},
+    l.paginasTotal?{k:"Páginas",v:`${l.paginaActual!=null?l.paginaActual:"—"} / ${l.paginasTotal}`}:null,
     l.progreso!=null?{k:"Progreso",v:l.progreso+"%"}:null,
     l.dificultad?{k:"Dificultad",v:l.dificultad}:null,
     l.puntuacion?{k:"Puntuación",v:l.puntuacion+"/10"}:null,
@@ -1682,10 +1699,29 @@ function wizSetStep(n){
 function wizNext(){wizSetStep(Math.min(2,wizStep+1));}
 function wizPrev(){wizSetStep(Math.max(0,wizStep-1));}
 
+/* ══ PÁGINAS / PROGRESO ══ */
+function calcProgress(){
+  const elTotal=$("f-paginas-total"),elActual=$("f-pagina-actual"),elRange=$("f-progreso"),elVal=$("progreso-val"),elBadge=$("progreso-auto-badge");
+  if(!elTotal||!elRange)return;
+  const total=parseInt(elTotal.value)||0;
+  const actual=parseInt(elActual?elActual.value:0)||0;
+  const auto=total>0&&elTotal.value!=="";
+  if(auto){
+    const pct=Math.min(100,Math.round(actual/total*100));
+    elRange.value=pct;
+    if(elVal)elVal.textContent=pct+"%";
+    if(elBadge)elBadge.style.display="";
+    elRange.disabled=true;
+  } else {
+    if(elBadge)elBadge.style.display="none";
+    elRange.disabled=false;
+  }
+}
+
 /* ══ BORRADOR ══ */
 function saveDraft(){
   if(editandoId!==null)return;
-  const campos=["f-tipo","f-estado","f-libro","f-autor","f-fecha","f-progreso","f-finalidad","f-categoria","f-orden","f-dificultad","f-puntuacion","f-tags","f-titulo-reflexion","f-reflexion","f-cita","f-vida","f-tension","f-notas"];
+  const campos=["f-tipo","f-estado","f-libro","f-autor","f-fecha","f-paginas-total","f-pagina-actual","f-progreso","f-finalidad","f-categoria","f-orden","f-dificultad","f-puntuacion","f-tags","f-titulo-reflexion","f-reflexion","f-cita","f-vida","f-tension","f-notas"];
   const data={};campos.forEach(id=>{const el=$(id);if(el)data[id]=el.value;});
   localStorage.setItem("ensu-draft",JSON.stringify(data));
 }
@@ -1695,9 +1731,10 @@ function loadDraft(){
 function clearDraft(){localStorage.removeItem("ensu-draft");}
 function restaurarBorrador(){
   const d=loadDraft();if(!d)return;
-  const campos=["f-tipo","f-estado","f-libro","f-autor","f-fecha","f-finalidad","f-categoria","f-orden","f-dificultad","f-puntuacion","f-tags","f-titulo-reflexion","f-reflexion","f-cita","f-vida","f-tension","f-notas"];
+  const campos=["f-tipo","f-estado","f-libro","f-autor","f-fecha","f-paginas-total","f-pagina-actual","f-finalidad","f-categoria","f-orden","f-dificultad","f-puntuacion","f-tags","f-titulo-reflexion","f-reflexion","f-cita","f-vida","f-tension","f-notas"];
   campos.forEach(id=>{const el=$(id);if(el&&d[id]!==undefined)el.value=d[id];});
-  if(d["f-progreso"]){$("f-progreso").value=d["f-progreso"];$("progreso-val").textContent=d["f-progreso"]+"%";}
+  if(d["f-progreso"]&&!d["f-paginas-total"]){$("f-progreso").value=d["f-progreso"];$("progreso-val").textContent=d["f-progreso"]+"%";}
+  calcProgress();
   $("draft-banner").style.display="none";
 }
 function descartarBorrador(){clearDraft();$("draft-banner").style.display="none";}
