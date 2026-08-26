@@ -1020,16 +1020,30 @@ input[type=range]:disabled{opacity:.45;pointer-events:none}
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 /* ── FIREBASE ── */
-firebase.initializeApp({
-  apiKey:            "AIzaSyCzqDu7SLE_Gj8OoSWABn4RMyt5i3z1Y-Q",
-  authDomain:        "ensu-tareas.firebaseapp.com",
-  databaseURL:       "https://ensu-tareas-default-rtdb.firebaseio.com",
-  projectId:         "ensu-tareas",
-  storageBucket:     "ensu-tareas.firebasestorage.app",
-  messagingSenderId: "589644635319",
-  appId:             "1:589644635319:web:fbe2e4073f8e4e49bac132"
-});
-const db = firebase.database();
+let db;
+try {
+  firebase.initializeApp({
+    apiKey:            "AIzaSyCzqDu7SLE_Gj8OoSWABn4RMyt5i3z1Y-Q",
+    authDomain:        "ensu-tareas.firebaseapp.com",
+    databaseURL:       "https://ensu-tareas-default-rtdb.firebaseio.com",
+    projectId:         "ensu-tareas",
+    storageBucket:     "ensu-tareas.firebasestorage.app",
+    messagingSenderId: "589644635319",
+    appId:             "1:589644635319:web:fbe2e4073f8e4e49bac132"
+  });
+  db = firebase.database();
+} catch(_) {
+  /* Firebase no disponible — mock para que la UI no se quede en blanco */
+  const _ref = () => ({
+    once: () => Promise.resolve({val:()=>null}),
+    on:   (e,cb) => { setTimeout(()=>cb({val:()=>null}),0); return ()=>{}; },
+    set:  () => Promise.resolve(),
+    update:()=> Promise.resolve(),
+    push: () => ({key:String(Date.now())}),
+    remove:()=> Promise.resolve()
+  });
+  db = {ref:_ref};
+}
 
 const ADMIN_USER   = "Alin";
 const ADMIN_HASH   = "bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714";
@@ -1548,7 +1562,7 @@ function irAHome(){
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
-  $("quote-section").style.display="";
+  $("quote-section").style.display="block";
   $("btn-tareas-nav").classList.remove("activa");
   $("btn-timeline-nav").classList.remove("activa");
   $("btn-stats-nav").classList.remove("activa");
@@ -1818,7 +1832,7 @@ function cerrarTagPage(){
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
-  $("quote-section").style.display="";
+  $("quote-section").style.display="block";
   $("search-section").style.display="";
 }
 
@@ -1829,7 +1843,7 @@ function mostrarCitaAleatoria(){
   const e=pool[Math.floor(Math.random()*pool.length)];
   $("quote-text").textContent=e.cita;
   $("quote-source").textContent=(e.tipo!=="reflexion"?(e.libro||""):(e.tituloRef||""))+(e.autor?" — "+e.autor:"");
-  $("quote-section").style.display="";
+  $("quote-section").style.display="block";
 }
 
 /* ══ STATS ══ */
