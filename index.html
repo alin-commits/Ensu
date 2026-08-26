@@ -94,7 +94,7 @@ body.admin .admin-bar{display:block}
    BOTTOM NAV (mobile)
 ════════════════════════════════════ */
 .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:var(--surface);border-top:1px solid var(--borde);padding-bottom:env(safe-area-inset-bottom,0px)}
-.bnav-grid{display:grid;grid-template-columns:repeat(4,1fr);height:56px}
+.bnav-grid{display:grid;grid-template-columns:repeat(5,1fr);height:56px}
 .bnav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:500;color:var(--muted);transition:color var(--tr);cursor:pointer;background:none;border:none;padding:0}
 .bnav-btn.activo{color:var(--accent)}
 .bnav-ico{font-size:19px;line-height:1}
@@ -109,6 +109,10 @@ html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
   .nav-actions .btn-nav{display:none}
   .btn-nuevo{display:none}
   .nav-name{display:none}
+  .bnav-ico{font-size:17px}
+  #quote-section{padding:16px 16px 0}
+  .stats-page{padding:24px 16px 80px}
+  .stats-boxes{grid-template-columns:repeat(3,1fr)}
 }
 
 /* ════════════════════════════════════
@@ -579,6 +583,9 @@ input[type=range]:disabled{opacity:.45;pointer-events:none}
     <a href="lista.html" class="bnav-btn" data-page="biblioteca">
       <span class="bnav-ico">📚</span><span>Biblioteca</span>
     </a>
+    <button class="bnav-btn" id="bnav-stats" data-page="stats" onclick="irAStats()">
+      <span class="bnav-ico">📊</span><span>Stats</span>
+    </button>
     <!-- Non-admin: dark + lock -->
     <button class="bnav-btn non-admin-only" onclick="toggleDarkMode()">
       <span class="bnav-ico">🌙</span><span>Tema</span>
