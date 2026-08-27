@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Biblioteca · EnSu</title>
 <link rel="icon" href="img/logo.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,8 +14,8 @@ html.dark{--bg:#0E0E10;--surface:#17171A;--surface2:#1E1E23;--text:#EDE8E1;--tex
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
-button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
-a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none;touch-action:manipulation}
+a{color:inherit;text-decoration:none;touch-action:manipulation}
 input,select,textarea{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface2);border:1.5px solid var(--borde);border-radius:var(--r-sm);padding:10px 14px;width:100%;outline:none;transition:border-color var(--tr),background var(--tr);-webkit-appearance:none;appearance:none}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);background:var(--surface)}
 textarea{resize:vertical;line-height:1.65}
@@ -55,6 +55,7 @@ html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
   body{padding-bottom:60px}
   .nav-actions .btn-nav{display:none}
   .btn-nuevo{display:none}
+  .btn-icon{display:none}
   .nav-name{display:none}
 }
 
@@ -85,7 +86,7 @@ body.admin .page-offset{padding-top:86px}
 .btn-ctrl.activo{border-color:var(--accent);color:var(--accent)}
 .spacer{flex:1}
 
-.tabs-row{display:flex;border-bottom:1px solid var(--borde);margin-bottom:20px;overflow-x:auto;scrollbar-width:none}
+.tabs-row{display:flex;border-bottom:1px solid var(--borde);margin-bottom:20px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
 .tabs-row::-webkit-scrollbar{display:none}
 .tab{font-size:13px;font-weight:500;color:var(--muted);padding:10px 16px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all var(--tr);white-space:nowrap;margin-bottom:-1px}
 .tab:hover{color:var(--text)}
@@ -130,7 +131,8 @@ html.dark .badge-pendiente{background:rgba(200,110,110,.2);color:#C08080}
 .form-header{padding:24px 26px 0}
 .form-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--text);margin-bottom:3px}
 .form-subtitle{font-size:12.5px;color:var(--muted);padding-bottom:14px}
-.form-body{padding:0 26px;overflow-y:auto;flex:1}
+.form-body{padding:0 26px;overflow-y:auto;flex:1;min-height:0}
+#libro-form{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
 .form-sec{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:18px 0 10px;border-top:1px solid var(--borde);margin-top:4px}
 .form-sec:first-child{margin-top:0;padding-top:14px;border-top:none}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
@@ -165,15 +167,31 @@ html.dark .toast{background:var(--accent);color:#1A1714}
 
 @media(max-width:767px){
   .page-wrap{padding:24px 16px 40px}
-  .form-row{grid-template-columns:1fr}
-  .form-header{padding:18px 18px 0}
-  .form-body{padding:0 18px}
-  .form-footer{padding:12px 18px 20px}
+  /* iOS: evitar zoom automático */
+  input,select,textarea{font-size:16px!important}
+  /* Form modal bottom-sheet */
   .modal-overlay{align-items:flex-end;padding:0}
-  .modal{max-height:94vh;border-radius:18px 18px 0 0;margin:auto 0 0}
-  .controls{gap:6px}
-  .search-wrap-l{max-width:100%;min-width:120px}
-  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
+  .modal{max-height:92vh;border-radius:22px 22px 0 0;margin:auto 0 0}
+  .form-header{padding:18px 18px 0}
+  .form-body{padding:0 16px;overflow-y:auto;flex:1;min-height:0;-webkit-overflow-scrolling:touch}
+  .form-footer{padding:12px 16px max(14px,env(safe-area-inset-bottom));gap:8px}
+  .form-row{grid-template-columns:1fr}
+  /* Controles: search ocupa toda la línea, selects y botones en fila siguiente */
+  .controls{flex-wrap:wrap;gap:6px}
+  .search-wrap-l{flex:1 1 100%;max-width:100%}
+  .sel-ctrl{height:40px;flex:1;min-width:0}
+  .btn-ctrl{height:40px}
+  /* Ocultar vista cards/tabla en mobile — siempre tabla */
+  #btn-vista-tabla,#btn-vista-cards{display:none}
+  /* Tabs: todas las pestañas scroll horizontal, nunca vertical */
+  .tabs-row{flex-nowrap:nowrap}
+  .tab{padding:10px 13px;font-size:12.5px}
+  /* Targets táctiles */
+  .tbl-btn{width:36px;height:36px}
+  .btn-save,.btn-cancel,.btn-del{height:44px}
+  /* Columnas tabla: ocultar dificultad, puntuación y acciones admin en mobile */
+  th:nth-child(5),td:nth-child(5),th:nth-child(6),td:nth-child(6){display:none}
+  /* Mostrar columna estado siempre visible */
   .toast{bottom:68px}
 }
 </style>
