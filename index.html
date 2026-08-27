@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EnSu — Biblioteca de conocimiento</title>
 <link rel="icon" href="img/logo.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,7 +118,11 @@ html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
   /* Targets táctiles mínimos 44px */
   .btn-save,.btn-cancel,.btn-edit-a,.btn-del,.btn-nueva-tarea{height:44px;font-size:14px}
   .btn-toggle-lectura,.sort-btn,.btn-filtrar,.pill-filtro,.tipo-pill{height:40px}
+  #filtros-select,.filtro-sec-sel,.tareas-sort-sel{height:44px}
+  .pill-t{height:38px}
   .bnav-btn{min-height:44px}
+  /* Range thumb más grande para touch */
+  input[type="range"]::-webkit-slider-thumb{width:22px;height:22px}
 }
 
 /* ════════════════════════════════════
@@ -423,6 +427,8 @@ html.dark .toast{background:var(--accent);color:#1A1714}
   /* wizard en mobile */
   .wiz-nav{gap:8px}
   .wiz-hint{font-size:11px}
+  /* animación bottom-sheet en mobile */
+  @keyframes mIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 }
 @media(max-width:399px){
   .tareas-stats{grid-template-columns:1fr 1fr}
@@ -1574,7 +1580,7 @@ function irAHome(){
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
-  $("quote-section").style.display="block";
+  mostrarCitaAleatoria();
   $("btn-tareas-nav").classList.remove("activa");
   $("btn-timeline-nav").classList.remove("activa");
   $("btn-stats-nav").classList.remove("activa");
@@ -1839,13 +1845,15 @@ function abrirTagPage(tag){
 }
 
 function cerrarTagPage(){
+  paginaActiva="home";
   $("tag-page").style.display="none";
   $("home-hero").style.display="";
   $("home-filtros").style.display="";
   $("toggle-lectura-row").style.display="";
   $("home-grid").style.display="";
-  $("quote-section").style.display="block";
   $("search-section").style.display="";
+  mostrarCitaAleatoria();
+  updateBNav("home");
 }
 
 /* ══ CITA ALEATORIA ══ */
