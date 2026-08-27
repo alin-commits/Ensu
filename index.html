@@ -1481,7 +1481,7 @@ function renderCards(){
     return`<article class="card" onclick="abrirLeer('${l.id}')">
   <div class="card-header">
     <span class="card-type">${tipoLabel(l.tipo)}</span>
-    <div class="card-badges">${badge1}<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span></div>
+    <div class="card-badges">${badge1}${l.tipo==="libro"?`<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>`:""}</div>
   </div>
   <div class="card-body">
     <p class="card-autor">${l.autor||"—"}</p>
@@ -1556,7 +1556,7 @@ function abrirDetalle(id){
   const TC={libro:"var(--accent)",reflexion:"#7B9E87",articulo:"#7a80a0",privado:"#9b7fa6"};
   $("detail-bar").style.background=TC[l.tipo]||"var(--accent)";
   $("d-autor").textContent=l.autor||"";
-  const bdg=$("d-badge");bdg.textContent=badgeLabel(l.estado);bdg.className=`badge ${badgeClass(l.estado)}`;
+  const bdg=$("d-badge");if(l.tipo==="libro"){bdg.textContent=badgeLabel(l.estado);bdg.className=`badge ${badgeClass(l.estado)}`;bdg.style.display="";}else bdg.style.display="none";
   $("d-titulo").textContent=l.tituloRef||l.libro||"";
   $("d-libro-autor").textContent=l.tipo!=="reflexion"?l.libro:"";
   $("d-tags").innerHTML=(l.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("");
@@ -1924,7 +1924,7 @@ function abrirLeer(id){
     <div class="leer-eyebrow">
       <span class="leer-tipo">${tipoLabel(l.tipo)}</span>
       ${badge1}
-      <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
+      ${l.tipo==="libro"?`<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>`:""}
     </div>
     <h1 class="leer-titulo">${l.tituloRef||l.libro}</h1>
     ${l.autor?`<p class="leer-autor">${l.autor}</p>`:""}
@@ -1937,7 +1937,7 @@ function abrirLeer(id){
   if(isAdmin&&l.notas){html+=`<div class="leer-sep"><div class="leer-sep-line"></div><span class="leer-sep-ico">🔒</span><div class="leer-sep-line"></div></div><div class="leer-seccion"><p class="leer-sec-lbl">Notas privadas</p><div class="leer-notas">${l.notas}</div></div>`;}
   const fichaItems=[
     l.fecha?{k:"Fecha",v:fmtFecha(l.fecha)}:null,
-    {k:"Estado",v:badgeLabel(l.estado)},
+    l.tipo==="libro"?{k:"Estado",v:badgeLabel(l.estado)}:null,
     l.paginasTotal?{k:"Páginas",v:`${l.paginaActual!=null?l.paginaActual:"—"} / ${l.paginasTotal}`}:null,
     l.progreso!=null?{k:"Progreso",v:l.progreso+"%"}:null,
     l.dificultad?{k:"Dificultad",v:l.dificultad}:null,
