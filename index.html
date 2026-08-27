@@ -108,9 +108,10 @@ html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
   body{padding-bottom:60px}
   .nav-actions .btn-nav{display:none}
   .btn-nuevo{display:none}
+  .btn-icon{display:none}
   .nav-name{display:none}
   .bnav-ico{font-size:17px}
-  #quote-section{padding:16px 16px 0}
+  #quote-section{padding:16px 16px 18px}
   .stats-page{padding:24px 16px 80px}
   .stats-boxes{grid-template-columns:repeat(3,1fr)}
   /* iOS: evitar zoom automático al enfocar inputs */
@@ -118,7 +119,7 @@ html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
   /* Targets táctiles mínimos 44px */
   .btn-save,.btn-cancel,.btn-edit-a,.btn-del,.btn-nueva-tarea{height:44px;font-size:14px}
   .btn-toggle-lectura,.sort-btn,.btn-filtrar,.pill-filtro,.tipo-pill{height:40px}
-  #filtros-select,.filtro-sec-sel,.tareas-sort-sel{height:44px}
+  #filtros-select,.filtro-sec-sel,.tareas-sort-sel{height:40px}
   .pill-t{height:38px}
   .bnav-btn{min-height:44px}
   /* Range thumb más grande para touch */
@@ -313,7 +314,8 @@ html.dark .pill-t.activa{background:var(--accent);color:#1A1714;border-color:var
 .form-header{padding:24px 26px 0}
 .form-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--text);margin-bottom:3px}
 .form-subtitle{font-size:12.5px;color:var(--muted);padding-bottom:14px}
-.form-body{padding:0 26px;overflow-y:auto;flex:1}
+.form-body{padding:0 26px;overflow-y:auto;flex:1;min-height:0}
+#libro-form{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
 .form-sec{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:18px 0 10px;border-top:1px solid var(--borde);margin-top:4px}
 .form-sec:first-child{margin-top:0;padding-top:14px;border-top:none}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
@@ -413,7 +415,7 @@ html.dark .toast{background:var(--accent);color:#1A1714}
   .modal-overlay{align-items:flex-end;padding:0}
   .modal{max-height:92vh;border-radius:22px 22px 0 0;margin:auto 0 0}
   .form-header{padding:16px 18px 0}
-  .form-body{padding:0 16px;-webkit-overflow-scrolling:touch}
+  .form-body{padding:0 16px;overflow-y:auto;flex:1;min-height:0;-webkit-overflow-scrolling:touch}
   .form-footer{padding:10px 16px max(16px,env(safe-area-inset-bottom));gap:8px}
   .form-row{grid-template-columns:1fr}
   .form-g{margin-bottom:8px}
@@ -538,7 +540,7 @@ html.dark .leer-nav{background:rgba(14,14,16,.92)}
 }
 
 /* ══ CITA ALEATORIA ══ */
-#quote-section{max-width:760px;margin:0 auto;padding:24px 24px 0;display:none}
+#quote-section{max-width:760px;margin:0 auto;padding:24px 24px 22px;display:none}
 .quote-card{background:var(--surface);border:1px solid var(--borde);border-radius:var(--r);padding:22px 28px;position:relative;overflow:hidden}
 .quote-card::before{content:'\201C';position:absolute;top:-12px;left:18px;font-family:'Cormorant Garamond',serif;font-size:88px;color:var(--accent);opacity:.18;line-height:1;pointer-events:none}
 .quote-text{font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--text);line-height:1.65;margin-bottom:12px;padding-left:8px}
