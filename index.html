@@ -1344,6 +1344,31 @@ function guardarEnStorage() {
   db.ref("libros").set(obj);
 }
 
+function runMigraciones(existing){
+  db.ref("migrations/m01_pendiente_a_proximo").once("value").then(snap=>{
+    if(snap.val())return;
+    const books=existing?Object.values(existing):[];
+    const updates={};
+    books.forEach(l=>{if(l.estado==="pendiente")updates[`libros/${l.id}/estado`]="proximo";});
+    const titulos=new Set(books.map(l=>l.libro));
+    let nextId=books.reduce((m,l)=>Math.max(m,+l.id||0),0)+1;
+    const nuevosPend=[
+      {libro:"Manual de vida",autor:"Epicteto",tituloRef:"El estoicismo práctico: distinguir lo que depende de ti de lo que no",categoria:"Filosofía",dificultad:"Moderada",tags:["Estoicismo","Filosofía","Libertad interior","Disciplina","Virtud"]},
+      {libro:"Así habló Zaratustra",autor:"Friedrich Nietzsche",tituloRef:"La filosofía como poesía: el eterno retorno, el superhombre y la muerte de Dios",categoria:"Filosofía",dificultad:"Densa",tags:["Filosofía","Nietzsche","Nihilismo","Existencialismo","Poder"]},
+      {libro:"El hombre rebelde",autor:"Albert Camus",tituloRef:"La rebelión como respuesta filosófica al absurdo y a los totalitarismos del siglo XX",categoria:"Filosofía",dificultad:"Densa",tags:["Absurdo","Rebelión","Filosofía","Camus","Política"]},
+      {libro:"Psicología de las masas",autor:"Sigmund Freud",tituloRef:"Cómo el individuo pierde su identidad crítica al fundirse con el grupo",categoria:"Psicología",dificultad:"Moderada",tags:["Psicología","Freud","Masas","Identidad","Inconsciente"]}
+    ];
+    nuevosPend.forEach(n=>{
+      if(!titulos.has(n.libro)){
+        updates[`libros/${nextId}`]={id:nextId,tipo:"libro",libro:n.libro,autor:n.autor,fecha:"",estado:"pendiente",progreso:0,dificultad:n.dificultad,puntuacion:null,tags:n.tags,tituloRef:n.tituloRef,reflexion:"",cita:"",vida:"",tension:"",finalidad:"Formación",categoria:n.categoria,orden:null,notas:""};
+        nextId++;
+      }
+    });
+    const done=()=>db.ref("migrations/m01_pendiente_a_proximo").set(true);
+    if(Object.keys(updates).length)db.ref().update(updates).then(done);else done();
+  });
+}
+
 function cargarDesdeStorage() {
   db.ref("libros").once("value").then(snapshot=>{
     if(!snapshot.val()){
@@ -1357,6 +1382,7 @@ function cargarDesdeStorage() {
       const toAdd={};
       DATOS_INICIALES.forEach(l=>{if(!existing[l.id])toAdd[l.id]=l;});
       if(Object.keys(toAdd).length)db.ref("libros").update(toAdd);
+      runMigraciones(existing);
     }
     db.ref("libros").on("value",snap=>{
       const data=snap.val();
