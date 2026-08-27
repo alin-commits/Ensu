@@ -1325,7 +1325,7 @@ const DATOS_INICIALES = [
   },
   {
     id:28,tipo:"libro",libro:"El marciano",autor:"Andy Weir",
-    fecha:"2025-11-06",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:9,
+    fecha:"2026-05-29",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:9,
     tags:["Supervivencia","Ciencia","Ingenio","Resiliencia","Humor","Espacio"],
     tituloRef:"Cuando no puedes controlar dónde estás, puedes controlar cómo usas lo que tienes",
     reflexion:"Mark Watney queda abandonado en Marte y tiene que sobrevivir con los recursos de una misión de 31 días durante más de 500. Weir hizo los cálculos reales, lo que le da una verosimilitud fascinante — no es ciencia ficción especulativa sino ingeniería de supervivencia.\n\nLo que hace que el libro funcione no es el drama sino el tono: Watney enfrenta cada crisis con ingenio y humor. Un recordatorio de que el humor y la resolución de problemas no son opuestos a la seriedad — son las herramientas más efectivas para la supervivencia.",
@@ -1334,7 +1334,7 @@ const DATOS_INICIALES = [
   },
   {
     id:50,tipo:"libro",libro:"El sutil arte de que todo te importe una mierda",autor:"Mark Manson",
-    fecha:"2025-12-20",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    fecha:"2026-07-14",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
     tags:["Mentalidad","Prioridades","Responsabilidad","Valores","Desarrollo personal","Autenticidad"],
     tituloRef:"No todo merece tu energía — la clave está en elegir conscientemente qué te importa y qué no",
     reflexion:"Manson desmonta la positividad forzada de la autoayuda convencional: no se trata de que todo salga bien, sino de elegir intencionalmente los problemas que estás dispuesto a enfrentar. La felicidad no es la ausencia de problemas; es tener los problemas correctos.\n\nEl argumento central: tenemos un límite de preocupaciones disponibles, y cómo los asignamos define la calidad de nuestra vida. Preocuparte por cosas triviales deja sin capacidad para lo que realmente importa. La madurez es la habilidad de decir 'eso no me importa' sin culpa.",
@@ -1343,7 +1343,7 @@ const DATOS_INICIALES = [
   },
   {
     id:51,tipo:"libro",libro:"Ikigai",autor:"Héctor García y Francesc Miralles",
-    fecha:"2026-01-18",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    fecha:"2026-07-12",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
     tags:["Propósito","Longevidad","Filosofía japonesa","Plenitud","Hábitos","Comunidad"],
     tituloRef:"El secreto de la longevidad y la plenitud no está en retirarse — está en nunca dejar de tener un propósito",
     reflexion:"Ikigai es el concepto japonés que define la razón de levantarse cada mañana: la intersección entre lo que amas, lo que se te da bien, lo que el mundo necesita y lo que te pueden pagar. No es un destino sino una dirección.\n\nEl libro estudia a los centenarios de Okinawa — la zona del mundo con mayor esperanza de vida — y extrae sus patrones: propósito claro, comunidad fuerte, movimiento constante y alimentación moderada. La conclusión más poderosa: la jubilación como cese total de actividad no existe en su vocabulario.",
@@ -1352,7 +1352,7 @@ const DATOS_INICIALES = [
   },
   {
     id:52,tipo:"libro",libro:"El arte de pensar",autor:"Rolf Dobelli",
-    fecha:"2026-02-10",estado:"leyendo",progreso:55,dificultad:"Moderada",puntuacion:null,
+    fecha:"2026-06-12",estado:"leyendo",progreso:55,dificultad:"Moderada",puntuacion:null,
     tags:["Sesgos cognitivos","Pensamiento crítico","Lógica","Decisiones","Racionalidad","Psicología"],
     tituloRef:"Tu mente comete los mismos errores una y otra vez — conocerlos es la única forma de evitarlos",
     reflexion:"Dobelli cataloga 99 sesgos cognitivos y errores de pensamiento sistemáticos que afectan a prácticamente todos los humanos sin excepción: el sesgo de confirmación, el efecto del superviviente, la aversión a la pérdida, el pensamiento de grupo.\n\nLo más valioso del libro no es la lista en sí sino el patrón que revela: la mente humana no está diseñada para la racionalidad perfecta, sino para la supervivencia. Entender cuándo y por qué tu pensamiento te traiciona es el único antídoto.",
@@ -1400,6 +1400,16 @@ function runMigraciones(existing){
     DATOS_INICIALES.filter(l=>l.id>=6).forEach(l=>{updates[`libros/${l.id}`]=l;});
     const done=()=>db.ref("migrations/m02_sync_datos_iniciales").set(true);
     if(Object.keys(updates).length)db.ref().update(updates).then(done);else done();
+  });
+  db.ref("migrations/m03_fix_fechas_reales").once("value").then(snap=>{
+    if(snap.val())return;
+    const updates={
+      "libros/28/fecha":"2026-05-29",
+      "libros/50/fecha":"2026-07-14",
+      "libros/51/fecha":"2026-07-12",
+      "libros/52/fecha":"2026-06-12"
+    };
+    db.ref().update(updates).then(()=>db.ref("migrations/m03_fix_fechas_reales").set(true));
   });
 }
 
