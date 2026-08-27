@@ -1351,7 +1351,7 @@ const DATOS_INICIALES = [
     vida:"",tension:"",finalidad:"Autoconocimiento",categoria:"Filosofía",orden:null,notas:""
   },
   {
-    id:52,tipo:"libro",libro:"El arte de pensar",autor:"Rolf Dobelli",
+    id:52,tipo:"libro",libro:"El arte de pensar",autor:"José Carlos Ruiz",
     fecha:"2026-06-12",estado:"leyendo",progreso:55,dificultad:"Moderada",puntuacion:null,
     tags:["Sesgos cognitivos","Pensamiento crítico","Lógica","Decisiones","Racionalidad","Psicología"],
     tituloRef:"Tu mente comete los mismos errores una y otra vez — conocerlos es la única forma de evitarlos",
@@ -1410,6 +1410,10 @@ function runMigraciones(existing){
       "libros/52/fecha":"2026-06-12"
     };
     db.ref().update(updates).then(()=>db.ref("migrations/m03_fix_fechas_reales").set(true));
+  });
+  db.ref("migrations/m04_fix_autor_arte_pensar").once("value").then(snap=>{
+    if(snap.val())return;
+    db.ref("libros/52/autor").set("José Carlos Ruiz").then(()=>db.ref("migrations/m04_fix_autor_arte_pensar").set(true));
   });
 }
 
