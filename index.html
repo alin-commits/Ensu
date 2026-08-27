@@ -1331,6 +1331,33 @@ const DATOS_INICIALES = [
     reflexion:"Mark Watney queda abandonado en Marte y tiene que sobrevivir con los recursos de una misión de 31 días durante más de 500. Weir hizo los cálculos reales, lo que le da una verosimilitud fascinante — no es ciencia ficción especulativa sino ingeniería de supervivencia.\n\nLo que hace que el libro funcione no es el drama sino el tono: Watney enfrenta cada crisis con ingenio y humor. Un recordatorio de que el humor y la resolución de problemas no son opuestos a la seriedad — son las herramientas más efectivas para la supervivencia.",
     cita:"En algún momento, todo sale mal. Decides si eso te define o si decides seguir adelante.",
     vida:"",tension:"",finalidad:"Ocio",categoria:"Novela",orden:null,notas:""
+  },
+  {
+    id:50,tipo:"libro",libro:"El sutil arte de que todo te importe una mierda",autor:"Mark Manson",
+    fecha:"2023-07-14",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    tags:["Mentalidad","Prioridades","Responsabilidad","Valores","Desarrollo personal","Autenticidad"],
+    tituloRef:"No todo merece tu energía — la clave está en elegir conscientemente qué te importa y qué no",
+    reflexion:"Manson desmonta la positividad forzada de la autoayuda convencional: no se trata de que todo salga bien, sino de elegir intencionalmente los problemas que estás dispuesto a enfrentar. La felicidad no es la ausencia de problemas; es tener los problemas correctos.\n\nEl argumento central: tenemos un límite de preocupaciones disponibles, y cómo los asignamos define la calidad de nuestra vida. Preocuparte por cosas triviales deja sin capacidad para lo que realmente importa. La madurez es la habilidad de decir 'eso no me importa' sin culpa.",
+    cita:"No aspires a tener una vida sin problemas. Aspira a tener mejores problemas.",
+    vida:"",tension:"",finalidad:"Autoconocimiento",categoria:"Desarrollo personal",orden:null,notas:""
+  },
+  {
+    id:51,tipo:"libro",libro:"Ikigai",autor:"Héctor García y Francesc Miralles",
+    fecha:"2023-05-30",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    tags:["Propósito","Longevidad","Filosofía japonesa","Plenitud","Hábitos","Comunidad"],
+    tituloRef:"El secreto de la longevidad y la plenitud no está en retirarse — está en nunca dejar de tener un propósito",
+    reflexion:"Ikigai es el concepto japonés que define la razón de levantarse cada mañana: la intersección entre lo que amas, lo que se te da bien, lo que el mundo necesita y lo que te pueden pagar. No es un destino sino una dirección.\n\nEl libro estudia a los centenarios de Okinawa — la zona del mundo con mayor esperanza de vida — y extrae sus patrones: propósito claro, comunidad fuerte, movimiento constante y alimentación moderada. La conclusión más poderosa: la jubilación como cese total de actividad no existe en su vocabulario.",
+    cita:"Solo los que se mueven siempre hacia lo que les da sentido consiguen vivir con plenitud hasta el final.",
+    vida:"",tension:"",finalidad:"Autoconocimiento",categoria:"Filosofía",orden:null,notas:""
+  },
+  {
+    id:52,tipo:"libro",libro:"El arte de pensar",autor:"Rolf Dobelli",
+    fecha:"2025-12-01",estado:"leyendo",progreso:55,dificultad:"Moderada",puntuacion:null,
+    tags:["Sesgos cognitivos","Pensamiento crítico","Lógica","Decisiones","Racionalidad","Psicología"],
+    tituloRef:"Tu mente comete los mismos errores una y otra vez — conocerlos es la única forma de evitarlos",
+    reflexion:"Dobelli cataloga 99 sesgos cognitivos y errores de pensamiento sistemáticos que afectan a prácticamente todos los humanos sin excepción: el sesgo de confirmación, el efecto del superviviente, la aversión a la pérdida, el pensamiento de grupo.\n\nLo más valioso del libro no es la lista en sí sino el patrón que revela: la mente humana no está diseñada para la racionalidad perfecta, sino para la supervivencia. Entender cuándo y por qué tu pensamiento te traiciona es el único antídoto.",
+    cita:"Un error de pensamiento no se corrige con fuerza de voluntad. Se corrige con conciencia del mecanismo que lo produce.",
+    vida:"",tension:"",finalidad:"Formación",categoria:"Pensamiento y decisiones",orden:null,notas:""
   }
 ];
 
@@ -1442,12 +1469,12 @@ function renderCards(){
   const grid=$("cards-grid");
   const FC={"Formación":"formacion","Autoconocimiento":"autoconocimiento","Ocio":"ocio"};
 
-  const lecturaCount=libros.filter(l=>l.estado==="pendiente").length;
+  const lecturaCount=libros.filter(l=>l.estado==="proximo"||l.estado==="pendiente").length;
   const togBtn=$("btn-toggle-lectura");
   if(togBtn)togBtn.textContent=`📚 Lista de lectura (${lecturaCount}) ${mostrarLectura?"▲":"▼"}`;
 
   const lecturaCards=(mostrarLectura&&(filtroActivo==="Todos"||filtroActivo==="libro"))
-    ?libros.filter(l=>l.estado==="pendiente").sort((a,b)=>(a.orden||99)-(b.orden||99))
+    ?libros.filter(l=>l.estado==="proximo"||l.estado==="pendiente").sort((a,b)=>(a.orden||99)-(b.orden||99))
     :[];
 
   let lista=libros.filter(l=>{
@@ -1502,7 +1529,8 @@ function renderCards(){
   const lecturaHtml=lecturaCards.length?`
   <div class="lectura-sep"><div class="sep-line"></div><span class="sep-text">Lista de lectura</span><div class="sep-line"></div></div>
   ${lecturaCards.map(l=>{
-    return`<article class="card card-pendiente" onclick="abrirLeer('${l.id}')">
+    const isPend=l.estado==="pendiente";
+    return`<article class="card ${isPend?"card-pendiente":"card-proximo"}" onclick="abrirLeer('${l.id}')">
   <div class="card-header">
     <span class="card-type">${tipoLabel(l.tipo)}</span>
     <span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>
@@ -1510,7 +1538,7 @@ function renderCards(){
   <div class="card-body">
     <p class="card-autor">${l.autor||"—"}</p>
     <h3 class="card-titulo">${l.libro}</h3>
-    <p class="card-libro proximo-hint">En lista de lectura</p>
+    <p class="card-libro proximo-hint">${isPend?"En lista de lectura":"Próximo en la lista"}</p>
   </div>
   <div class="card-footer"><span class="card-fecha">${l.orden?`#${l.orden} en lista`:""}</span><span class="card-arrow">→</span></div>
 </article>`;
