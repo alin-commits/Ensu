@@ -1363,7 +1363,7 @@ const DATOS_INICIALES = [
   },
   {
     id:53,tipo:"articulo",libro:"El efecto espectador",autor:"Darley & Latané",
-    fecha:"2024-11-10",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    fecha:"2026-08-25",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
     tags:["Psicología social","Responsabilidad","Comportamiento","Emergencias","Sesgos","Dilución"],
     tituloRef:"La presencia de otros no garantiza que alguien ayude — al contrario, puede ser exactamente lo que lo impide",
     reflexion:"El efecto espectador es uno de los fenómenos más contraintuitivos de la psicología social: cuantas más personas presencian una emergencia, menor es la probabilidad de que alguna actúe. La responsabilidad se diluye entre la multitud — si todos pueden intervenir, nadie siente que debe ser él quien lo haga.\n\nDocumentado por Darley y Latané tras el caso Kitty Genovese (1964), el fenómeno explica que la inacción no refleja indiferencia sino un error de cálculo colectivo. El antídoto es específico: en una emergencia, señala a una persona concreta, mírala a los ojos y pídele ayuda directamente. La responsabilidad difusa se vuelve individual solo cuando se nombra.",
@@ -1432,6 +1432,29 @@ function runMigraciones(existing){
     const l=DATOS_INICIALES.find(x=>x.id===53);
     if(l)db.ref("libros/53").once("value").then(s=>{if(!s.val())db.ref("libros/53").set(l);}).then(()=>db.ref("migrations/m06_add_efecto_espectador").set(true));
     else db.ref("migrations/m06_add_efecto_espectador").set(true);
+  });
+  db.ref("migrations/m07_force_efecto_espectador").once("value").then(snap=>{
+    if(snap.val())return;
+    const l=DATOS_INICIALES.find(x=>x.id===53);
+    if(l)db.ref("libros/53").set(l).then(()=>db.ref("migrations/m07_force_efecto_espectador").set(true));
+    else db.ref("migrations/m07_force_efecto_espectador").set(true);
+  });
+  db.ref("migrations/m08_epicteto_reflexion").once("value").then(snap=>{
+    if(snap.val())return;
+    db.ref("libros").once("value").then(s=>{
+      const books=s.val()?Object.values(s.val()):[];
+      const ep=books.find(b=>b.autor&&b.autor.toLowerCase().includes("epicteto"));
+      if(!ep){db.ref("migrations/m08_epicteto_reflexion").set(true);return;}
+      db.ref("libros/"+ep.id).update({
+        tituloRef:"La libertad no está en cambiar el mundo — está en elegir a qué le das poder sobre ti",
+        reflexion:"Epicteto divide todo en dos categorías: lo que depende de nosotros (juicios, deseos, impulsos) y lo que no depende (el cuerpo, la reputación, el cargo, la muerte). El error que genera sufrimiento es ocuparse de lo segundo como si dependiera de uno.\n\nEl Enquiridión es un entrenamiento de atención: cada vez que algo te perturba, pregunta si está en tu mano o no. Si no lo está, no merece un minuto de preocupación. Si lo está, actúa. La tranquilidad no es apatía — es la consecuencia de dejar de luchar contra lo que no puedes controlar. Epicteto era esclavo. Su libertad interior era absoluta.",
+        cita:"No busques que lo que ocurre ocurra como tú quieres. Desea que lo que ocurre ocurra como ocurre, y serás feliz.",
+        tags:["Estoicismo","Control","Libertad interior","Virtud","Aceptación","Filosofía"],
+        dificultad:"Accesible",
+        finalidad:"Autoconocimiento",
+        categoria:"Filosofía"
+      }).then(()=>db.ref("migrations/m08_epicteto_reflexion").set(true));
+    });
   });
   db.ref("migrations/m05_fix_reflexion_arte_pensar").once("value").then(snap=>{
     if(snap.val())return;
