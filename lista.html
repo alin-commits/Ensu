@@ -192,9 +192,12 @@ html.dark .toast{background:var(--accent);color:#1A1714}
   /* Targets táctiles */
   .tbl-btn{width:36px;height:36px}
   .btn-save,.btn-cancel,.btn-del{height:44px}
+  /* En mobile: forzar vista cards, ocultar tabla */
+  #tabla-wrap{display:none!important}
+  #cards-wrap{display:block!important}
+  #cards-grid-lib{grid-template-columns:1fr!important}
   /* Columnas tabla: ocultar dificultad, puntuación y acciones admin en mobile */
   th:nth-child(5),td:nth-child(5),th:nth-child(6),td:nth-child(6){display:none}
-  /* Mostrar columna estado siempre visible */
   .toast{bottom:68px}
 }
 </style>
@@ -328,6 +331,10 @@ html.dark .toast{background:var(--accent);color:#1A1714}
           <div class="form-g"><label for="f-progreso">Progreso — <span id="progreso-val">50%</span></label><input type="range" id="f-progreso" min="0" max="100" value="50" oninput="$('progreso-val').textContent=this.value+'%'" style="margin-top:8px"></div>
         </div>
         <div class="form-row">
+          <div class="form-g"><label for="f-pagina-actual">Página actual</label><input type="number" id="f-pagina-actual" min="0" placeholder="0"></div>
+          <div class="form-g"><label for="f-paginas-total">Total páginas</label><input type="number" id="f-paginas-total" min="1" placeholder="300"></div>
+        </div>
+        <div class="form-row">
           <div class="form-g"><label for="f-finalidad">Finalidad</label><select id="f-finalidad"><option value="">—</option><option value="Formación">Formación</option><option value="Autoconocimiento">Autoconocimiento</option><option value="Ocio">Ocio</option></select></div>
           <div class="form-g"><label for="f-categoria">Categoría</label><select id="f-categoria"><option value="">—</option><option value="Psicología">Psicología</option><option value="Relaciones">Relaciones</option><option value="Desarrollo personal">Desarrollo personal</option><option value="Filosofía">Filosofía</option><option value="Productividad">Productividad</option><option value="Pensamiento y decisiones">Pensamiento y decisiones</option><option value="Finanzas">Finanzas</option><option value="Ciencia">Ciencia</option><option value="Geopolítica">Geopolítica</option><option value="Marketing">Marketing</option><option value="Novela">Novela</option></select></div>
         </div>
@@ -403,7 +410,7 @@ firebase.initializeApp({
 const db=firebase.database();
 const ADMIN_USER="Alin",ADMIN_HASH="bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714";
 
-let libros=[],busqueda="",filtros={tipo:"",estado:"",categoria:""},sortDesc=true,vista="tabla",editandoId=null,isAdmin=false;
+let libros=[],busqueda="",filtros={tipo:"",estado:"",categoria:""},sortDesc=true,vista=window.innerWidth<=767?"cards":"tabla",editandoId=null,isAdmin=false;
 
 const $=id=>document.getElementById(id);
 function fmtFecha(str){if(!str)return"";const[y,m,d]=str.split("-");const ms=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];return`${+d} ${ms[+m-1]} ${y}`;}
@@ -459,6 +466,7 @@ function setBusqueda(val){busqueda=val.trim().toLowerCase();$("search-clr").clas
 function limpiarBusqueda(){$("search-input").value="";busqueda="";$("search-clr").classList.remove("v");render();}
 function toggleSort(){sortDesc=!sortDesc;$("btn-sort").textContent=sortDesc?"Reciente ↓":"Antiguo ↑";render();}
 function setVista(v){vista=v;$("tabla-wrap").style.display=v==="tabla"?"":"none";$("cards-wrap").style.display=v==="cards"?"":"none";$("btn-vista-tabla").classList.toggle("activo",v==="tabla");$("btn-vista-cards").classList.toggle("activo",v==="cards");render();}
+function verEntrada(id){window.location.href="index.html?leer="+id;}
 
 function render(){
   const d=getData();
@@ -472,7 +480,7 @@ function renderTable(data){
     <tr>
       <td class="td-orden">${i+1}</td>
       <td>
-        <span class="tbl-link td-titulo" onclick="abrirFormModal('${l.id}')">${l.tipo!=="reflexion"?l.libro:l.tituloRef}</span>
+        <span class="tbl-link td-titulo" onclick="verEntrada('${l.id}')">${l.tipo!=="reflexion"?l.libro:l.tituloRef}</span>
         ${l.tituloRef&&l.tipo!=="reflexion"?`<br><span style="font-size:11.5px;color:var(--muted)">${l.tituloRef}</span>`:""}
       </td>
       <td>${l.autor||"—"}</td>
@@ -492,7 +500,7 @@ function renderCards(data){
   if(!data.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:48px 24px;color:var(--muted)"><div class="empty-ico">📖</div><p>No hay entradas.</p></div>`;return;}
   g.innerHTML=data.map(l=>{
     const tags=(l.tags||[]).slice(0,3).map(t=>`<span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:var(--surface2);color:var(--text2)">${t}</span>`).join(" ");
-    return`<div onclick="abrirFormModal('${l.id}')" style="background:var(--surface);border:1px solid var(--borde);border-radius:14px;padding:16px;cursor:pointer;transition:box-shadow .2s,transform .2s" onmouseenter="this.style.cssText+='box-shadow:0 6px 24px rgba(0,0,0,.1);transform:translateY(-2px)'" onmouseleave="this.style.boxShadow='';this.style.transform=''">
+    return`<div onclick="verEntrada('${l.id}')" style="background:var(--surface);border:1px solid var(--borde);border-radius:14px;padding:16px;cursor:pointer;transition:box-shadow .2s,transform .2s" onmouseenter="this.style.cssText+='box-shadow:0 6px 24px rgba(0,0,0,.1);transform:translateY(-2px)'" onmouseleave="this.style.boxShadow='';this.style.transform=''">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">${tipoLabel(l.tipo)}</span>${l.tipo==="libro"?`<span class="badge ${badgeClass(l.estado)}">${badgeLabel(l.estado)}</span>`:""}</div>
   <p style="font-size:11px;color:var(--muted);margin-bottom:4px">${l.autor||"—"}</p>
   <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.25">${l.tipo!=="reflexion"?l.libro:l.tituloRef}</p>
@@ -518,6 +526,7 @@ function abrirFormModal(editId){
     $("f-titulo-reflexion").value=l.tituloRef||"";$("f-reflexion").value=l.reflexion||"";
     $("f-cita").value=l.cita||"";$("f-vida").value=l.vida||"";$("f-tension").value=l.tension||"";
     $("f-dificultad").value=l.dificultad||"Accesible";$("f-puntuacion").value=l.puntuacion||"";
+    $("f-paginas-total").value=l.paginasTotal||"";$("f-pagina-actual").value=l.paginaActual!=null?l.paginaActual:"";
     $("f-finalidad").value=l.finalidad||"";$("f-categoria").value=l.categoria||"";
     $("f-orden").value=l.orden||"";$("f-notas").value=l.notas||"";
   } else {
@@ -540,6 +549,8 @@ function guardarLibro(e){
     cita:$("f-cita").value.trim(),vida:$("f-vida").value.trim(),tension:$("f-tension").value.trim(),
     dificultad:$("f-dificultad").value,
     puntuacion:puntRaw?Math.min(10,Math.max(1,parseInt(puntRaw))):null,
+    paginasTotal:$("f-paginas-total").value?parseInt($("f-paginas-total").value):null,
+    paginaActual:$("f-pagina-actual").value!==""?parseInt($("f-pagina-actual").value):null,
     finalidad:$("f-finalidad").value,categoria:$("f-categoria").value,
     orden:$("f-orden").value?parseInt($("f-orden").value):null,notas:$("f-notas").value.trim()
   };

@@ -1360,11 +1360,20 @@ const DATOS_INICIALES = [
     reflexion:"Ruiz rescata la filosofía como herramienta práctica para el pensamiento cotidiano. El libro enseña a identificar falacias, distinguir hechos de opiniones, construir argumentos sólidos y reconocer cuándo un razonamiento nos está fallando.\n\nLa tesis central: la falta de pensamiento crítico no es una cuestión de inteligencia sino de entrenamiento. La filosofía no es una disciplina académica reservada para unos pocos — es un conjunto de instrumentos concretos para pensar con más rigor y menos confusión ante cualquier problema.",
     cita:"No hay pensamiento sin filosofía. Solo pensamiento que no sabe que usa filosofía.",
     vida:"",tension:"",finalidad:"Formación",categoria:"Pensamiento y decisiones",orden:null,notas:""
+  },
+  {
+    id:53,tipo:"articulo",libro:"El efecto espectador",autor:"Darley & Latané",
+    fecha:"2024-11-10",estado:"terminado",progreso:100,dificultad:"Accesible",puntuacion:null,
+    tags:["Psicología social","Responsabilidad","Comportamiento","Emergencias","Sesgos","Dilución"],
+    tituloRef:"La presencia de otros no garantiza que alguien ayude — al contrario, puede ser exactamente lo que lo impide",
+    reflexion:"El efecto espectador es uno de los fenómenos más contraintuitivos de la psicología social: cuantas más personas presencian una emergencia, menor es la probabilidad de que alguna actúe. La responsabilidad se diluye entre la multitud — si todos pueden intervenir, nadie siente que debe ser él quien lo haga.\n\nDocumentado por Darley y Latané tras el caso Kitty Genovese (1964), el fenómeno explica que la inacción no refleja indiferencia sino un error de cálculo colectivo. El antídoto es específico: en una emergencia, señala a una persona concreta, mírala a los ojos y pídele ayuda directamente. La responsabilidad difusa se vuelve individual solo cuando se nombra.",
+    cita:"Cuando todo el mundo es responsable, nadie lo es.",
+    vida:"",tension:"",finalidad:"Formación",categoria:"Psicología",orden:null,notas:""
   }
 ];
 
 let libros=[], filtroActivo="Todos", filtroFinalidad="", filtroCategoria="", filtroEstadoLib="", filtroDificultad="";
-let mostrarLectura=false, busqueda="", isAdmin=false, sortDesc=true, editandoId=null;
+let mostrarLectura=false, busqueda="", isAdmin=false, sortDesc=true, editandoId=null, _autoOpen=false;
 
 /* ── FIREBASE STORAGE ── */
 function guardarEnStorage() {
@@ -1417,6 +1426,12 @@ function runMigraciones(existing){
     if(snap.val())return;
     db.ref("libros/52/autor").set("José Carlos Ruiz").then(()=>db.ref("migrations/m04_fix_autor_arte_pensar").set(true));
   });
+  db.ref("migrations/m06_add_efecto_espectador").once("value").then(snap=>{
+    if(snap.val())return;
+    const l=DATOS_INICIALES.find(x=>x.id===53);
+    if(l)db.ref("libros/53").once("value").then(s=>{if(!s.val())db.ref("libros/53").set(l);}).then(()=>db.ref("migrations/m06_add_efecto_espectador").set(true));
+    else db.ref("migrations/m06_add_efecto_espectador").set(true);
+  });
   db.ref("migrations/m05_fix_reflexion_arte_pensar").once("value").then(snap=>{
     if(snap.val())return;
     const updates={
@@ -1447,6 +1462,7 @@ function cargarDesdeStorage() {
       const data=snap.val();
       libros=data?Object.values(data):[];
       actualizarStats();renderFiltros();renderCards();actualizarAutocomplete();mostrarCitaAleatoria();
+      if(!_autoOpen){const p=new URLSearchParams(window.location.search).get("leer");if(p){_autoOpen=true;setTimeout(()=>abrirLeer(p),200);}}
     });
   });
 }
