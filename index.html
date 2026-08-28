@@ -1374,6 +1374,7 @@ const DATOS_INICIALES = [
 
 let libros=[], filtroActivo="Todos", filtroFinalidad="", filtroCategoria="", filtroEstadoLib="", filtroDificultad="";
 let mostrarLectura=false, busqueda="", isAdmin=false, sortDesc=true, editandoId=null, _autoOpen=false;
+if(new URLSearchParams(location.search).get("leer")){document.body.style.cssText="opacity:0;transition:opacity .15s ease";}
 
 /* ── FIREBASE STORAGE ── */
 function guardarEnStorage() {
@@ -1984,6 +1985,7 @@ function moverTarea(id,nuevoEstado){db.ref("tareas/"+id+"/estado").set(nuevoEsta
 /* ══ PANEL LECTURA ══ */
 let leerActualId=null;
 function abrirLeer(id){
+  document.body.style.opacity="";
   const l=libros.find(x=>x.id==id);if(!l)return;
   leerActualId=id;
   const FC={"Formación":"formacion","Autoconocimiento":"autoconocimiento","Ocio":"ocio"};
