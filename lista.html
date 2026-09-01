@@ -380,7 +380,7 @@ html.dark .toast{background:var(--accent);color:#1A1714}
         <p class="login-sub">Solo el autor puede editar.</p>
       </div>
       <div class="form-body" style="padding-top:4px">
-        <div class="form-g"><label for="login-user">Usuario</label><input type="text" id="login-user" placeholder="Usuario" autocomplete="username" onkeydown="if(event.key==='Enter')$('login-pwd').focus()"></div>
+        <div class="form-g"><label for="login-user">Email</label><input type="email" id="login-user" placeholder="email@ejemplo.com" autocomplete="email" onkeydown="if(event.key==='Enter')$('login-pwd').focus()"></div>
         <div class="form-g" style="margin-top:10px"><label for="login-pwd">Contraseña</label><input type="password" id="login-pwd" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')handleLogin()"><span class="err-msg" id="login-error">Credenciales incorrectas.</span></div>
       </div>
       <div class="form-footer"><button class="btn-cancel" onclick="cerrarModal('login-overlay')">Cancelar</button><button class="btn-save" onclick="handleLogin()">Entrar</button></div>
@@ -398,6 +398,7 @@ html.dark .toast{background:var(--accent);color:#1A1714}
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 firebase.initializeApp({
   apiKey:"AIzaSyCzqDu7SLE_Gj8OoSWABn4RMyt5i3z1Y-Q",
@@ -409,7 +410,6 @@ firebase.initializeApp({
   appId:"1:589644635319:web:fbe2e4073f8e4e49bac132"
 });
 const db=firebase.database();
-const ADMIN_USER="Alin",ADMIN_HASH="bb573a0c76b875b506e711f7f1a70fbe0119d6af95334de3710563f41a3e1714";
 
 let libros=[],busqueda="",filtros={tipo:"",estado:"",categoria:""},sortDesc=true,vista=window.innerWidth<=767?"cards":"tabla",editandoId=null,isAdmin=false;
 
@@ -560,12 +560,11 @@ function guardarLibro(e){
   guardarEnStorage();cerrarModal("form-overlay");renderStats();render();
 }
 
-async function sha256(text){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(text));return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");}
-function setAdminMode(on){isAdmin=on;document.body.classList.toggle("admin",on);$("lock-icon").textContent=on?"🔓":"🔒";if(on)sessionStorage.setItem("ensu-admin","1");else sessionStorage.removeItem("ensu-admin");renderStats();render();}
-function initAdminMode(){if(sessionStorage.getItem("ensu-admin")==="1")setAdminMode(true);}
+function setAdminMode(on){isAdmin=on;document.body.classList.toggle("admin",on);$("lock-icon").textContent=on?"🔓":"🔒";renderStats();render();}
+firebase.auth().onAuthStateChanged(user=>setAdminMode(!!user));
 function abrirLoginModal(){if(isAdmin){$("login-section").style.display="none";$("logout-section").style.display="";}else{$("login-section").style.display="";$("logout-section").style.display="none";$("login-user").value="";$("login-pwd").value="";$("login-error").classList.remove("visible");}abrirModal("login-overlay");}
-async function handleLogin(){const user=$("login-user").value.trim(),pwd=$("login-pwd").value,hash=await sha256(pwd);if(user===ADMIN_USER&&hash===ADMIN_HASH){setAdminMode(true);cerrarModal("login-overlay");mostrarToast("Modo edición activado.");}else $("login-error").classList.add("visible");}
-function handleLogout(){setAdminMode(false);cerrarModal("login-overlay");mostrarToast("Sesión cerrada.");}
+function handleLogin(){const email=$("login-user").value.trim(),pwd=$("login-pwd").value;firebase.auth().signInWithEmailAndPassword(email,pwd).then(()=>{cerrarModal("login-overlay");mostrarToast("Modo edición activado.");}).catch(()=>$("login-error").classList.add("visible"));}
+function handleLogout(){firebase.auth().signOut().then(()=>{cerrarModal("login-overlay");mostrarToast("Sesión cerrada.");});}
 
 let tT;function mostrarToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("show"),3000);}
 
@@ -586,7 +585,7 @@ document.addEventListener("keydown",function(e){
   if(e.metaKey&&e.altKey&&e.key.toUpperCase()==="I"){e.preventDefault();return false;}
 });
 
-initDarkMode();initAdminMode();setVista(vista);cargarDesdeStorage();
+initDarkMode();setVista(vista);cargarDesdeStorage();
 </script>
 </body>
 </html>
