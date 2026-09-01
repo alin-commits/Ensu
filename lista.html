@@ -58,6 +58,7 @@ html.dark .bnav-plus-circle{background:var(--accent);color:#1A1714}
   .nav-actions .btn-nav{display:none}
   .btn-nuevo{display:none}
   .btn-icon{display:none}
+  #btn-lock{display:flex}
   .nav-name{display:none}
 }
 
@@ -214,7 +215,7 @@ html.dark .toast{background:var(--accent);color:#1A1714}
       <a href="index.html" class="btn-nav">Inicio</a>
       <button class="btn-nuevo admin-only" onclick="abrirFormModal()"><span>+</span> Nueva entrada</button>
       <button class="btn-icon" onclick="toggleDarkMode()"><span id="dark-icon">🌙</span></button>
-      <button class="btn-icon" onclick="abrirLoginModal()"><span id="lock-icon">🔒</span></button>
+      <button class="btn-icon" id="btn-lock" onclick="abrirLoginModal()"><span id="lock-icon">🔒</span></button>
     </div>
   </div>
 </nav>
@@ -466,7 +467,7 @@ function setBusqueda(val){busqueda=val.trim().toLowerCase();$("search-clr").clas
 function limpiarBusqueda(){$("search-input").value="";busqueda="";$("search-clr").classList.remove("v");render();}
 function toggleSort(){sortDesc=!sortDesc;$("btn-sort").textContent=sortDesc?"Reciente ↓":"Antiguo ↑";render();}
 function setVista(v){vista=v;$("tabla-wrap").style.display=v==="tabla"?"":"none";$("cards-wrap").style.display=v==="cards"?"":"none";$("btn-vista-tabla").classList.toggle("activo",v==="tabla");$("btn-vista-cards").classList.toggle("activo",v==="cards");render();}
-function verEntrada(id){window.location.href="index.html?leer="+id;}
+function verEntrada(id){if(isAdmin){abrirFormModal(id);}else{window.location.href="index.html?leer="+id;}}
 
 function render(){
   const d=getData();
